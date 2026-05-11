@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.FeedbackMapper">
+
+    <resultMap id="feedbackResultMap" type="dto.member.FeedbackDTO">
+        <id     property="id"           column="id"/>
+        <result property="workoutId"    column="workout_id"/>
+        <result property="mealId"       column="meal_id"/>
+        <result property="inbodyId"     column="inbody_id"/>
+        <result property="feedbackDate" column="feedback_date"/>
+        <result property="summary"      column="summary"/>
+        <result property="comment"      column="comment"/>
+        <result property="nextComment"  column="next_comment"/>
+        <result property="trainerId"    column="trainer_id"/>
+    </resultMap>
+
+    <!-- 피드백 저장 -->
+    <insert id="insert" parameterType="dto.member.FeedbackDTO">
+        INSERT INTO FEEDBACK
+            (workout_id, meal_id, inbody_id, feedback_date,
+             summary, comment, next_comment, trainer_id)
+        VALUES
+            (#{workoutId}, #{mealId}, #{inbodyId}, #{feedbackDate},
+             #{summary}, #{comment}, #{nextComment}, #{trainerId})
+    </insert>
+
+    <!-- trainer_id로 피드백 목록 조회 -->
+    <select id="findByTrainerId" parameterType="int" resultMap="feedbackResultMap">
+        SELECT id, workout_id, meal_id, inbody_id, feedback_date,
+               summary, comment, next_comment, trainer_id
+        FROM FEEDBACK
+        WHERE trainer_id = #{trainerId}
+        ORDER BY feedback_date DESC
+    </select>
+
+    <!-- workout_id로 피드백 조회 -->
+    <select id="findByWorkoutId" parameterType="int" resultMap="feedbackResultMap">
+        SELECT id, workout_id, meal_id, inbody_id, feedback_date,
+               summary, comment, next_comment, trainer_id
+        FROM FEEDBACK
+        WHERE workout_id = #{workoutId}
+        ORDER BY id DESC
+    </select>
+
+    <!-- MEMBER.id 경유 피드백 목록 조회 (회원용) -->
+    <select id="findByMemberId" parameterType="int" resultMap="feedbackResultMap">
+        SELECT f.id, f.workout_id, f.meal_id, f.inbody_id, f.feedback_date,
+               f.summary, f.comment, f.next_comment, f.trainer_id
+        FROM FEEDBACK f
+        JOIN WORKOUT_LOG wl ON f.workout_id = wl.id
+        WHERE wl.member_id = #{memberId}
+        ORDER BY f.feedback_date DESC
+    </select>
+
+    <!-- 피드백 수정 -->
+    <update id="update" parameterType="dto.member.FeedbackDTO">
+        UPDATE FEEDBACK SET
+            summary      = #{summary},
+            comment      = #{comment},
+            next_comment = #{nextComment}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="trainer.workout">
+
+    <resultMap id="workoutLogMap" type="WorkoutLogDTO">
+        <id     property="id"        column="id"/>
+        <result property="memberId"  column="member_id"/>
+        <result property="sessionId" column="session_id"/>
+        <result property="date"      column="date"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime"   column="end_time"/>
+        <result property="gymId"     column="gym_id"/>
+        <collection property="details" ofType="WorkoutDetailDTO">
+            <id     property="id"        column="detail_id"/>
+            <result property="workoutId" column="workout_id"/>
+            <result property="title"     column="title"/>
+            <result property="set"       column="set_col"/>
+            <result property="rep"       column="rep"/>
+            <result property="weight"    column="detail_weight"/>
+        </collection>
+    </resultMap>
+
+    <!-- Full list of logs with details (for trainer view) -->
+    <select id="findAllLogsByClientId" parameterType="int" resultMap="workoutLogMap">
+        SELECT wl.id, wl.member_id, wl.session_id,
+               wl.date, wl.start_time, wl.end_time, wl.gym_id,
+               wd.id        AS detail_id,
+               wd.workout_id,
+               wd.title,
+               wd.`set`     AS set_col,
+               wd.rep,
+               wd.weight    AS detail_weight
+        FROM WORKOUT_LOG wl
+        LEFT JOIN WORKOUT_DETAIL wd ON wl.id = wd.workout_id
+        WHERE wl.member_id = #{clientId}
+        ORDER BY wl.date DESC, wl.id DESC, wd.id ASC
+    </select>
+
+    <!-- Summary list for the log picker (no heavy JOIN) -->
+    <select id="findLogsByClientId" parameterType="int" resultType="map">
+        SELECT wl.id                               AS id,
+               DATE_FORMAT(wl.date, '%Y-%m-%d')   AS date,
+               TIME_FORMAT(wl.start_time, '%H:%i') AS startTime,
+               TIME_FORMAT(wl.end_time,   '%H:%i') AS endTime,
+               COUNT(wd.id)                        AS exerciseCount
+        FROM WORKOUT_LOG wl
+        LEFT JOIN WORKOUT_DETAIL wd ON wd.workout_id = wl.id
+        WHERE wl.member_id = #{clientId}
+        GROUP BY wl.id, wl.date, wl.start_time, wl.end_time
+        ORDER BY wl.date DESC, wl.id DESC
+        LIMIT 10
+    </select>
+
+    <!-- Full log with all details -->
+    <select id="findLogById" parameterType="int" resultMap="workoutLogMap">
+        SELECT wl.id, wl.member_id, wl.session_id,
+               wl.date, wl.start_time, wl.end_time, wl.gym_id,
+               wd.id        AS detail_id,
+               wd.workout_id,
+               wd.title,
+               wd.`set`     AS set_col,
+               wd.rep,
+               wd.weight    AS detail_weight
+        FROM WORKOUT_LOG wl
+        LEFT JOIN WORKOUT_DETAIL wd ON wl.id = wd.workout_id
+        WHERE wl.id = #{logId}
+    </select>
+
+    <!-- Create new WORKOUT_LOG -->
+    <insert id="insertLog" parameterType="WorkoutLogDTO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO WORKOUT_LOG (member_id, session_id, date, start_time, end_time, gym_id)
+        VALUES (
+            #{memberId},
+            #{sessionId},
+            #{date},
+            #{startTime},
+            #{endTime},
+            <choose>
+                <when test="gymId > 0">#{gymId}</when>
+                <otherwise>NULL</otherwise>
+            </choose>
+        )
+    </insert>
+
+    <!-- Append one exercise to an existing log -->
+    <insert id="insertDetail" parameterType="WorkoutDetailDTO">
+        INSERT INTO WORKOUT_DETAIL (workout_id, title, `set`, rep, weight)
+        VALUES (#{workoutId}, #{title}, #{set}, #{rep}, #{weight})
+    </insert>
+
+    <!-- Resolve gym_id from the client's active membership with this trainer -->
+    <select id="findGymIdByClientAndTrainer" parameterType="map" resultType="Integer">
+        SELECT gym_id
+        FROM MEMBERSHIP_PT
+        WHERE member_id  = #{clientId}
+          AND trainer_id = #{trainerId}
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
+</mapper>

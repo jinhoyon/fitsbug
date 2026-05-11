@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.notification">
+    <select id="findRecentByUserAndMember" parameterType="map" resultType="NotificationDTO">
+        SELECT n.*,
+        CASE
+        WHEN TIMESTAMPDIFF(MINUTE, n.create_date, NOW()) &lt; 1 THEN '방금 전'
+        WHEN TIMESTAMPDIFF(MINUTE, n.create_date, NOW()) &lt; 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, n.create_date, NOW()), '분 전')
+        WHEN TIMESTAMPDIFF(HOUR,   n.create_date, NOW()) &lt; 24 THEN CONCAT(TIMESTAMPDIFF(HOUR,   n.create_date, NOW()), '시간 전')
+        WHEN TIMESTAMPDIFF(DAY,    n.create_date, NOW()) = 1    THEN '어제'
+        ELSE DATE_FORMAT(n.create_date, '%m/%d')
+        END AS create_date_label
+        FROM notification n
+        WHERE n.user_id = #{userId}
+        ORDER BY n.create_date DESC
+        LIMIT #{limit}
+    </select>
+
+    <update id="markAsRead" parameterType="map">
+        UPDATE notification
+        SET is_read = 1
+        WHERE notification_id = #{notificationId}
+          AND user_id = #{userId}
+    </update>
+
+    <update id="markAllAsRead" parameterType="map">
+        UPDATE notification
+        SET is_read = 1
+        WHERE user_id = #{userId}
+          AND is_read = 0
+    </update>
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.client">
+    <select id="selectClients" resultType="ClientDTO">
+        SELECT m.id AS clientId, u.nickname AS name, u.age,
+               u.profile_image AS profileImage,
+               m.goals, m.height, m.weight,
+               mpt.trainer_id, mpt.next_session, mpt.lesson_count, mpt.last_session, mpt.status
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        JOIN MEMBERSHIP_PT mpt ON mpt.id = (
+            SELECT id FROM MEMBERSHIP_PT
+            WHERE member_id = m.id AND trainer_id = #{trainerId}
+            ORDER BY id DESC LIMIT 1
+        )
+        WHERE u.is_deleted = 0
+        <if test="filter != null and filter != 'all'">
+            AND mpt.status = #{filter}
+        </if>
+        <if test="search != null and search != ''">
+            AND u.nickname LIKE CONCAT('%', #{search}, '%')
+        </if>
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countClients" resultType="int">
+        SELECT COUNT(*)
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        JOIN MEMBERSHIP_PT mpt ON mpt.id = (
+            SELECT id FROM MEMBERSHIP_PT
+            WHERE member_id = m.id AND trainer_id = #{trainerId}
+            ORDER BY id DESC LIMIT 1
+        )
+        WHERE u.is_deleted = 0
+        <if test="filter != null and filter != 'all'">
+            AND mpt.status = #{filter}
+        </if>
+        <if test="search != null and search != ''">
+            AND u.nickname LIKE CONCAT('%', #{search}, '%')
+        </if>
+    </select>
+
+    <select id="selectClientById" resultType="ClientDTO">
+        SELECT m.id AS clientId, u.nickname AS name, u.age, u.profile_image as profileImage,
+               m.goals, m.height, m.weight,
+               m.purpose, m.experience,
+               m.exerciseCount_goal AS exerciseCountGoal,
+               m.diet,
+               mpt.trainer_id, mpt.next_session, mpt.lesson_count, mpt.last_session, mpt.status
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        JOIN MEMBERSHIP_PT mpt ON mpt.id = (
+            SELECT id FROM MEMBERSHIP_PT WHERE member_id = m.id ORDER BY id DESC LIMIT 1
+        )
+        WHERE m.id = #{clientId}
+          AND u.is_deleted = 0
+    </select>
+
+</mapper>

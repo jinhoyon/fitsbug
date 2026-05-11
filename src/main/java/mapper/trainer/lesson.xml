@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lesson">
+    <select id="findLessonsByDate" parameterType="map" resultType="TrainerLessonDTO">
+        SELECT l.id AS lesson_id,
+               u.nickname AS member_name,
+               l.client_id,
+               l.status,
+               DATE_FORMAT(l.start_time, '%H:%i')              AS start_time,
+               DATE_FORMAT(l.end_time, '%H:%i')                AS end_time,
+               TIMESTAMPDIFF(MINUTE, l.start_time, l.end_time) AS duration_minutes,
+               DATE_FORMAT(l.lesson_date, '%Y-%m-%d')          AS lesson_date
+        FROM lesson l
+        JOIN member m ON l.client_id = m.id
+        JOIN USER u ON m.user_id = u.id
+        WHERE l.lesson_date = #{date}
+          AND EXISTS (
+              SELECT 1 FROM MEMBERSHIP_PT mpt
+              WHERE mpt.member_id = m.id AND mpt.trainer_id = #{trainerId}
+          )
+        ORDER BY l.start_time ASC
+    </select>
+
+    <select id="findLessonsByDateRange" parameterType="map" resultType="TrainerLessonDTO">
+        SELECT l.id AS lesson_id,
+               u.nickname AS member_name,
+               l.client_id,
+               l.status,
+               DATE_FORMAT(l.start_time, '%H:%i')              AS start_time,
+               DATE_FORMAT(l.end_time, '%H:%i')                AS end_time,
+               TIMESTAMPDIFF(MINUTE, l.start_time, l.end_time) AS duration_minutes,
+               DATE_FORMAT(l.lesson_date, '%Y-%m-%d')          AS lesson_date
+        FROM lesson l
+        JOIN member m ON l.client_id = m.id
+        JOIN USER u ON m.user_id = u.id
+        WHERE l.lesson_date BETWEEN #{startDate} AND #{endDate}
+          AND EXISTS (
+              SELECT 1 FROM MEMBERSHIP_PT mpt
+              WHERE mpt.member_id = m.id AND mpt.trainer_id = #{trainerId}
+          )
+        ORDER BY l.lesson_date ASC, l.start_time ASC
+    </select>
+
+    <insert id="insertLesson" parameterType="map">
+        INSERT INTO LESSON (trainer_id, client_id, lesson_date, start_time, end_time, status)
+        VALUES (#{trainerId}, #{clientId}, #{lessonDate}, #{startTime}, #{endTime}, '예약완료')
+    </insert>
+
+    <!-- Returns [{lesson_date: "YYYY-MM-DD", cnt: N}, ...] for month overview dots -->
+    <select id="findLessonCountsByMonth" parameterType="map" resultType="map">
+        SELECT DATE_FORMAT(l.lesson_date, '%Y-%m-%d') AS lesson_date,
+               COUNT(*)                               AS cnt
+        FROM lesson l
+        JOIN member m ON l.client_id = m.id
+        WHERE YEAR(l.lesson_date)  = #{year}
+          AND MONTH(l.lesson_date) = #{month}
+          AND EXISTS (
+              SELECT 1 FROM MEMBERSHIP_PT mpt
+              WHERE mpt.member_id = m.id AND mpt.trainer_id = #{trainerId}
+          )
+        GROUP BY l.lesson_date
+    </select>
+
+</mapper>

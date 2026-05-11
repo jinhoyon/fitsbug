@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="mapper.membership">
+
+    <resultMap type="dto.gym.Membership" id="membershipMap">
+        <id property="membershipNum" column="id"/>
+        <result property="gymNum" column="gym_id"/>
+        <result property="type" column="type"/>
+        <result property="typeRep" column="type_rep"/>
+        <result property="price" column="price"/>
+    </resultMap>
+    
+    <select id="selectMembershipByGym"
+        parameterType="int"
+        resultMap="membershipMap">
+    SELECT
+        id,
+        gym_id,
+        type,
+        type_rep,
+        price
+    FROM MEMBERSHIP
+    WHERE gym_id = #{value}
+      AND type IN ('day', 'month', 'pt')
+    ORDER BY
+        CASE
+            WHEN type = 'day' THEN 1
+            WHEN type = 'month' THEN 2
+            WHEN type = 'pt' THEN 3
+        END,
+        type_rep ASC
+</select>
+
+</mapper>

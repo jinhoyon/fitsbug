@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.MealLogMapper">
+
+    <!--
+        MEAL_LOG 테이블 실제 컬럼:
+        id, member_id, meal_date, meal, derscription(DB 오타),
+        totcalorie, meal_time, calories, protein, carbs, fat, image_url
+    -->
+
+    <resultMap id="mealResultMap" type="dto.member.MealLogDTO">
+        <id     property="id"          column="id"/>
+        <result property="memberId"    column="member_id"/>
+        <result property="mealDate"    column="meal_date"/>
+        <result property="meal"        column="meal"/>
+        <result property="description" column="derscription"/>
+        <result property="totCalorie"  column="totcalorie"/>
+        <result property="mealTime"    column="meal_time"/>
+        <result property="calories"    column="calories"/>
+        <result property="protein"     column="protein"/>
+        <result property="carbs"       column="carbs"/>
+        <result property="fat"         column="fat"/>
+        <result property="imageUrl"    column="image_url"/>
+    </resultMap>
+
+    <!-- 식단 저장 (전체 컬럼) -->
+    <insert id="insert" parameterType="dto.member.MealLogDTO">
+        INSERT INTO MEAL_LOG (
+            member_id, meal_date, meal, description,
+            totcalorie, meal_time, calories, protein, carbs, fat, image_url
+        ) VALUES (
+            #{memberId}, #{mealDate}, #{meal}, #{description},
+            #{totCalorie}, #{mealTime}, #{calories}, #{protein}, #{carbs}, #{fat}, #{imageUrl}
+        )
+    </insert>
+
+    <!-- MEMBER.id로 식단 조회 -->
+    <select id="findByMemberId" parameterType="int" resultMap="mealResultMap">
+        SELECT id, member_id, meal_date, meal, description,
+               totcalorie, meal_time, calories, protein, carbs, fat, image_url
+        FROM MEAL_LOG
+        WHERE member_id = #{memberId}
+        ORDER BY meal_date DESC, meal_time DESC
+    </select>
+
+    <!-- USER.email → MEMBER.id 경유 식단 조회 -->
+    <select id="findByEmail" parameterType="string" resultMap="mealResultMap">
+        SELECT ml.id, ml.member_id, ml.meal_date, ml.meal, ml.description,
+               ml.totcalorie, ml.meal_time, ml.calories, ml.protein,
+               ml.carbs, ml.fat, ml.image_url
+        FROM MEAL_LOG ml
+        JOIN MEMBER m ON ml.member_id = m.id
+        JOIN USER   u ON m.user_id    = u.id
+        WHERE u.email = #{email}
+          AND u.is_deleted = 0
+        ORDER BY ml.meal_date DESC, ml.meal_time DESC
+    </select>
+
+    <!-- 특정 날짜 식단 조회 -->
+    <select id="findByMemberIdAndDate" parameterType="map" resultMap="mealResultMap">
+        SELECT id, member_id, meal_date, meal, description,
+               totcalorie, meal_time, calories, protein, carbs, fat, image_url
+        FROM MEAL_LOG
+        WHERE member_id = #{memberId}
+          AND meal_date = #{mealDate}
+        ORDER BY meal_time ASC
+    </select>
+
+    <!-- 식단 수정 -->
+    <update id="update" parameterType="dto.member.MealLogDTO">
+        UPDATE MEAL_LOG SET
+            meal_date   = #{mealDate},
+            meal        = #{meal},
+            description = #{description},
+            totcalorie  = #{totCalorie},
+            meal_time   = #{mealTime},
+            calories    = #{calories},
+            protein     = #{protein},
+            carbs       = #{carbs},
+            fat         = #{fat},
+            image_url   = #{imageUrl}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 식단 삭제 -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM MEAL_LOG WHERE id = #{id}
+    </delete>
+
+</mapper>

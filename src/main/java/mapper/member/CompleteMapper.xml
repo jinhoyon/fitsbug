@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.CompleteMapper">
+
+    <!-- 오운완 게시글 작성 시 오늘 workout_log 기록 삽입 (중복 방지) -->
+    <insert id="insertLog" parameterType="string">
+        INSERT INTO workout_log (member_id, date)
+        SELECT m.id, CURDATE()
+        FROM member m
+        INNER JOIN user u ON m.user_id = u.id
+        WHERE u.email = #{userId}
+          AND NOT EXISTS (
+              SELECT 1 FROM workout_log wl2
+              WHERE wl2.member_id = m.id AND wl2.date = CURDATE()
+          )
+    </insert>
+
+    <select id="getWeekLog" parameterType="string" resultType="string">
+        SELECT DATE_FORMAT(wl.date, '%a') AS d
+        FROM workout_log wl
+        INNER JOIN member m ON wl.member_id = m.id
+        INNER JOIN user   u ON m.user_id    = u.id
+        WHERE u.email = #{userId}
+          AND YEARWEEK(wl.date, 1) = YEARWEEK(CURDATE(), 1)
+        GROUP BY wl.date
+    </select>
+
+    <select id="getStreak" parameterType="string" resultType="int">
+        SELECT COUNT(DISTINCT wl.date)
+        FROM workout_log wl
+        INNER JOIN member m ON wl.member_id = m.id
+        INNER JOIN user   u ON m.user_id    = u.id
+        WHERE u.email = #{userId}
+          AND wl.date >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+    </select>
+
+    <select id="getBestStreak" parameterType="string" resultType="int">
+        SELECT COUNT(DISTINCT wl.date)
+        FROM workout_log wl
+        INNER JOIN member m ON wl.member_id = m.id
+        INNER JOIN user   u ON m.user_id    = u.id
+        WHERE u.email = #{userId}
+    </select>
+
+</mapper>

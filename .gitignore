@@ -1,0 +1,12 @@
+# Mac
+.DS_Store
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# build/artifacts
+build/
+classes/
+out/
+target/

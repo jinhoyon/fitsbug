@@ -1,0 +1,15 @@
+package service.member;
+
+import java.util.List;
+import java.util.Map;
+
+import dto.member.TrainerDTO;
+import dto.trainer.AvailabilityDTO;
+
+public interface TrainerService {
+    List<TrainerDTO> getTrainerList(String keyword, String category, String sort);
+    
+    TrainerDTO getTrainerDetail(int trainerId);
+    List<AvailabilityDTO> getTrainerAvailabilityList(Integer trainerId);
+    Map<String,Object> getTrainerInfoByTrainerId(Integer trainerId);
+}

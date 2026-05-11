@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pricingAvailability">
+
+    <insert id="insertPricing" parameterType="dto.trainer.PricingDTO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO trainer_pricing (trainer_id, label, session_count, price, is_popular)
+        VALUES (#{trainerId}, #{label}, #{sessionCount}, #{price}, #{popular})
+    </insert>
+
+    <delete id="deletePricing" parameterType="int">
+        DELETE FROM trainer_pricing WHERE trainer_id = #{trainerId}
+    </delete>
+
+    <select id="findPricingByTrainerId" parameterType="int" resultType="dto.trainer.PricingDTO">
+        SELECT id,
+               trainer_id    AS trainerId,
+               label,
+               session_count AS sessionCount,
+               price,
+               is_popular    AS popular,
+               is_active     AS active
+        FROM trainer_pricing
+        WHERE trainer_id = #{trainerId}
+          AND is_active = 1
+        ORDER BY session_count ASC
+    </select>
+
+    <!-- ── AVAILABILITY ─────────────────────────────────────── -->
+
+    <insert id="insertAvailability" parameterType="dto.trainer.AvailabilityDTO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO trainer_availability (trainer_id, day_of_week, start_time, end_time)
+        VALUES (#{trainerId}, #{dayOfWeek}, #{startTime}, #{endTime})
+    </insert>
+
+    <delete id="deleteAvailability" parameterType="int">
+        DELETE FROM trainer_availability WHERE trainer_id = #{trainerId}
+    </delete>
+
+    <select id="findAvailabilityByTrainerId" parameterType="int" resultType="dto.trainer.AvailabilityDTO">
+        SELECT id,
+               trainer_id  AS trainerId,
+               day_of_week AS dayOfWeek,
+               start_time  AS startTime,
+               end_time    AS endTime,
+               is_active   AS active
+        FROM trainer_availability
+        WHERE trainer_id = #{trainerId}
+          AND is_active = 1
+        ORDER BY FIELD(day_of_week, 'MON','TUE','WED','THU','FRI','SAT','SUN')
+    </select>
+
+</mapper>

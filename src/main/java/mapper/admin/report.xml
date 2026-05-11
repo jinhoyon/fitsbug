@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.admin.report">
+	<select id="selectReportList" parameterType="map" resultType="report">
+        SELECT 
+			r.id as reportId,
+        	r.reporter_id as reporterId,
+        	u1.name as reporterName,
+        	r.target_id as targetId,
+        	r.post_id as postNum,
+        	r.category, r.title, r.content, r.file, r.result, r.status,
+        	r.reg_date as regDate,
+        	r.process_date as processDate 
+ 		FROM REPORT r
+ 		LEFT JOIN USER u1 on(r.reporter_id=u1.id)
+        WHERE 1=1
+        <if test="status == 'WAIT'"> AND status = 'WAIT' </if>
+        <if test="status == 'DONE'"> AND status IN ('REJECT', 'HIDE') </if>
+        <if test="keyword != null and keyword != ''">
+            AND (r.title LIKE CONCAT('%', #{keyword}, '%') OR r.content LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        ORDER BY r.reg_date DESC
+    </select>
+
+    <select id="selectReportDetail" parameterType="int" resultType="report">
+        SELECT 
+        	r.id as reportId,
+        	r.reporter_id as reporterId,
+        	u1.name as reporterName,
+        	r.target_id as targetId,
+        	u2.name as targetName,
+        	r.post_id as postNum,
+        	r.category, r.title, r.content, r.file, r.result, r.status,
+        	r.reg_date as regDate,
+        	r.process_date as processDate 
+        FROM REPORT r
+        LEFT JOIN USER u1 on(r.reporter_id=u1.id)
+        LEFT JOIN USER u2 on(r.target_id=u2.id)
+        WHERE r.id = #{reportId}
+    </select>
+
+    <update id="updateReportStatus" parameterType="report">
+        UPDATE REPORT 
+        SET status = #{status}, 
+            result = #{result}, 
+            process_date = NOW()
+        WHERE id = #{reportId}
+    </update>
+    
+    <select id="selectReportCnt" resultType="Integer">
+		select count(*) from report
+	</select>
+</mapper>

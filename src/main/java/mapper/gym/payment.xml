@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="mapper.payment">
+
+    <insert id="insertMembershipRegistration"
+            parameterType="dto.gym.MembershipRegistration"
+            useGeneratedKeys="true"
+            keyProperty="mrNum">
+        INSERT INTO MEMBERSHIP_PT (
+            member_id,
+            membership_id,
+            gym_id,
+            register_date,
+            start_date,
+            end_date,
+            status,
+            trainer_id,
+            next_session,
+            lesson_count,
+            last_session
+        ) VALUES (
+            #{memberNum},
+            #{membershipNum},
+            #{gymId},
+            CURDATE(),
+            #{startDate},
+            #{endDate},
+            #{status},
+            #{trainerId},
+            #{nextSession},
+            #{lessonCount},
+            #{lastSession}
+        )
+    </insert>
+
+    <insert id="insertPayment"
+            parameterType="dto.gym.Payment"
+            useGeneratedKeys="true"
+            keyProperty="paymentNum">
+        INSERT INTO PAYMENT (
+        user_id,
+        user_name,
+        membership_id,
+        mp_id,
+        gym_id,
+        order_id,
+        trainer_id,
+        payment_date,
+        payment_price,
+        payment_fee,
+        method,
+        status,
+        payment_type
+    ) VALUES (
+        #{userId},
+        #{userName},
+        #{membershipNum},
+        #{mrNum},
+        #{gymId},
+        #{orderId},
+        #{trainerId},
+        NOW(),
+        #{paymentPrice},
+        #{paymentFee},
+        #{method},
+        #{status},
+        #{paymentType}
+    )
+
+    </insert>
+
+    <select id="selectMembershipRegistration"
+            parameterType="int"
+            resultType="dto.gym.MembershipRegistration">
+        SELECT
+            id AS mrNum,
+            member_id AS memberNum,
+            membership_id AS membershipNum,
+            gym_id AS gymId,
+            register_date AS registerDate,
+            start_date AS startDate,
+            end_date AS endDate,
+            status,
+            trainer_id AS trainerId,
+            next_session AS nextSession,
+            lesson_count AS lessonCount,
+            last_session AS lastSession
+        FROM MEMBERSHIP_PT
+        WHERE id = #{value}
+    </select>
+
+    <select id="selectPayment"
+            parameterType="int"
+            resultType="dto.gym.Payment">
+        SELECT
+            id AS paymentNum,
+            user_id AS userId,
+            user_name AS userName,
+            membership_id AS membershipNum,
+            mp_id AS mrNum,
+            gym_id AS gymId,
+            order_id AS orderId,
+            trainer_id AS trainerId,
+            payment_date AS paymentDate,
+            payment_price AS paymentPrice,
+            payment_fee AS paymentFee,
+            method,
+            status,
+            payment_type AS paymentType,
+            canceled_at AS canceledAt,
+            reason
+        FROM PAYMENT
+        WHERE id = #{value}
+    </select>
+
+    <select id="selectMembership"
+            parameterType="int"
+            resultType="dto.gym.Membership">
+        SELECT
+            id AS membershipNum,
+            gym_id AS gymNum,
+            trainer_id AS trainerNum,
+            type,
+            type_rep AS typeRep,
+            price
+        FROM MEMBERSHIP
+        WHERE id = #{value}
+    </select>
+
+    <select id="selectRefundRequestList" parameterType="int" resultType="dto.gym.Payment">
+        SELECT
+            p.id AS paymentNum,
+            p.user_id AS userId,
+            p.user_name AS userName,
+            p.membership_id AS membershipNum,
+            p.payment_price AS paymentPrice,
+            p.method AS method,
+            p.status AS status,
+            p.reason AS reason,
+            p.payment_date AS paymentDate,
+            p.canceled_at AS canceledAt,
+            u.name AS memberName,
+            CONCAT(
+                CASE
+                    WHEN m.type = 'pt' THEN 'PT '
+                    WHEN m.type = 'day' THEN '1일 '
+                    WHEN m.type = 'month' THEN '헬스장 '
+                    ELSE ''
+                END,
+                m.type_rep,
+                CASE
+                    WHEN m.type = 'pt' THEN '회권'
+                    WHEN m.type = 'month' THEN '개월 이용권'
+                    WHEN m.type = 'day' THEN '이용권'
+                    ELSE ''
+                END
+            ) AS membershipName
+        FROM PAYMENT p
+        JOIN `USER` u ON p.user_id = u.id
+        JOIN MEMBERSHIP m ON p.membership_id = m.id
+        WHERE p.gym_id = #{value}
+          AND p.status = '환불요청'
+        ORDER BY p.payment_date DESC
+    </select>
+
+    <select id="countRefundRequest" parameterType="int" resultType="int">
+		SELECT COUNT(*)
+		FROM PAYMENT p
+		WHERE p.gym_id = #{value}
+  			AND p.status = '환불요청'
+    </select>
+
+    <update id="approveRefund" parameterType="map">
+        UPDATE PAYMENT
+		SET status = '환불완료',
+    		canceled_at = NOW()
+		WHERE id = #{paymentNum}
+  	   	 AND gym_id = #{gymId}
+ 		 AND status = '환불요청'
+    </update>
+
+    <update id="cancelPtSessionByPayment" parameterType="int">
+        UPDATE LESSON l
+    JOIN PAYMENT p
+      ON p.id = #{paymentNum}
+    JOIN MEMBERSHIP_PT mp
+      ON p.mp_id = mp.id
+    SET l.status = '취소'
+    WHERE l.trainer_id = mp.trainer_id
+      AND l.client_id = mp.member_id
+      AND l.status = '예약완료'
+    </update>
+    
+    <select id="selectPaymentByOrderId"
+        parameterType="string"
+        resultType="dto.gym.Payment">
+    SELECT
+        id AS paymentNum,
+        user_id AS userId,
+        user_name AS userName,
+        membership_id AS membershipNum,
+        mp_id AS mrNum,
+        gym_id AS gymId,
+        order_id AS orderId,
+        trainer_id AS trainerId,
+        payment_date AS paymentDate,
+        payment_price AS paymentPrice,
+        payment_fee AS paymentFee,
+        method,
+        status,
+        payment_type AS paymentType,
+        canceled_at AS canceledAt,
+        reason
+    FROM PAYMENT
+    WHERE order_id = #{value}
+</select>
+
+<update id="cancelPaymentByOrderId" parameterType="map">
+    UPDATE PAYMENT
+    SET
+        status = '취소완료',
+        canceled_at = NOW(),
+        reason = #{reason}
+    WHERE order_id = #{orderId}
+      AND status = '결제완료'
+</update>
+
+<update id="expireMembershipPtByOrderId" parameterType="string">
+    UPDATE MEMBERSHIP_PT mp
+    JOIN PAYMENT p
+      ON p.mp_id = mp.id
+    SET mp.status = 'expired'
+    WHERE p.order_id = #{value}
+</update>
+
+</mapper>

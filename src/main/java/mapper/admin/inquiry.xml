@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.admin.inquiry">
+	<select id="selectInquiryList" parameterType="map" resultType="inquiry">
+        SELECT 
+            i.id as inquiryId,
+            i.user_id as userId,
+            u.name as userName,
+            i.category,
+            i.title,
+            i.content,
+            i.file,
+            i.result,
+            i.status,
+            i.reg_date as regDate,
+            i.process_date as processDate 
+        FROM INQUIRY i
+        LEFT JOIN USER u ON (i.user_id = u.id)  <!-- 수정됨: i.id -> i.user_id -->
+        WHERE i.status = #{status}
+        <if test="keyword != null and keyword != ''">
+            <!-- MySQL/MariaDB 기준 CONCAT으로 수정 -->
+            AND (i.title LIKE CONCAT('%', #{keyword}, '%') OR u.name LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        ORDER BY i.reg_date DESC
+    </select>
+
+    <select id="selectInquiryDetail" parameterType="int" resultType="inquiry">
+        SELECT 
+			i.id as inquiryId,
+        	i.user_id as userId,
+        	u.name as userName,
+        	i.category,
+        	i.title,
+        	i.content,
+        	i.file,
+        	i.result,
+        	i.status,
+        	i.reg_date as regDate,
+        	i.process_date as processDate
+        FROM INQUIRY i
+        LEFT JOIN USER u ON (i.user_id = u.id)
+        WHERE i.id = #{inquiryId}
+    </select>
+
+    <update id="updateInquiryReply" parameterType="inquiry">
+        UPDATE INQUIRY 
+        SET result = #{result}, 
+            status = 'COMPLETE', 
+            process_date = NOW()
+        WHERE id = #{inquiryId}
+    </update>
+    
+    <select id="selectInquiryCnt" resultType="Integer">
+		select count(*) from inquiry
+	</select>
+</mapper>

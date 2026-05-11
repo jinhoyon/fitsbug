@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.admin.sales">
+    <!-- [1] 결제 및 매출 분석용 ResultMap -->
+    <resultMap id="PaymentResultMap" type="sales">
+        <id property="paymentNum" column="id"/> <!-- PAYMENT 테이블의 id -->
+        <result property="paymentDate" column="payment_date"/>
+        <result property="paymentPrice" column="payment_price"/>
+        <result property="paymentFee" column="payment_fee"/>
+        <result property="paymentStatus" column="status"/>
+        <result property="userNum" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="method" column="method"/>
+        <result property="canceledAt" column="canceled_at"/>
+        <result property="reason" column="reason"/>
+        <result property="tossPaymentKey" column="toss_payment_key"/>
+        <result property="tossOrderId" column="toss_order_id"/>
+        <!-- 조인 필드 -->
+        <result property="gymId" column="gym_id"/>
+        <result property="gymName" column="gym_name"/>
+        <result property="trainerId" column="trainer_id"/>
+        <result property="trainerName" column="trainer_name"/>
+    </resultMap>
+
+    <!-- [2] 정산 전용 ResultMap -->
+    <resultMap id="SettlementResultMap" type="sales">
+        <id property="settlementNum" column="id"/> <!-- SETTLEMENT 테이블의 id -->
+        <result property="targetNum" column="target_id"/>
+        <result property="targetType" column="target_type"/>
+        <result property="settlementMonth" column="settlement_month"/>
+        <result property="settlementDeadline" column="settlement_deadline"/>
+        <result property="totalSales" column="total_sales"/>
+        <result property="totalFee" column="total_fee"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="settlementStatus" column="status"/> <!-- 컬럼명이 status인 경우 -->
+        <result property="completedAt" column="completed_at"/>
+    </resultMap>
+
+	<!-- [추가] 대시보드 요약 -->
+    <select id="getSalesSummary" resultType="map">
+        SELECT 
+            IFNULL(SUM(payment_price), 0) as totalSales,
+            IFNULL(SUM(payment_fee), 0) as totalFee,
+            IFNULL(SUM(payment_price) - SUM(payment_fee), 0) as totalAmount
+        FROM PAYMENT
+        WHERE status = '결제완료' 
+        <if test="startDate != null and endDate != null">
+            AND payment_date BETWEEN #{startDate} AND #{endDate}
+        </if>
+    </select>
+    
+    <!-- [추가] 모달창용 정산 세부 내역 조회 (중요) -->
+    <!-- resultType="map"으로 설정하여 Service/Controller에서 Map 형태로 바로 받습니다. -->
+    <select id="selectSettlementDetail" resultType="map">
+        SELECT 
+            u.name AS memberName,
+            p.payment_date AS payDate,
+            p.payment_price AS payAmount,
+            p.payment_fee AS fee,
+            (p.payment_price - p.payment_fee) AS netAmount,
+            COALESCE(pa.bank_name, g.bank_name) AS bankName,
+        	COALESCE(pa.account_number, g.account_number) AS accountNum,
+        	CASE 
+            	WHEN (SELECT target_type FROM SETTLEMENT WHERE id = #{settlementId}) = 'GYM' THEN g.name
+            	ELSE tu.name 
+        	END AS ownerName
+        FROM PAYMENT p
+    	JOIN USER u ON p.user_id = u.id
+    	LEFT JOIN GYM g ON p.gym_id = g.id
+    	LEFT JOIN TRAINER t ON p.trainer_id = t.id
+    	LEFT JOIN USER tu ON t.user_id = tu.id 
+    	LEFT JOIN PAYOUT_ACCOUNT pa ON t.id = pa.trainer_id
+        WHERE p.status = '결제완료'
+    	<!-- 1. 해당 정산의 대상(헬스장 or 트레이너) 필터링 -->
+    	AND (
+        	CASE 
+            	WHEN (SELECT target_type FROM SETTLEMENT WHERE id = #{settlementId}) = 'GYM' 
+            	THEN p.gym_id
+            	ELSE p.trainer_id 
+        	END
+    	) = (SELECT target_id FROM SETTLEMENT WHERE id = #{settlementId})
+    
+    	<!-- 2. 해당 정산의 월(Month) 필터링 -->
+    	AND DATE_FORMAT(p.payment_date, '%Y-%m') = (SELECT settlement_month FROM SETTLEMENT WHERE id = #{settlementId})
+    
+    	ORDER BY p.payment_date DESC
+    </select>
+    <!-- [섹션 1] 정산 상세 내역 조회 (SettlementResultMap 사용) -->
+    <select id="selectSettlementList" resultMap="SettlementResultMap">
+        SELECT 
+        	s.*,
+        	(SELECT IFNULL(SUM(payment_price), 0) 
+         	FROM PAYMENT p 
+         	WHERE p.status = '결제완료' 
+           	AND (CASE WHEN s.target_type = 'GYM' THEN p.gym_id ELSE p.trainer_id END) = s.target_id
+           	AND DATE_FORMAT(p.payment_date, '%Y-%m') = s.settlement_month
+        	) as total_sales,
+        	(SELECT IFNULL(SUM(payment_fee), 0) 
+         	FROM PAYMENT p 
+         	WHERE p.status = '결제완료' 
+           	AND (CASE WHEN s.target_type = 'GYM' THEN p.gym_id ELSE p.trainer_id END) = s.target_id
+           	AND DATE_FORMAT(p.payment_date, '%Y-%m') = s.settlement_month
+        	) as total_fee,
+        	(SELECT IFNULL(SUM(payment_price) - SUM(payment_fee), 0) 
+         	FROM PAYMENT p 
+         	WHERE p.status = '결제완료' 
+            AND (CASE WHEN s.target_type = 'GYM' THEN p.gym_id ELSE p.trainer_id END) = s.target_id
+            AND DATE_FORMAT(p.payment_date, '%Y-%m') = s.settlement_month
+        	) as total_amount
+    	FROM SETTLEMENT s
+        <where>
+            <if test="status != null and status != ''">
+                AND s.status = #{status}
+            </if>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND (s.target_id LIKE CONCAT('%', #{searchKeyword}, '%')) 
+            </if>
+        </where>
+        ORDER BY s.settlement_deadline ASC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="selectSettlementCount" resultType="int">
+		SELECT COUNT(*) FROM SETTLEMENT s
+		<where>
+			<if test="status != null and status != ''">
+				AND s.status = #{status}
+			</if>
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND (s.target_id LIKE CONCAT('%', #{searchKeyword}, '%'))
+			</if>
+		</where>
+	</select>
+	<!-- [추가] 정산 상태 업데이트 -->
+    <update id="updateSettlementStatus">
+        UPDATE SETTLEMENT 
+        SET status = '정산완료', 
+            completed_at = NOW() 
+        WHERE id = #{id}
+    </update>
+    
+    <!-- [섹션 2] 매출 상세 내역 조회 (PaymentResultMap 사용) -->
+    <select id="selectSalesList" resultMap="PaymentResultMap">
+        SELECT 
+            p.id, p.payment_date, p.payment_price, p.payment_fee, (p.payment_price-p.payment_fee) as payment_amount,
+            p.gym_id, g.name as gym_name, 
+            p.trainer_id, u.name as trainer_name
+        FROM PAYMENT p
+        LEFT JOIN GYM g ON p.gym_id = g.id
+        LEFT JOIN TRAINER t ON p.trainer_id = t.id
+        LEFT JOIN USER u ON t.user_id = u.id
+        WHERE p.status = '결제완료'
+        <if test="startDate != null and endDate != null">
+            AND p.payment_date BETWEEN #{startDate} AND #{endDate}
+        </if>
+        <if test="viewType == 'gym'">
+    		AND p.gym_id IS NOT NULL AND p.trainer_id IS NULL
+		</if>
+		<if test="viewType == 'trainer'">
+    		AND p.trainer_id IS NOT NULL
+		</if>
+        <if test="salesSearch != null and salesSearch != ''">
+            AND (g.name LIKE CONCAT('%', #{salesSearch}, '%') OR u.name LIKE CONCAT('%', #{salesSearch}, '%'))
+        </if>
+        ORDER BY p.payment_date DESC
+        LIMIT #{pageSize} OFFSET #{salesOffset}
+    </select>  
+    <!-- [추가] 매출 내역 총 개수 -->
+    <select id="selectSalesCount" resultType="int">
+        SELECT COUNT(*)
+        FROM PAYMENT p
+        LEFT JOIN GYM g ON p.gym_id = g.id
+        LEFT JOIN USER u ON p.user_id = u.id
+        WHERE p.status = '결제완료'
+        <if test="startDate != null and endDate != null">
+            AND p.payment_date BETWEEN #{startDate} AND #{endDate}
+        </if>
+        <if test="viewType == 'gym'">
+    		AND p.gym_id IS NOT NULL AND p.trainer_id IS NULL
+		</if>
+		<if test="viewType == 'trainer'">
+    		AND p.trainer_id IS NOT NULL
+		</if>
+        <if test="salesSearch != null and salesSearch != ''">
+            AND (g.name LIKE CONCAT('%', #{salesSearch}, '%') OR u.name LIKE CONCAT('%', #{salesSearch}, '%'))
+        </if>
+    </select>
+
+    <!-- [섹션 3] 결제 내역 조회 (PaymentResultMap 사용) -->
+    <select id="selectPaymentHistory" resultMap="PaymentResultMap">
+        SELECT p.*, u.name as user_name 
+        FROM PAYMENT p
+        LEFT JOIN USER u ON p.user_id = u.id
+        <where>
+        <!-- 1. 날짜 필터 (매출 내역과 동일하게 추가) -->
+        <if test="startDate != null and endDate != null">
+            AND p.payment_date BETWEEN #{startDate} AND #{endDate}
+        </if>
+        <!-- 2. 상태 필터 (매출 내역처럼 '전체'가 아닐 때만 작동) -->
+        <if test="status != null and status != '전체' and status != ''">
+            AND p.status = #{status}
+        </if>
+        <!-- 3. 검색어 (매출 내역처럼 괄호로 감싸서 논리 오류 방지) -->
+        <if test="paymentSearch != null and paymentSearch != ''">
+            AND (u.name LIKE CONCAT('%', #{paymentSearch}, '%') OR p.id LIKE CONCAT('%', #{paymentSearch}, '%'))
+        </if>
+    </where>
+    ORDER BY p.payment_date DESC
+    LIMIT #{pageSize} OFFSET #{paymentOffset}
+    </select>
+    <!-- [추가] 결제 내역 총 개수 -->
+    <select id="selectPaymentCount" resultType="int">
+        SELECT COUNT(*)
+        FROM PAYMENT p
+        LEFT JOIN USER u ON p.user_id = u.id
+        <where>
+        <if test="startDate != null and endDate != null">
+            AND p.payment_date BETWEEN #{startDate} AND #{endDate}
+        </if>
+        <if test="status != null and status != '전체' and status != ''">
+            AND p.status = #{status}
+        </if>
+        <if test="paymentSearch != null and paymentSearch != ''">
+            AND (u.name LIKE CONCAT('%', #{paymentSearch}, '%') OR p.id LIKE CONCAT('%', #{paymentSearch}, '%'))
+        </if>
+    </where>
+    </select>   
+</mapper>

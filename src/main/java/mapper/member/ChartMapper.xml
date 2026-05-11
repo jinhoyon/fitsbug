@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.ChartMapper">
+
+    <!-- 운동 볼륨 차트 (날짜별 weight*rep*set 합계) -->
+    <select id="getWorkoutChart" parameterType="string" resultType="dto.member.ChartDTO">
+        SELECT
+            DATE(wl.date)               AS date,
+            SUM(wd.weight * wd.rep * wd.`set`) AS value
+        FROM WORKOUT_LOG wl
+        JOIN WORKOUT_DETAIL wd ON wl.id = wd.workout_id
+        JOIN MEMBER m          ON wl.member_id = m.id
+        JOIN USER   u          ON m.user_id    = u.id
+        WHERE u.email = #{email}
+          AND u.is_deleted = 0
+        GROUP BY DATE(wl.date)
+        ORDER BY date ASC
+    </select>
+
+    <!-- 식단 칼로리 차트 (날짜별 totcalorie) -->
+    <select id="getFoodChart" parameterType="string" resultType="dto.member.ChartDTO">
+        SELECT
+            meal_date               AS date,
+            SUM(totcalorie)         AS calorie
+        FROM MEAL_LOG ml
+        JOIN MEMBER m ON ml.member_id = m.id
+        JOIN USER   u ON m.user_id    = u.id
+        WHERE u.email = #{email}
+          AND u.is_deleted = 0
+        GROUP BY meal_date
+        ORDER BY meal_date ASC
+    </select>
+
+    <!-- 인바디 차트 (날짜별 weight/muscle_mass/body_fat) -->
+    <select id="getInbodyChart" parameterType="string" resultType="dto.member.ChartDTO">
+        SELECT
+            il.record_date  AS date,
+            il.weight       AS weight,
+            il.muscle_mass  AS muscle,
+            il.body_fat     AS fat
+        FROM INBODY_LOG il
+        JOIN MEMBER m ON il.member_id = m.id
+        JOIN USER   u ON m.user_id    = u.id
+        WHERE u.email = #{email}
+          AND u.is_deleted = 0
+        ORDER BY il.record_date ASC
+    </select>
+
+</mapper>

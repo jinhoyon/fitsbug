@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="mapper.review">
+
+    <resultMap type="dto.gym.Review" id="reviewMap">
+        <id property="reviewNum" column="id"/>
+        <result property="gymId" column="gym_id"/>
+        <result property="clientId" column="client_id"/>
+        <result property="clientName" column="client_name"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="rating" column="rating"/>
+        <result property="comment" column="comment"/>
+        <result property="file" column="file"/>
+    </resultMap>
+    
+    <select id="selectRecentReviewByGym" parameterType="int" resultMap="reviewMap">
+        SELECT
+            r.id,
+            r.gym_id,
+            r.client_id,
+            u.name AS client_name,
+            r.rating,
+            r.comment,
+            r.created_at
+        FROM REVIEW_GYM r
+        JOIN `USER` u
+          ON r.client_id = u.id
+        WHERE r.gym_id = #{value}
+        ORDER BY r.created_at DESC
+        LIMIT 4
+    </select>
+    
+    <!-- 리뷰 작성 -->
+    <insert id="insertReview" parameterType="dto.gym.Review">
+        INSERT INTO REVIEW_GYM (
+            gym_id,
+            client_id,
+            rating,
+            comment,
+            created_at
+        ) VALUES (
+            #{gymId},
+            #{clientId},
+            #{rating},
+            #{comment},
+            NOW()
+        )
+    </insert>
+    
+    <!-- 리뷰 단건 조회 -->
+    <select id="selectReviewByReviewNum" parameterType="int" resultMap="reviewMap">
+        SELECT 
+            r.id,
+            r.gym_id,
+            r.client_id,
+            u.name AS client_name,
+            r.rating,
+            r.comment,
+            r.created_at,
+            r.file
+        FROM REVIEW_GYM r
+        JOIN `USER` u
+          ON r.client_id = u.id
+        WHERE r.id = #{value}
+    </select>
+    
+    <!-- 리뷰 수정 -->
+    <update id="updateReview" parameterType="dto.gym.Review">
+        UPDATE REVIEW_GYM
+        SET 
+            rating = #{rating},
+            comment = #{comment}
+        WHERE id = #{reviewNum}
+    </update>
+    
+    <!-- 리뷰 삭제 -->
+    <delete id="deleteReview" parameterType="int">
+        DELETE FROM REVIEW_GYM
+        WHERE id = #{value}
+    </delete>
+    
+    <!-- 헬스장 리뷰 목록 -->
+    <select id="selectReviewListByGymId" parameterType="int" resultMap="reviewMap">
+        SELECT 
+            r.id,
+            r.gym_id,
+            r.client_id,
+            u.name AS client_name,
+            r.rating,
+            r.comment,
+            r.created_at,
+            r.file
+        FROM REVIEW_GYM r
+        JOIN `USER` u
+          ON r.client_id = u.id
+        WHERE r.gym_id = #{value}
+        ORDER BY r.created_at DESC
+    </select>
+
+</mapper>

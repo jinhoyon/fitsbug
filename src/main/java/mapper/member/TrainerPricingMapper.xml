@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.TrainerPricingMapper">
+
+    <resultMap id="pricingResultMap" type="dto.member.TrainerPricingDTO">
+        <id     property="id"           column="id"/>
+        <result property="trainerId"    column="trainer_id"/>
+        <result property="label"        column="label"/>
+        <result property="sessionCount" column="session_count"/>
+        <result property="price"        column="price"/>
+        <result property="popular"      column="is_popular"/>
+        <result property="active"       column="is_active"/>
+        <result property="createdAt"    column="created_at"/>
+    </resultMap>
+
+    <!-- 이용권 저장 -->
+    <insert id="insert" parameterType="dto.member.TrainerPricingDTO">
+        INSERT INTO trainer_pricing
+            (trainer_id, label, session_count, price, is_popular, is_active)
+        VALUES
+            (#{trainerId}, #{label}, #{sessionCount}, #{price}, #{popular}, #{active})
+    </insert>
+
+    <!-- trainer_id로 활성 이용권 목록 조회 -->
+    <select id="findByTrainerId" parameterType="int" resultMap="pricingResultMap">
+        SELECT id, trainer_id, label, session_count, price, is_popular, is_active, created_at
+        FROM trainer_pricing
+        WHERE trainer_id = #{trainerId}
+          AND is_active  = 1
+        ORDER BY session_count ASC
+    </select>
+
+    <!-- 이용권 비활성화 -->
+    <update id="deactivate" parameterType="int">
+        UPDATE trainer_pricing SET is_active = 0 WHERE id = #{id}
+    </update>
+
+    <!-- 이용권 수정 -->
+    <update id="update" parameterType="dto.member.TrainerPricingDTO">
+        UPDATE trainer_pricing SET
+            label         = #{label},
+            session_count = #{sessionCount},
+            price         = #{price},
+            is_popular    = #{popular}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

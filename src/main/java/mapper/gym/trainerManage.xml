@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.trainerManage">
+
+    <!-- 트레이너 목록 조회 -->
+    <select id="selectTrainerList"
+            parameterType="map"
+            resultType="dto.gym.TrainerList">
+        SELECT
+        t.id AS trainerId,
+        t.user_id AS userId,
+        u.name AS name,
+        u.phone AS phoneNum,
+        u.profile_image AS profileImg,
+        t.trainer_type AS trainerType,
+        t.approval_status AS approvalStatus,
+        (
+    COUNT(DISTINCT mp.member_id)
+    +
+    COUNT(DISTINCT CASE
+        WHEN l.client_id IS NOT NULL
+             AND mp2.member_id IS NULL
+        THEN l.client_id
+    END)
+) AS memberCount
+
+    FROM TRAINER t
+
+    JOIN `USER` u
+      ON t.user_id = u.id
+
+    LEFT JOIN MEMBERSHIP_PT mp
+      ON t.id = mp.trainer_id
+     AND mp.status = 'active'
+    LEFT JOIN LESSON l
+  ON l.trainer_id = t.id
+ AND l.status != '취소'
+
+LEFT JOIN MEMBERSHIP_PT mp2
+  ON mp2.member_id = l.client_id
+ AND mp2.trainer_id = l.trainer_id
+
+    WHERE t.gym_id = #{gymId}
+      AND t.approval_status = 'APPROVED'
+      AND u.is_deleted = false
+
+    <!-- 검색 -->
+    <if test="keyword != null and keyword != ''">
+        AND (
+            u.name LIKE CONCAT('%', #{keyword}, '%')
+            OR CAST(t.id AS CHAR) LIKE CONCAT('%', #{keyword}, '%')
+        )
+    </if>
+
+    GROUP BY
+        t.id,
+        t.user_id,
+        u.name,
+        u.phone,
+        u.profile_image,
+        t.trainer_type,
+        t.approval_status
+
+    ORDER BY t.id DESC
+
+    </select>
+
+    <!-- 현재 트레이너 회원 목록 -->
+    <select id="selectCurrentMembers"
+        parameterType="map"
+        resultType="dto.gym.TrainerMemberView">
+
+    SELECT
+        memberId,
+        memberName,
+        membershipName,
+        remainingSession,
+        startDate
+    FROM (
+        SELECT
+            m.id AS memberId,
+            u.name AS memberName,
+            CONCAT('PT ', ms.type_rep, '회') AS membershipName,
+            IFNULL(mp.lesson_count, 0) AS remainingSession,
+            DATE_FORMAT(mp.start_date, '%Y-%m-%d') AS startDate
+        FROM MEMBERSHIP_PT mp
+        JOIN TRAINER t ON mp.trainer_id = t.id
+        JOIN MEMBER m ON mp.member_id = m.id
+        JOIN `USER` u ON m.user_id = u.id
+        JOIN MEMBERSHIP ms ON mp.membership_id = ms.id
+        WHERE mp.trainer_id = #{trainerId}
+          AND t.gym_id = #{gymId}
+          AND mp.status = 'active'
+          AND ms.type = 'pt'
+
+        UNION ALL
+
+        SELECT
+            m.id AS memberId,
+            u.name AS memberName,
+            'PT 예약회원' AS membershipName,
+            0 AS remainingSession,
+            DATE_FORMAT(l.created_at, '%Y-%m-%d') AS startDate
+        FROM LESSON l
+        JOIN TRAINER t ON l.trainer_id = t.id
+        JOIN MEMBER m ON l.client_id = m.id
+        JOIN `USER` u ON m.user_id = u.id
+        WHERE l.trainer_id = #{trainerId}
+          AND t.gym_id = #{gymId}
+          AND l.status != '취소'
+          AND STR_TO_DATE(l.lesson_date, '%Y-%m-%d') >= CURDATE()
+          AND NOT EXISTS (
+              SELECT 1
+              FROM MEMBERSHIP_PT mp
+              WHERE mp.member_id = l.client_id
+                AND mp.trainer_id = l.trainer_id
+                AND mp.status = 'active'
+          )
+    ) x
+    ORDER BY startDate DESC
+
+</select>
+
+    <!-- 과거 트레이너 회원 목록 -->
+    <select id="selectPastMembers"
+        parameterType="map"
+        resultType="dto.gym.TrainerMemberView">
+
+    SELECT
+        memberId,
+        memberName,
+        membershipName,
+        remainingSession,
+        startDate
+    FROM (
+
+        SELECT
+            m.id AS memberId,
+            u.name AS memberName,
+            CONCAT('PT ', ms.type_rep, '회') AS membershipName,
+            IFNULL(mp.lesson_count, 0) AS remainingSession,
+            DATE_FORMAT(mp.start_date, '%Y-%m-%d') AS startDate
+        FROM MEMBERSHIP_PT mp
+        JOIN TRAINER t ON mp.trainer_id = t.id
+        JOIN MEMBER m ON mp.member_id = m.id
+        JOIN `USER` u ON m.user_id = u.id
+        JOIN MEMBERSHIP ms ON mp.membership_id = ms.id
+        WHERE mp.trainer_id = #{trainerId}
+          AND t.gym_id = #{gymId}
+          AND mp.status = 'expired'
+          AND ms.type = 'pt'
+
+        UNION ALL
+
+        SELECT
+            m.id AS memberId,
+            u.name AS memberName,
+            'PT 예약회원' AS membershipName,
+            0 AS remainingSession,
+            DATE_FORMAT(l.lesson_date, '%Y-%m-%d') AS startDate
+        FROM LESSON l
+        JOIN TRAINER t ON l.trainer_id = t.id
+        JOIN MEMBER m ON l.client_id = m.id
+        JOIN `USER` u ON m.user_id = u.id
+        WHERE l.trainer_id = #{trainerId}
+          AND t.gym_id = #{gymId}
+          AND l.status != '취소'
+          AND STR_TO_DATE(l.lesson_date, '%Y-%m-%d') &lt; CURDATE()
+          AND NOT EXISTS (
+              SELECT 1
+              FROM MEMBERSHIP_PT mp
+              WHERE mp.member_id = l.client_id
+                AND mp.trainer_id = l.trainer_id
+                AND mp.status = 'active'
+          )
+    ) x
+    ORDER BY startDate DESC
+
+</select>
+
+<select id="selectTrainerAssignList"
+        parameterType="int"
+        resultType="dto.gym.TrainerAssign">
+
+    SELECT
+        trainerName,
+        memberName,
+        assignedAt,
+        membershipName,
+        remainingCount,
+        status
+    FROM (
+        SELECT
+            tu.name AS trainerName,
+            mu.name AS memberName,
+            mp.register_date AS assignedAt,
+            CONCAT('PT ', IFNULL(ms.type_rep, 0), '회') AS membershipName,
+            IFNULL(mp.lesson_count, 0) AS remainingCount,
+            CASE
+                WHEN mp.status = 'active' THEN '이용중'
+                ELSE '종료'
+            END AS status
+        FROM MEMBERSHIP_PT mp
+        JOIN TRAINER t ON mp.trainer_id = t.id
+        JOIN `USER` tu ON t.user_id = tu.id
+        JOIN MEMBER m ON mp.member_id = m.id
+        JOIN `USER` mu ON m.user_id = mu.id
+        LEFT JOIN MEMBERSHIP ms ON mp.membership_id = ms.id
+        WHERE t.gym_id = #{value}
+
+        UNION ALL
+
+        SELECT
+            tu.name AS trainerName,
+            mu.name AS memberName,
+            l.created_at AS assignedAt,
+            'PT 예약회원' AS membershipName,
+            0 AS remainingCount,
+            '예약회원' AS status
+        FROM LESSON l
+        JOIN TRAINER t ON l.trainer_id = t.id
+        JOIN `USER` tu ON t.user_id = tu.id
+        JOIN MEMBER m ON l.client_id = m.id
+        JOIN `USER` mu ON m.user_id = mu.id
+        WHERE t.gym_id = #{value}
+          AND l.status != '취소'
+          AND NOT EXISTS (
+              SELECT 1
+              FROM MEMBERSHIP_PT mp
+              WHERE mp.member_id = l.client_id
+                AND mp.trainer_id = l.trainer_id
+          )
+    ) x
+    ORDER BY assignedAt DESC
+
+</select>
+
+</mapper>

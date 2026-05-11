@@ -1,0 +1,896 @@
+/* ===================================================
+   핏츠버그(Fitsbug) 전체 통합 스타일
+   =================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+
+/* ─── CSS 변수 ─── */
+:root {
+  /* 핏불 브랜드 컬러 (오렌지 + 틸) */
+  --fb-orange:        #FF6B35;
+  --fb-orange-light:  #FF8C5A;
+  --fb-orange-deep:   #E8521E;
+  --fb-teal:          #00BFA5;
+  --fb-teal-light:    #26D4BB;
+  --fb-teal-deep:     #00897B;
+
+  /* 보조 컬러 */
+  --fb-sky:           #E8F8F6;
+  --fb-peach:         #FFF3EE;
+  --fb-yellow:        #FFD166;
+
+  /* 중성 컬러 */
+  --fb-white:         #FFFFFF;
+  --fb-bg:            #F7F9FC;
+  --fb-surface:       #FFFFFF;
+  --fb-card:          #FFFFFF;
+  --fb-border:        #E8EDF5;
+  --fb-text-primary:  #1A1F36;
+  --fb-text-secondary:#5A6480;
+  --fb-text-muted:    #9DA8C0;
+
+  /* 사이드바 */
+  --sidebar-bg:       #FFFFFF;
+  --sidebar-w:        260px;
+
+  /* 그림자 */
+  --shadow-sm:        0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md:        0 4px 20px rgba(0,0,0,0.10);
+  --shadow-lg:        0 8px 32px rgba(0,0,0,0.12);
+  --shadow-orange:    0 4px 20px rgba(255,107,53,0.25);
+  --shadow-teal:      0 4px 20px rgba(0,191,165,0.25);
+
+  /* 라운드 */
+  --radius-sm:        8px;
+  --radius-md:        14px;
+  --radius-lg:        20px;
+  --radius-xl:        28px;
+  --radius-full:      9999px;
+}
+
+/* ─── 기본 리셋 ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; }
+
+body {
+  font-family: 'Noto Sans KR', 'Nunito', sans-serif;
+  background: var(--fb-bg);
+  color: var(--fb-text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ─── 스크롤바 커스텀 ─── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--fb-bg); }
+::-webkit-scrollbar-thumb { background: var(--fb-teal-light); border-radius: 99px; }
+
+/* ===================================================
+   사이드바
+   =================================================== */
+.fb-sidebar {
+  position: fixed;
+  left: 0; top: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--sidebar-bg);
+  border-right: 2px solid var(--fb-border);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  z-index: 100;
+  overflow-y: auto;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.05);
+}
+
+/* 로고 영역 */
+.fb-sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding: 0 8px;
+}
+
+.fb-sidebar-logo img {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+}
+
+.fb-sidebar-logo-text {
+  font-family: 'Nunito', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--fb-orange), var(--fb-teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+/* 프로필 카드 */
+.fb-sidebar-profile {
+  background: linear-gradient(135deg, var(--fb-peach), #fff);
+  border: 1.5px solid rgba(255,107,53,0.15);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fb-sidebar-profile img {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-full);
+  border: 2.5px solid var(--fb-orange);
+  object-fit: cover;
+}
+
+.fb-sidebar-profile-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--fb-text-primary);
+}
+
+.fb-sidebar-profile-email {
+  font-size: 12px;
+  color: var(--fb-text-muted);
+  margin-top: 1px;
+}
+
+.fb-sidebar-profile-badge {
+  font-size: 11px;
+  color: var(--fb-teal-deep);
+  background: var(--fb-sky);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  margin-top: 4px;
+  display: inline-block;
+  font-weight: 600;
+}
+
+/* 네비 메뉴 */
+.fb-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+
+.fb-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  color: var(--fb-text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.fb-nav-item:hover {
+  background: var(--fb-peach);
+  color: var(--fb-orange);
+  transform: translateX(3px);
+}
+
+.fb-nav-item.active {
+  background: linear-gradient(135deg, var(--fb-orange), var(--fb-orange-light));
+  color: white;
+  box-shadow: var(--shadow-orange);
+}
+
+.fb-nav-item .material-symbols-outlined {
+  font-size: 21px;
+}
+
+/* 사이드바 하단 */
+.fb-sidebar-bottom {
+  border-top: 1.5px solid var(--fb-border);
+  padding-top: 16px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ===================================================
+   버튼 시스템
+   =================================================== */
+.fb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: var(--radius-full);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.fb-btn-primary {
+  background: linear-gradient(135deg, var(--fb-orange), var(--fb-orange-light));
+  color: white;
+  box-shadow: var(--shadow-orange);
+}
+.fb-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(255,107,53,0.35);
+}
+
+.fb-btn-teal {
+  background: linear-gradient(135deg, var(--fb-teal), var(--fb-teal-light));
+  color: white;
+  box-shadow: var(--shadow-teal);
+}
+.fb-btn-teal:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0,191,165,0.35);
+}
+
+.fb-btn-outline {
+  background: white;
+  color: var(--fb-orange);
+  border: 2px solid var(--fb-orange);
+}
+.fb-btn-outline:hover {
+  background: var(--fb-peach);
+  transform: translateY(-1px);
+}
+
+.fb-btn-ghost {
+  background: transparent;
+  color: var(--fb-text-secondary);
+  border: 1.5px solid var(--fb-border);
+}
+.fb-btn-ghost:hover {
+  background: var(--fb-bg);
+  border-color: var(--fb-teal);
+  color: var(--fb-teal);
+}
+
+.fb-btn-sm { padding: 7px 16px; font-size: 13px; }
+.fb-btn-lg { padding: 14px 32px; font-size: 16px; }
+.fb-btn-full { width: 100%; }
+
+/* ===================================================
+   카드
+   =================================================== */
+.fb-card {
+  background: var(--fb-card);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1.5px solid var(--fb-border);
+  transition: box-shadow 0.2s;
+}
+
+.fb-card:hover { box-shadow: var(--shadow-md); }
+
+.fb-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--fb-text-primary);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 그라디언트 카드 */
+.fb-card-orange {
+  background: linear-gradient(135deg, var(--fb-orange) 0%, var(--fb-orange-light) 100%);
+  color: white;
+  border: none;
+}
+
+.fb-card-teal {
+  background: linear-gradient(135deg, var(--fb-teal) 0%, var(--fb-teal-light) 100%);
+  color: white;
+  border: none;
+}
+
+/* ===================================================
+   배지 / 태그
+   =================================================== */
+.fb-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.fb-badge-owun {
+  background: linear-gradient(135deg, var(--fb-orange), var(--fb-yellow));
+  color: white;
+}
+
+.fb-badge-free {
+  background: var(--fb-sky);
+  color: var(--fb-teal-deep);
+}
+
+.fb-badge-teal {
+  background: var(--fb-sky);
+  color: var(--fb-teal-deep);
+}
+
+/* ===================================================
+   폼 인풋
+   =================================================== */
+.fb-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--fb-border);
+  background: var(--fb-bg);
+  color: var(--fb-text-primary);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.fb-input:focus {
+  border-color: var(--fb-orange);
+  box-shadow: 0 0 0 3px rgba(255,107,53,0.12);
+  background: white;
+}
+
+.fb-input::placeholder { color: var(--fb-text-muted); }
+
+.fb-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fb-text-secondary);
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* ===================================================
+   모달
+   =================================================== */
+.fb-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26,31,54,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.fb-modal {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: var(--shadow-lg);
+  animation: fb-modal-in 0.3s ease;
+}
+
+@keyframes fb-modal-in {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.fb-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.fb-modal-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--fb-text-primary);
+}
+
+.fb-modal-close {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--fb-bg);
+  color: var(--fb-text-secondary);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  transition: background 0.2s;
+}
+.fb-modal-close:hover { background: #fee2e2; color: #ef4444; }
+
+/* ===================================================
+   레이아웃
+   =================================================== */
+.fb-main-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.fb-content {
+  flex: 1;
+  margin-left: var(--sidebar-w);
+  padding: 32px 36px;
+  max-width: calc(100vw - var(--sidebar-w));
+}
+
+.fb-page-header {
+  margin-bottom: 28px;
+}
+
+.fb-page-title {
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--fb-text-primary);
+  letter-spacing: -0.5px;
+}
+
+.fb-page-subtitle {
+  font-size: 14px;
+  color: var(--fb-text-muted);
+  margin-top: 4px;
+}
+
+/* ===================================================
+   핏불 마스코트 따봉 애니메이션
+   =================================================== */
+#fitbull-cheer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 40px;
+}
+
+#fitbull-cheer-char {
+  transform: translateY(200px) scale(0.5);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.175,0.885,0.32,1.275),
+              opacity 0.4s ease;
+  position: relative;
+}
+
+#fitbull-cheer-char.show {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+#fitbull-cheer-char svg {
+  width: 140px;
+  height: 140px;
+  filter: drop-shadow(0 8px 24px rgba(255,107,53,0.35));
+}
+
+.fb-cheer-bubble {
+  position: absolute;
+  top: -60px;
+  right: -10px;
+  background: linear-gradient(135deg, var(--fb-orange), var(--fb-yellow));
+  color: white;
+  font-weight: 900;
+  font-size: 16px;
+  padding: 8px 16px;
+  border-radius: var(--radius-lg);
+  white-space: nowrap;
+  box-shadow: var(--shadow-orange);
+  animation: fb-bubble-bounce 0.5s ease 0.3s both;
+}
+
+.fb-cheer-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 20px;
+  width: 0; height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid var(--fb-orange-light);
+}
+
+@keyframes fb-bubble-bounce {
+  from { opacity: 0; transform: scale(0.5) translateY(-10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* 반짝이 파티클 */
+.fb-sparkle {
+  position: absolute;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  animation: fb-sparkle-anim 1s ease forwards;
+}
+
+@keyframes fb-sparkle-anim {
+  0%   { opacity: 1; transform: scale(1) translate(0,0); }
+  100% { opacity: 0; transform: scale(0) translate(var(--tx), var(--ty)); }
+}
+
+/* ===================================================
+   통계 카드
+   =================================================== */
+.fb-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.fb-stat-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  border: 1.5px solid var(--fb-border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.fb-stat-icon {
+  width: 50px; height: 50px;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.fb-stat-icon-orange { background: var(--fb-peach); }
+.fb-stat-icon-teal   { background: var(--fb-sky); }
+.fb-stat-icon-yellow { background: #FFF9E6; }
+
+.fb-stat-value {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--fb-text-primary);
+  line-height: 1.2;
+}
+
+.fb-stat-label {
+  font-size: 12px;
+  color: var(--fb-text-muted);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* ===================================================
+   탭 UI
+   =================================================== */
+.fb-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--fb-bg);
+  padding: 4px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--fb-border);
+  width: fit-content;
+  margin-bottom: 20px;
+}
+
+.fb-tab {
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--fb-text-secondary);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: all 0.2s;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.fb-tab.active {
+  background: white;
+  color: var(--fb-orange);
+  box-shadow: var(--shadow-sm);
+}
+
+.fb-tab:hover:not(.active) {
+  color: var(--fb-text-primary);
+}
+
+/* ===================================================
+   커뮤니티 포스트 카드
+   =================================================== */
+.fb-post-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1.5px solid var(--fb-border);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.fb-post-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ===================================================
+   채팅 UI
+   =================================================== */
+.fb-chat-bubble-me {
+  background: linear-gradient(135deg, var(--fb-orange), var(--fb-orange-light));
+  color: white;
+  border-radius: 18px 18px 4px 18px;
+  padding: 10px 16px;
+  font-size: 14px;
+  max-width: 70%;
+  align-self: flex-end;
+  box-shadow: var(--shadow-orange);
+}
+
+.fb-chat-bubble-other {
+  background: white;
+  color: var(--fb-text-primary);
+  border-radius: 18px 18px 18px 4px;
+  padding: 10px 16px;
+  font-size: 14px;
+  max-width: 70%;
+  align-self: flex-start;
+  border: 1.5px solid var(--fb-border);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ===================================================
+   스트릭 UI
+   =================================================== */
+.fb-streak-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.fb-streak-circle {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  transition: transform 0.2s;
+}
+
+.fb-streak-circle.done {
+  background: linear-gradient(135deg, var(--fb-orange), var(--fb-yellow));
+  color: white;
+  box-shadow: 0 2px 8px rgba(255,107,53,0.3);
+}
+
+.fb-streak-circle.today {
+  border: 2.5px solid var(--fb-orange);
+  color: var(--fb-orange);
+  background: var(--fb-peach);
+}
+
+.fb-streak-circle.empty {
+  background: var(--fb-bg);
+  border: 1.5px solid var(--fb-border);
+  color: var(--fb-text-muted);
+}
+
+.fb-streak-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fb-text-muted);
+}
+
+/* ===================================================
+   유틸리티
+   =================================================== */
+.fb-divider {
+  border: none;
+  border-top: 1.5px solid var(--fb-border);
+  margin: 16px 0;
+}
+
+.fb-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--fb-border);
+}
+
+.fb-avatar-sm { width: 32px; height: 32px; }
+.fb-avatar-lg { width: 56px; height: 56px; }
+
+/* 리액션 버튼 */
+.fb-reaction-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--fb-border);
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 600;
+  color: var(--fb-text-secondary);
+}
+
+.fb-reaction-btn:hover {
+  border-color: var(--fb-orange);
+  background: var(--fb-peach);
+  transform: scale(1.05);
+}
+
+.fb-reaction-btn.reacted {
+  background: var(--fb-peach);
+  border-color: var(--fb-orange);
+  color: var(--fb-orange);
+}
+
+/* 배경 패턴 (헬스 관련) */
+.fb-bg-pattern {
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(255,107,53,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0,191,165,0.04) 0%, transparent 50%);
+}
+
+/* 알림 뱃지 */
+.fb-badge-count {
+  position: absolute;
+  top: -4px; right: -4px;
+  width: 18px; height: 18px;
+  background: var(--fb-orange);
+  color: white;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid white;
+}
+
+/* 진행 게이지 */
+.fb-progress {
+  width: 100%;
+  height: 8px;
+  background: var(--fb-bg);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.fb-progress-bar {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--fb-orange), var(--fb-yellow));
+  transition: width 0.5s ease;
+}
+
+.fb-progress-bar-teal {
+  background: linear-gradient(90deg, var(--fb-teal), var(--fb-teal-light));
+}
+
+/* 핏불 로그인 카드 */
+.fb-auth-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 48px 44px;
+  box-shadow: var(--shadow-lg);
+  border: 1.5px solid var(--fb-border);
+  width: 100%;
+  max-width: 420px;
+}
+
+/* 그리드 */
+.fb-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.fb-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+/* 핏불 캐릭터 SVG 인라인 */
+.fb-mascot-inline {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* 토스트 알림 */
+.fb-toast {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  background: var(--fb-text-primary);
+  color: white;
+  padding: 14px 22px;
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.fb-toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* 헬스장 핫타임 배지 */
+.fb-hot-badge {
+  background: linear-gradient(135deg, #FF4D4D, var(--fb-orange));
+  color: white;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 채팅 입력 영역 */
+.fb-chat-input-area {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  padding: 16px;
+  border-top: 1.5px solid var(--fb-border);
+  background: white;
+}
+
+.fb-chat-input {
+  flex: 1;
+  padding: 12px 18px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--fb-border);
+  outline: none;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  transition: border-color 0.2s;
+  resize: none;
+}
+
+.fb-chat-input:focus {
+  border-color: var(--fb-orange);
+}
+
+/* ===================================================
+   페이지 진입 애니메이션
+   =================================================== */
+.fb-fade-in {
+  animation: fb-fade-in 0.5s ease both;
+}
+
+@keyframes fb-fade-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fb-fade-in-delay-1 { animation-delay: 0.1s; }
+.fb-fade-in-delay-2 { animation-delay: 0.2s; }
+.fb-fade-in-delay-3 { animation-delay: 0.3s; }
+
+/* 카드 hover 리프트 */
+.fb-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  transition: all 0.25s ease;
+}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="mapper.schedule">
+
+    <resultMap type="dto.gym.Schedule" id="scheduleMap">
+        <id property="gsNum" column="id"/>
+        <result property="gymNum" column="gym_id"/>
+        <result property="availableWeekdayStart" column="available_weekday_start"/>
+        <result property="availableWeekdayEnd" column="available_weekday_end"/>
+        <result property="availableWeekendStart" column="available_weekend_start"/>
+        <result property="availableWeekendEnd" column="available_weekend_end"/>
+    </resultMap>
+    
+    <select id="selectScheduleByGym"
+            parameterType="int"
+            resultMap="scheduleMap">
+        SELECT
+            id,
+            gym_id,
+            available_weekday_start,
+            available_weekday_end,
+            available_weekend_start,
+            available_weekend_end
+        FROM GYM_SCHEDULE
+        WHERE gym_id = #{value}
+    </select>
+    
+    <select id="selectPtSessionListByGymAndWeek"
+            parameterType="map"
+            resultType="dto.gym.PtSessionView">
+        SELECT
+            ps.id AS id,
+            ps.trainer_id AS trainerId,
+            t_user.name AS trainerName,
+            m_user.name AS clientName,
+            DATE_FORMAT(ps.start_time, '%H:%i') AS startTime,
+            HOUR(ps.start_time) AS startHour,
+            WEEKDAY(ps.lesson_date) + 1 AS dayOfWeek,
+            ps.status AS status
+        FROM LESSON ps
+        JOIN TRAINER t
+          ON ps.trainer_id = t.id
+        JOIN `USER` t_user
+          ON t.user_id = t_user.id
+        JOIN MEMBER m
+          ON ps.client_id = m.id
+        JOIN `USER` m_user
+          ON m.user_id = m_user.id
+        WHERE t.gym_id = #{gymId}
+          AND ps.lesson_date >= #{weekStart}
+          AND ps.lesson_date <![CDATA[<]]> #{weekEnd}
+          AND ps.status != '취소'
+        ORDER BY ps.lesson_date, ps.start_time
+    </select>
+    
+    <select id="selectTrainerListByGym"
+        parameterType="int"
+        resultType="dto.gym.TrainerChoose">
+    SELECT
+        t.id AS trainerId,
+        u.name AS trainerName
+    FROM TRAINER t
+    JOIN `USER` u
+      ON t.user_id = u.id
+    WHERE t.gym_id = #{value}
+      AND t.approval_status = 'APPROVED'
+    ORDER BY u.name
+    </select>
+
+</mapper>

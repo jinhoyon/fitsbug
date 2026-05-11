@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.trainer.message">
+
+    <!-- Room list for a trainer: one row per CHAT_ROOM, with partner info -->
+    <select id="getRoomList" parameterType="int" resultType="map">
+        SELECT
+            cr.id AS roomId,
+            CASE WHEN cr.user_one = #{myId} THEN cr.user_two ELSE cr.user_one END AS partnerId,
+            u.nickname       AS partnerNickname,
+            u.profile_image  AS partnerProfileImg,
+            (SELECT cm2.message FROM CHAT_MESSAGE cm2
+             WHERE cm2.room_id = cr.id
+             ORDER BY cm2.send_date DESC LIMIT 1) AS lastMessage,
+            DATE_FORMAT(
+                (SELECT cm3.send_date FROM CHAT_MESSAGE cm3
+                 WHERE cm3.room_id = cr.id
+                 ORDER BY cm3.send_date DESC LIMIT 1),
+                '%H:%i') AS lastTime,
+            SUM(CASE WHEN cm.sender_id != #{myId} AND cm.is_read = 0 THEN 1 ELSE 0 END) AS unreadCount
+        FROM CHAT_ROOM cr
+        JOIN `user` u ON u.id = CASE WHEN cr.user_one = #{myId} THEN cr.user_two ELSE cr.user_one END
+        LEFT JOIN CHAT_MESSAGE cm ON cm.room_id = cr.id
+        WHERE cr.user_one = #{myId} OR cr.user_two = #{myId}
+        GROUP BY cr.id, u.id, u.nickname, u.profile_image
+        ORDER BY MAX(cm.send_date) DESC
+    </select>
+
+    <!-- Find existing room between two users -->
+    <select id="findRoom" parameterType="map" resultType="int">
+        SELECT id FROM CHAT_ROOM
+        WHERE (user_one = #{userOne} AND user_two = #{userTwo})
+           OR (user_one = #{userTwo} AND user_two = #{userOne})
+        LIMIT 1
+    </select>
+
+    <!-- Create a new chat room -->
+    <insert id="createRoom" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO CHAT_ROOM (user_one, user_two, create_date)
+        VALUES (#{userOne}, #{userTwo}, NOW())
+    </insert>
+
+    <!-- Messages in a room with sender info -->
+    <select id="getChatMessages" parameterType="int" resultType="ChatMessageDTO">
+        SELECT
+            cm.id,
+            cm.room_id     AS roomId,
+            cm.sender_id   AS senderId,
+            cm.message,
+            cm.is_read     AS isRead,
+            DATE_FORMAT(cm.send_date, '%H:%i') AS sendDate,
+            u.nickname      AS senderNickname,
+            u.profile_image AS senderProfileImg
+        FROM CHAT_MESSAGE cm
+        JOIN `user` u ON u.id = cm.sender_id
+        WHERE cm.room_id = #{roomId}
+        ORDER BY cm.send_date ASC
+    </select>
+
+    <!-- Send a message -->
+    <insert id="sendMessage" parameterType="ChatMessageDTO">
+        INSERT INTO CHAT_MESSAGE (room_id, sender_id, message, is_read, send_date)
+        VALUES (#{roomId}, #{senderId}, #{message}, 0, NOW())
+    </insert>
+
+    <!-- Mark all messages in a room from the partner as read -->
+    <update id="markAsRead" parameterType="map">
+        UPDATE CHAT_MESSAGE
+        SET is_read = 1
+        WHERE room_id   = #{roomId}
+          AND sender_id != #{myId}
+          AND is_read    = 0
+    </update>
+
+    <!-- Total unread count across all rooms (for nav badge) -->
+    <select id="getUnreadCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM CHAT_MESSAGE cm
+        JOIN CHAT_ROOM cr ON cm.room_id = cr.id
+        WHERE (cr.user_one = #{myId} OR cr.user_two = #{myId})
+          AND cm.sender_id != #{myId}
+          AND cm.is_read = 0
+    </select>
+
+</mapper>

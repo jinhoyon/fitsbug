@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.MembershipMapper">
+    <resultMap id="membershipResultMap" type="dto.member.MembershipDTO">
+        <id     property="id"        column="id"/>
+        <result property="gymId"     column="gym_id"/>
+        <result property="trainerId" column="trainer_id"/>
+        <result property="type"      column="type"/>
+        <result property="typeRep"   column="type_rep"/>
+        <result property="price"     column="price"/>
+    </resultMap>
+
+    <resultMap id="registrationResultMap" type="dto.member.MembershipRegistrationDTO">
+        <id     property="id"           column="id"/>
+        <result property="memberId"     column="member_id"/>
+        <result property="membershipId" column="membership_id"/>
+        <result property="gymId"        column="gym_id"/>
+        <result property="registerDate" column="register_date"/>
+        <result property="startDate"    column="start_date"/>
+        <result property="endDate"      column="end_date"/>
+        <result property="status"       column="status"/>
+        <result property="trainerId"    column="trainer_id"/>
+        <result property="nextSession"  column="next_session"/>
+        <result property="lessonCount"  column="lesson_count"/>
+        <result property="lastSession"  column="last_session"/>
+    </resultMap>
+
+    <!-- MEMBERSHIP 조회 -->
+    <select id="findById" parameterType="int" resultMap="membershipResultMap">
+        SELECT id, gym_id, trainer_id, type, type_rep, price
+        FROM MEMBERSHIP WHERE id = #{id}
+    </select>
+
+    <!-- GYM별 이용권 목록 -->
+    <select id="findByGymId" parameterType="int" resultMap="membershipResultMap">
+        SELECT id, gym_id, trainer_id, type, type_rep, price
+        FROM MEMBERSHIP WHERE gym_id = #{gymId}
+    </select>
+
+    <!-- TRAINER별 이용권 목록 -->
+    <select id="findByTrainerId" parameterType="int" resultMap="membershipResultMap">
+        SELECT id, gym_id, trainer_id, type, type_rep, price
+        FROM MEMBERSHIP WHERE trainer_id = #{trainerId}
+    </select>
+
+    <!-- trainer_id + session 수(type_rep)로 MEMBERSHIP.id 조회 -->
+    <select id="findByTrainerAndCount" parameterType="map" resultType="int">
+        SELECT id FROM trainer_pricing
+        WHERE trainer_id = #{trainerId}
+          AND session_count= #{sessionCount}
+        LIMIT 1
+    </select>
+
+    <!-- MEMBERSHIP_PT 등록: gymId/trainerId nullable 처리 -->
+    <insert id="insertRegistration" parameterType="dto.member.MembershipRegistrationDTO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO MEMBERSHIP_PT (
+            member_id, membership_id, gym_id,
+            register_date, start_date, end_date,
+            status, trainer_id, lesson_count
+        ) VALUES (
+            #{memberId},
+            #{membershipId},
+            <choose>
+                <when test="gymId != null">#{gymId}</when>
+                <otherwise>NULL</otherwise>
+            </choose>,
+            #{registerDate}, #{startDate}, #{endDate},
+            #{status},
+            <choose>
+                <when test="trainerId != null">#{trainerId}</when>
+                <otherwise>NULL</otherwise>
+            </choose>,
+            #{lessonCount}
+        )
+    </insert>
+
+    <!-- MEMBER.id로 MEMBERSHIP_PT 목록 조회 -->
+    <select id="findRegistrationByMemberId" parameterType="int" resultMap="registrationResultMap">
+        SELECT id, member_id, membership_id, gym_id,
+               register_date, start_date, end_date, status,
+               trainer_id, next_session, lesson_count, last_session
+        FROM MEMBERSHIP_PT
+        WHERE member_id = #{memberId}
+        ORDER BY id DESC
+    </select>
+
+    <!-- 활성 MEMBERSHIP_PT 조회 (member_id 기준) -->
+    <select id="findActiveByMemberId" parameterType="int" resultMap="registrationResultMap">
+        SELECT id, member_id, membership_id, gym_id,
+               register_date, start_date, end_date, status,
+               trainer_id, next_session, lesson_count, last_session
+        FROM MEMBERSHIP_PT
+        WHERE member_id = #{memberId}
+          AND status = 'active'
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
+    <!-- 상태 업데이트 (expired 처리) -->
+    <update id="updateRegistrationStatus" parameterType="map">
+        UPDATE MEMBERSHIP_PT
+        SET status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <!-- lesson_count 차감 -->
+    <update id="decrementLessonCount" parameterType="int">
+        UPDATE MEMBERSHIP_PT
+        SET lesson_count = lesson_count - 1
+        WHERE id = #{id}
+          AND lesson_count > 0
+    </update>
+
+    <!-- lesson_count 증가 (PT 결제 후) -->
+    <update id="addLessonCount" parameterType="map">
+        UPDATE MEMBERSHIP_PT
+        SET lesson_count = lesson_count + #{sessionCount}
+        WHERE id = #{id}
+    </update>
+
+    <!-- next_session, last_session 업데이트 -->
+    <update id="updateSessionInfo" parameterType="map">
+        UPDATE MEMBERSHIP_PT
+        SET next_session = #{nextSession},
+            last_session = #{lastSession}
+        WHERE id = #{id}
+    </update>
+
+    <!-- trainer_id로 MEMBERSHIP_PT 목록 조회 -->
+    <select id="findRegistrationByTrainerId" parameterType="int" resultMap="registrationResultMap">
+        SELECT id, member_id, membership_id, gym_id,
+               register_date, start_date, end_date, status,
+               trainer_id, next_session, lesson_count, last_session
+        FROM MEMBERSHIP_PT
+        WHERE trainer_id = #{trainerId}
+        ORDER BY id DESC
+    </select>
+
+</mapper>

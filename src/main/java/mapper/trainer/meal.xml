@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.trainer.meal">
+
+    <!-- Fetch Single Day -->
+    <select id="selectMealsByDay" parameterType="map" resultType="dto.trainer.MealDTO">
+        SELECT
+            id as id,
+            member_id AS userId,
+            meal_time AS mealTime,
+            meal AS mealType,
+            description AS mealName,
+            image_url AS imageUrl,
+            calories,
+            protein,
+            carbs,
+            fat,
+            totcalorie,
+            meal_date AS mealDate
+        FROM meal_log
+        WHERE member_id = #{userId}
+          AND meal_date = #{date}
+    </select>
+
+    <!-- Fetch Range (Monday - Sunday) -->
+    <select id="selectMealsByWeek" parameterType="map" resultType="dto.trainer.MealDTO">
+        SELECT
+            id as id,
+            member_id AS userId,
+            meal_time AS mealTime,
+            meal AS mealType,
+            description AS mealName,
+            image_url AS imageUrl,
+            calories,
+            protein,
+            carbs,
+            fat,
+            totcalorie,
+            meal_date AS mealDate
+        FROM meal_log
+        WHERE member_id = #{userId}
+          AND meal_date BETWEEN #{monday} AND #{sunday}
+        ORDER BY meal_date
+    </select>
+
+</mapper>

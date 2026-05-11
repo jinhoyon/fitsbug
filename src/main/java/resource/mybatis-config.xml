@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+	PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+	<typeAliases>
+		<typeAlias type="dto.admin.MemberDTO" alias="member"/>
+		<typeAlias type="dto.admin.ExerciseDTO" alias="exercise"/>
+		<typeAlias type="dto.admin.ReportDTO" alias="report"/>
+		<typeAlias type="dto.admin.InquiryDTO" alias="inquiry"/>
+		<typeAlias type="dto.admin.SalesDTO" alias="sales"/>
+		<typeAlias type="dto.admin.AdminMainDTO" alias="adminMain"/>
+		<typeAlias type="dto.trainer.NotificationDTO" alias="notification"/>
+		<typeAlias type="dto.trainer.MealDTO" alias="meal"/>
+		<typeAlias alias="MemberDTO"        type="dto.member.MemberDTO"/>
+		<typeAlias alias="UserDTO"        	type="dto.member.UserDTO"/>
+		<typeAlias alias="GymDTO"     		type="dto.member.GymDTO"/>
+    	<typeAlias alias="WorkoutLogDTO" 	type="dto.member.WorkoutLogDTO"/>
+    	<typeAlias alias="WorkoutDetailDTO" type="dto.member.WorkoutDetailDTO"/>
+        <typeAlias alias="MealLogDTO"    	type="dto.member.MealLogDTO"/>
+        <typeAlias alias="InbodyLogDTO"  	type="dto.member.InbodyLogDTO"/>
+        <typeAlias alias="ExerciseGuideDTO" type="dto.member.ExerciseGuideDTO"/>
+		<typeAlias alias="ChartDTO"         type="dto.member.ChartDTO"/>
+        <typeAlias alias="PostDTO"          type="dto.member.PostDTO"/>
+        <typeAlias alias="MyPostDTO"  		type="dto.member.MyPostDTO"/>
+        <typeAlias alias="CommentDTO"       type="dto.member.CommentDTO"/>
+        <typeAlias alias="MessageDTO"       type="dto.member.MessageDTO"/>
+        <typeAlias alias="MessageRoomDTO"   type="dto.member.MessageRoomDTO"/>
+        <typeAlias alias="ChatRoomDTO"    	type="dto.member.ChatRoomDTO"/>
+		<typeAlias alias="ChatMessageDTO" 	type="dto.member.ChatMessageDTO"/>
+        <typeAlias alias="NotificationDTO"  type="dto.member.NotificationDTO"/>
+        <typeAlias alias="TossDTO"  		type="dto.member.TossDTO"/>
+        <typeAlias alias="PaymentDTO"       type="dto.member.PaymentDTO"/>
+        <typeAlias alias="PtFeedbackDTO"    type="dto.member.PtFeedbackDTO"/>
+        <typeAlias alias="ReportDTO"        type="dto.member.ReportDTO"/>
+        <typeAlias alias="MembershipDTO"             type="dto.member.MembershipDTO"/>
+		<typeAlias alias="MembershipRegistrationDTO" type="dto.member.MembershipRegistrationDTO"/>
+		<typeAlias alias="LessonDTO"                 type="dto.member.LessonDTO"/>
+        <typeAlias alias="ReservationDTO"   type="dto.member.ReservationDTO"/>
+        <typeAlias alias="InquiryDTO"  		type="dto.member.InquiryDTO"/>
+		<typeAlias alias="MyPageDTO"   		type="dto.member.MyPageDTO"/>        
+        <typeAlias alias="TrainerReviewDTO" type="dto.member.TrainerReviewDTO"/>
+		<typeAlias type="dto.trainer.UserDTO" alias="user"/>
+		<typeAlias type="dto.gym.Gym"  alias="gym"/>
+
+		<!-- Trainer Mapper Alias -->
+		<typeAlias type="dto.trainer.CertificationDTO"  alias="CertificationDTO"/>
+		<typeAlias type="dto.trainer.ClientDTO" alias="ClientDTO"/>
+		<typeAlias type="dto.trainer.LessonDTO" alias="TrainerLessonDTO"/>
+		<typeAlias type="dto.trainer.MealDTO" alias="MealDTO"/>
+		<typeAlias type="dto.trainer.NotificationDTO" alias="TrainerNotificationDTO"/>
+		<typeAlias type="dto.trainer.PayoutAccountDTO" alias="PayoutAccountDTO"/>
+		<typeAlias type="dto.trainer.PricingDTO" alias="PricingDTO"/>
+		<typeAlias type="dto.trainer.AvailabilityDTO" alias="AvailabilityDTO"/>
+		<typeAlias type="dto.trainer.TrainerDTO" alias="TrainerDTO"/>
+	</typeAliases>
+
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC"/>
+			<dataSource type="POOLED">
+				<property name="driver" value="org.mariadb.jdbc.Driver"/>
+				<property name="url" value="jdbc:mariadb://localhost:3306/fitsbug"/>
+				<property name="username" value="root"/>
+				<property name="password" value="7564"/>
+<!-- 				최대 활성 커넥션 수 : 동시에 사용할 수 있는 최대 커녁센 수-->
+				<property name="poolMaximumActiveConnections" value="500"/>
+<!-- 				최대 유효 커넥션 수 : 사용하지않고 대기 상태를 유지할 커넥선 개수-->
+				<property name="poolMaximumIdleConnections" value="500"/>
+			</dataSource>
+		</environment>
+	</environments>
+
+	<mappers>
+		<mapper resource="mapper/admin/member.xml"/>
+		<mapper resource="mapper/admin/exercise.xml"/>
+		<mapper resource="mapper/admin/report.xml"/>
+		<mapper resource="mapper/admin/inquiry.xml"/>
+		<mapper resource="mapper/admin/sales.xml"/>
+		<mapper resource="mapper/admin/adminMain.xml"/>
+
+		<mapper resource="mapper/gym/gymMain.xml"/>
+		<mapper resource="mapper/gym/gymNotice.xml"/>
+		<mapper resource="mapper/gym/gymTrainerView.xml"/>
+		<mapper resource="mapper/gym/membership.xml"/>
+		<mapper resource="mapper/gym/review.xml"/>
+		<mapper resource="mapper/gym/schedule.xml"/>
+		<mapper resource="mapper/gym/dashboard.xml"/>
+		<mapper resource="mapper/gym/memberManage.xml"/>
+		<mapper resource="mapper/gym/trainerManage.xml"/>
+		<mapper resource="mapper/gym/sales.xml"/>
+		<mapper resource="mapper/gym/infoEdit.xml"/>
+		<mapper resource="mapper/gym/payment.xml"/>
+		<mapper resource="mapper/gym/tossPayment.xml"/>
+		
+
+
+		<mapper resource="mapper/member/MemberMapper.xml"/>
+		<mapper resource="mapper/member/UserMapper.xml"/>
+ 		<mapper resource="mapper/member/GymMapper.xml"/>
+		<mapper resource="mapper/member/WorkoutLogMapper.xml"/>
+        <mapper resource="mapper/member/MealLogMapper.xml"/>
+        <mapper resource="mapper/member/InbodyLogMapper.xml"/>
+        <mapper resource="mapper/member/PostMapper.xml"/>
+        <mapper resource="mapper/member/PostReactionMapper.xml"/>
+        <mapper resource="mapper/member/ExerciseGuideMapper.xml"/>
+        <mapper resource="mapper/member/CommentMapper.xml"/>
+        <mapper resource="mapper/member/ChatMapper.xml"/>
+        <mapper resource="mapper/member/MessageMapper.xml"/>
+        <mapper resource="mapper/member/NotificationMapper.xml"/>
+        <mapper resource="mapper/member/PaymentMapper.xml"/>
+        <mapper resource="mapper/member/PtFeedbackMapper.xml"/>
+        <mapper resource="mapper/member/ReportMapper.xml"/>
+        <mapper resource="mapper/member/ReservationMapper.xml"/>
+        <mapper resource="mapper/member/MypageMapper.xml"/>
+        <mapper resource="mapper/member/InquiryMapper.xml"/>
+        <mapper resource="mapper/member/TrainerReviewMapper.xml"/>
+        <mapper resource="mapper/member/FeedbackMapper.xml"/>
+        <mapper resource="mapper/member/PtFeedbackMapper.xml"/>
+		<mapper resource="mapper/member/ChartMapper.xml"/>
+        <mapper resource="mapper/member/CompleteMapper.xml"/>
+        <mapper resource="mapper/member/MembershipMapper.xml"/>
+        <mapper resource="mapper/member/LessonMapper.xml"/>
+        <mapper resource="mapper/member/TossMapper.xml"/>
+		<mapper resource="mapper/member/TrainerMapper.xml"/>
+		<mapper resource="mapper/member/trainerListMapper.xml"/>
+		<mapper resource="mapper/member/TrainerPricingMapper.xml"/>
+		<mapper resource="mapper/member/TrainerSpecializationMapper.xml"/>
+		<mapper resource="mapper/member/TrainerTraitsMapper.xml"/>
+		<mapper resource="mapper/member/TrainerCertificationMapper.xml"/>
+		
+		<mapper resource="mapper/trainer/lesson.xml"/>
+		<mapper resource="mapper/trainer/notification.xml"/>
+		<mapper resource="mapper/trainer/client.xml"/>
+		<mapper resource="mapper/trainer/meal.xml"/>
+		<mapper resource="mapper/trainer/payment.xml"/>
+		<mapper resource="mapper/trainer/user.xml"/>
+		<mapper resource="mapper/trainer/trainer.xml"/>
+		<mapper resource="mapper/trainer/payout_account.xml"/>
+		<mapper resource="mapper/trainer/certification.xml"/>
+		<mapper resource="mapper/trainer/pricing_availability.xml"/>
+		<mapper resource="mapper/trainer/settlement.xml"/>
+		<mapper resource="mapper/trainer/workout.xml"/>
+		<mapper resource="mapper/trainer/message.xml"/>
+
+	</mappers>
+</configuration>

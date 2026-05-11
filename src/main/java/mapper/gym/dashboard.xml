@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.dashboard">
+
+    <select id="selectNewMemberCount" parameterType="map" resultType="int">
+        SELECT COUNT(DISTINCT m.id)
+		FROM MEMBER m
+		JOIN `USER` u ON m.user_id = u.id
+		JOIN MEMBERSHIP_PT mp ON mp.member_id = m.id
+		WHERE mp.gym_id = #{gymId}
+ 		 AND u.created_at >= DATE_FORMAT(NOW(), '%Y-%m-01')
+    </select>
+
+    <select id="selectTodayScheduleList" parameterType="map" resultType="dto.gym.TodayPtSchedule">
+    SELECT
+        DATE_FORMAT(l.start_time, '%H:%i') AS startTime,
+        tu.name AS trainerName,
+        mu.name AS memberName,
+        CASE
+    WHEN mp.id IS NULL THEN 'PT 예약회원'
+    ELSE CONCAT('PT ', m.type_rep, '회권')
+END AS membershipName,
+        l.status AS status
+    FROM LESSON l
+    JOIN TRAINER t ON l.trainer_id = t.id
+    JOIN `USER` tu ON t.user_id = tu.id
+    JOIN MEMBER mb ON l.client_id = mb.id
+    JOIN `USER` mu ON mb.user_id = mu.id
+    LEFT JOIN MEMBERSHIP_PT mp
+           ON mp.member_id = mb.id
+          AND mp.trainer_id = t.id
+          AND mp.gym_id = #{gymId}
+    LEFT JOIN MEMBERSHIP m
+           ON mp.membership_id = m.id
+          AND m.type = 'pt'
+    WHERE t.gym_id = #{gymId}
+      AND l.lesson_date = DATE_FORMAT(CURDATE(), '%Y-%m-%d')
+    ORDER BY l.start_time
+</select>
+
+    <select id="selectTotalRevenue" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT IFNULL(SUM(payment_price), 0)
+        FROM PAYMENT
+        WHERE gym_id = #{gymId}
+          AND status = '결제완료'
+          AND payment_date >= DATE_FORMAT(NOW(), '%Y-%m-01')
+    </select>
+
+    <select id="selectMembershipRevenue" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT IFNULL(SUM(payment_price), 0)
+        FROM PAYMENT
+        WHERE gym_id = #{gymId}
+          AND payment_type = 'MEMBERSHIP'
+          AND status = '결제완료'
+          AND payment_date >= DATE_FORMAT(NOW(), '%Y-%m-01')
+    </select>
+
+    <select id="selectPtRevenue" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT IFNULL(SUM(payment_price), 0)
+        FROM PAYMENT
+        WHERE gym_id = #{gymId}
+          AND payment_type = 'PT'
+          AND status = '결제완료'
+          AND payment_date >= DATE_FORMAT(NOW(), '%Y-%m-01')
+    </select>
+
+    <select id="selectTopTrainerList" parameterType="map" resultType="dto.gym.TopTrainerRevenue">
+    SELECT
+        t.id AS trainerId,
+        u.name AS trainerName,
+        IFNULL(ls.sessionCount, 0) AS sessionCount,
+        IFNULL(p.revenue, 0) AS revenue
+    FROM TRAINER t
+    JOIN `USER` u ON t.user_id = u.id
+
+    LEFT JOIN (
+        SELECT trainer_id, COUNT(*) AS sessionCount
+        FROM LESSON
+        WHERE status = '완료'
+        GROUP BY trainer_id
+    ) ls ON ls.trainer_id = t.id
+
+    LEFT JOIN (
+        SELECT trainer_id, SUM(payment_price) AS revenue
+        FROM PAYMENT
+        WHERE payment_type = 'PT'
+          AND status = '결제완료'
+          AND payment_date >= DATE_FORMAT(NOW(), '%Y-%m-01')
+        GROUP BY trainer_id
+    ) p ON p.trainer_id = t.id
+
+    WHERE t.gym_id = #{gymId}
+    ORDER BY revenue DESC
+    LIMIT 5
+</select>
+
+    <select id="selectWeeklyVisit" parameterType="map" resultType="dto.gym.WeeklyVisitStat">
+    SELECT
+        CASE DAYOFWEEK(`date`)
+            WHEN 1 THEN 'SUN'
+            WHEN 2 THEN 'MON'
+            WHEN 3 THEN 'TUE'
+            WHEN 4 THEN 'WED'
+            WHEN 5 THEN 'THU'
+            WHEN 6 THEN 'FRI'
+            WHEN 7 THEN 'SAT'
+        END AS dayName,
+
+        COUNT(*) AS visitCount,
+
+        ROUND(COUNT(*) / IFNULL(maxTable.maxCount, 1) * 100) AS heightPercent,
+
+        DATE_FORMAT(`date`, '%m-%d') AS dateLabel
+
+    FROM WORKOUT_LOG,
+        (
+            SELECT MAX(cnt) AS maxCount
+            FROM (
+                SELECT COUNT(*) AS cnt
+                FROM WORKOUT_LOG
+                WHERE gym_id = #{gymId}
+                  AND `date` BETWEEN #{weekStart} AND #{weekEnd}
+                GROUP BY DAYOFWEEK(`date`)
+            ) t
+        ) maxTable
+    WHERE gym_id = #{gymId}
+      AND `date` BETWEEN #{weekStart} AND #{weekEnd}
+    GROUP BY DAYOFWEEK(`date`), maxTable.maxCount
+    ORDER BY DAYOFWEEK(`date`)
+</select>
+
+    <select id="selectNewMemberGrowthRate" parameterType="map" resultType="double">
+        SELECT
+        CASE
+            WHEN prev.cnt = 0 AND curr.cnt > 0 THEN 100
+            WHEN prev.cnt = 0 THEN 0
+            ELSE ROUND((curr.cnt - prev.cnt) / prev.cnt * 100, 1)
+        END
+    FROM
+        (
+            SELECT COUNT(DISTINCT m.id) AS cnt
+            FROM MEMBER m
+            JOIN `USER` u ON m.user_id = u.id
+            JOIN MEMBERSHIP_PT mp ON mp.member_id = m.id
+            WHERE mp.gym_id = #{gymId}
+              AND u.created_at >= DATE_FORMAT(NOW(), '%Y-%m-01')
+        ) curr,
+        (
+            SELECT COUNT(DISTINCT m.id) AS cnt
+            FROM MEMBER m
+            JOIN `USER` u ON m.user_id = u.id
+            JOIN MEMBERSHIP_PT mp ON mp.member_id = m.id
+            WHERE mp.gym_id = #{gymId}
+              AND u.created_at >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01')
+              AND u.created_at &lt; DATE_FORMAT(NOW(), '%Y-%m-01')
+        ) prev
+    </select>
+
+    <select id="selectTotalRevenueGrowthRate" parameterType="map" resultType="double">
+        SELECT
+            CASE
+                WHEN prev.amount = 0 AND curr.amount > 0 THEN 100
+                WHEN prev.amount = 0 THEN 0
+                ELSE ROUND((curr.amount - prev.amount) / prev.amount * 100, 1)
+            END
+        FROM
+            (
+                SELECT IFNULL(SUM(payment_price), 0) AS amount
+                FROM PAYMENT
+                WHERE gym_id = #{gymId}
+                  AND status = '결제완료'
+                  AND payment_date >= DATE_FORMAT(NOW(), '%Y-%m-01')
+            ) curr,
+            (
+                SELECT IFNULL(SUM(payment_price), 0) AS amount
+                FROM PAYMENT
+                WHERE gym_id = #{gymId}
+                  AND status = '결제완료'
+                  AND payment_date >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01')
+                  AND payment_date &lt; DATE_FORMAT(NOW(), '%Y-%m-01')
+            ) prev
+    </select>
+
+    <select id="selectMembershipGrowthRate" parameterType="map" resultType="double">
+        SELECT
+            CASE
+                WHEN prev.amount = 0 AND curr.amount > 0 THEN 100
+                WHEN prev.amount = 0 THEN 0
+                ELSE ROUND((curr.amount - prev.amount) / prev.amount * 100, 1)
+            END
+        FROM
+            (
+                SELECT IFNULL(SUM(payment_price), 0) AS amount
+                FROM PAYMENT
+                WHERE gym_id = #{gymId}
+                  AND payment_type = 'MEMBERSHIP'
+                  AND status = '결제완료'
+                  AND payment_date >= DATE_FORMAT(NOW(), '%Y-%m-01')
+            ) curr,
+            (
+                SELECT IFNULL(SUM(payment_price), 0) AS amount
+                FROM PAYMENT
+                WHERE gym_id = #{gymId}
+                  AND payment_type = 'MEMBERSHIP'
+                  AND status = '결제완료'
+                  AND payment_date >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01')
+                  AND payment_date &lt; DATE_FORMAT(NOW(), '%Y-%m-01')
+            ) prev
+    </select>
+
+    <select id="selectPtGrowthRate" parameterType="map" resultType="double">
+        SELECT
+            CASE
+                WHEN prev.amount = 0 AND curr.amount > 0 THEN 100
+                WHEN prev.amount = 0 THEN 0
+                ELSE ROUND((curr.amount - prev.amount) / prev.amount * 100, 1)
+            END
+        FROM
+            (
+                SELECT IFNULL(SUM(payment_price), 0) AS amount
+                FROM PAYMENT
+                WHERE gym_id = #{gymId}
+                  AND payment_type = 'PT'
+                  AND status = '결제완료'
+                  AND payment_date >= DATE_FORMAT(NOW(), '%Y-%m-01')
+            ) curr,
+            (
+                SELECT IFNULL(SUM(payment_price), 0) AS amount
+                FROM PAYMENT
+                WHERE gym_id = #{gymId}
+                  AND payment_type = 'PT'
+                  AND status = '결제완료'
+                  AND payment_date >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01')
+                  AND payment_date &lt; DATE_FORMAT(NOW(), '%Y-%m-01')
+            ) prev
+    </select>
+
+    <select id="selectMembershipDistributionList" parameterType="map" resultType="dto.gym.MembershipDistribution">
+    SELECT
+        m.type_rep AS month,
+        IFNULL(ROUND(COUNT(*) / NULLIF(total.totalCount, 0) * 100), 0) AS percent
+    FROM MEMBERSHIP_PT mp
+    JOIN MEMBERSHIP m ON mp.membership_id = m.id
+    CROSS JOIN (
+        SELECT COUNT(*) AS totalCount
+        FROM MEMBERSHIP_PT mp2
+        JOIN MEMBERSHIP m2 ON mp2.membership_id = m2.id
+        WHERE mp2.gym_id = #{gymId}
+          AND m2.type = 'month'
+          AND mp2.register_date >= DATE_FORMAT(NOW(), '%Y-%m-01')
+    ) total
+    WHERE mp.gym_id = #{gymId}
+      AND m.type = 'month'
+      AND mp.register_date >= DATE_FORMAT(NOW(), '%Y-%m-01')
+    GROUP BY m.type_rep, total.totalCount
+    ORDER BY m.type_rep
+</select>
+
+    <select id="selectRevenueTrendList" parameterType="map" resultType="dto.gym.RevenueTrend">
+        SELECT
+            MONTH(monthly.monthDate) AS month,
+            IFNULL(ROUND(monthly.totalRevenue / NULLIF(maxTable.maxRevenue, 0) * 100), 0) AS totalPercent,
+            CASE
+                WHEN monthly.totalRevenue = 0 THEN 0
+                ELSE ROUND(monthly.membershipRevenue / monthly.totalRevenue * 100)
+            END AS membershipPercent
+        FROM (
+            SELECT
+                DATE_FORMAT(payment_date, '%Y-%m-01') AS monthDate,
+                IFNULL(SUM(payment_price), 0) AS totalRevenue,
+                IFNULL(SUM(CASE WHEN payment_type = 'MEMBERSHIP' THEN payment_price ELSE 0 END), 0) AS membershipRevenue
+            FROM PAYMENT
+            WHERE gym_id = #{gymId}
+              AND status = '결제완료'
+              AND payment_date >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 5 MONTH), '%Y-%m-01')
+            GROUP BY DATE_FORMAT(payment_date, '%Y-%m-01')
+        ) monthly
+        CROSS JOIN (
+            SELECT MAX(totalRevenue) AS maxRevenue
+            FROM (
+                SELECT IFNULL(SUM(payment_price), 0) AS totalRevenue
+                FROM PAYMENT
+                WHERE gym_id = #{gymId}
+                  AND status = '결제완료'
+                  AND payment_date >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 5 MONTH), '%Y-%m-01')
+                GROUP BY DATE_FORMAT(payment_date, '%Y-%m-01')
+            ) t
+        ) maxTable
+        ORDER BY monthly.monthDate
+    </select>
+
+    <select id="selectHotTimeList" parameterType="map" resultType="dto.gym.HotTime">
+        SELECT
+            CASE DAYOFWEEK(`date`)
+                WHEN 1 THEN 'SUN'
+                WHEN 2 THEN 'MON'
+                WHEN 3 THEN 'TUE'
+                WHEN 4 THEN 'WED'
+                WHEN 5 THEN 'THU'
+                WHEN 6 THEN 'FRI'
+                WHEN 7 THEN 'SAT'
+            END AS dayName,
+            HOUR(start_time) AS hour,
+            COUNT(*) AS visitCount,
+            IFNULL(ROUND(COUNT(*) / NULLIF(maxTable.maxCount, 0) * 100), 0) AS heightPercent
+        FROM WORKOUT_LOG,
+            (
+                SELECT MAX(cnt) AS maxCount
+                FROM (
+                    SELECT COUNT(*) AS cnt
+                    FROM WORKOUT_LOG
+                    WHERE gym_id = #{gymId}
+                      AND `date` = #{selectedDate}
+                    GROUP BY HOUR(start_time)
+                ) t
+            ) maxTable
+        WHERE gym_id = #{gymId}
+          AND `date` = #{selectedDate}
+        GROUP BY DAYOFWEEK(`date`), HOUR(start_time), maxTable.maxCount
+        ORDER BY HOUR(start_time)
+    </select>
+
+</mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="trainer">
+    <insert id="insertTrainer" parameterType="dto.trainer.TrainerDTO"
+            useGeneratedKeys="true" keyProperty="trainerId">
+        INSERT INTO trainer (
+            user_id,
+            description,
+            address,
+            address_detail,
+            postcode,
+            latitude,
+            longitude,
+            approval_status
+        )
+        VALUES (
+            #{userId},
+            #{description},
+            #{address},
+            #{addressDetail},
+            #{postcode},
+            #{latitude},
+            #{longitude},
+            'PENDING'
+        )
+    </insert>
+
+    <update id="updateTrainer" parameterType="dto.trainer.TrainerDTO">
+        UPDATE trainer SET
+            description               = #{description},
+            address                   = #{address},
+            address_detail            = #{addressDetail},
+            postcode                  = #{postcode},
+            latitude                  = #{latitude},
+            longitude                 = #{longitude},
+            trainer_type              = #{trainerType},
+            gym_id                    = #{gymId},
+            business_registration_num = #{businessRegistrationNum}
+        WHERE id = #{trainerId}
+    </update>
+
+    <select id="findByUserId" parameterType="int" resultType="TrainerDTO">
+        SELECT
+            t.id                        AS trainerId,
+            t.user_id                   AS userId,
+            t.trainer_type              AS trainerType,
+            t.gym_id                    AS gymId,
+            t.business_registration_num AS businessRegistrationNum,
+            t.description,
+            t.address,
+            t.address_detail            AS addressDetail,
+            t.postcode,
+            t.latitude,
+            t.longitude,
+            t.approval_status           AS approvalStatus,
+            t.is_verified               AS isVerified,
+            u.name,
+            u.email
+        FROM trainer t
+        JOIN `user` u ON t.user_id = u.id
+        WHERE t.user_id = #{userId}
+          AND u.role = 'TRAINER'
+          AND u.is_deleted = false
+    </select>
+
+    <!-- SPECIALIZATIONS -->
+    <delete id="deleteSpecializations" parameterType="int">
+        DELETE FROM trainer_specialization WHERE trainer_id = #{trainerId}
+    </delete>
+
+    <insert id="insertSpecialization" parameterType="map">
+        INSERT INTO trainer_specialization (trainer_id, type) VALUES (#{trainerId}, #{type})
+    </insert>
+
+    <!-- TRAITS -->
+    <delete id="deleteTraits" parameterType="int">
+        DELETE FROM trainer_traits WHERE trainer_id = #{trainerId}
+    </delete>
+
+    <insert id="insertTrait" parameterType="map">
+        INSERT INTO trainer_traits (trainer_id, type) VALUES (#{trainerId}, #{type})
+    </insert>
+
+    <!-- SPECIALIZATIONS READ -->
+    <select id="findSpecializationsByTrainerId" parameterType="int" resultType="String">
+        SELECT type FROM trainer_specialization WHERE trainer_id = #{trainerId}
+    </select>
+
+    <!-- TRAITS READ -->
+    <select id="findTraitsByTrainerId" parameterType="int" resultType="String">
+        SELECT type FROM trainer_traits WHERE trainer_id = #{trainerId}
+    </select>
+
+    <!-- GYM LOOKUP (used during trainer signup to resolve gym_code → gym_id) -->
+    <select id="findGymIdByGymCode" parameterType="String" resultType="int">
+        SELECT id FROM gym WHERE gym_code = #{gymCode}
+    </select>
+
+    <!-- GYM INFO (used to copy location onto trainer record) -->
+    <select id="findGymInfoById" parameterType="int" resultType="dto.gym.Gym">
+        SELECT id, name, gym_code AS gymCode, address, address_detail AS addressDetail, postcode, latitude, longitude
+        FROM gym WHERE id = #{id}
+    </select>
+
+    <!-- PROFILE IMAGE (stored on user table) -->
+    <update id="updateProfileImage" parameterType="map">
+        UPDATE `user` SET profile_image = #{fileName}
+        WHERE id = (SELECT user_id FROM trainer WHERE id = #{trainerId})
+    </update>
+
+    <update id="resetApprovalStatusToPending" parameterType="int">
+        UPDATE trainer SET approval_status = 'PENDING' WHERE id = #{trainerId}
+    </update>
+
+</mapper>

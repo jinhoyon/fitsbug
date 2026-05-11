@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.admin.member">
+	<select id="selectAllGym" resultType="member">
+		select g.name as gymName, u.phone as gymTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as gymClientCount, ifnull(sum(p.payment_price*0.9),0) as gymCal 
+		from gym g 
+		left join user u on(g.user_id=u.id)
+		left join member m on(u.id=m.id)
+		left join trainer t on(g.id=t.gym_id)
+		left join payment p on(p.user_id=g.user_id)
+		group by g.name, u.phone, u.created_at
+		order by g.name
+	</select>
+	<select id="selectAllTrainer" resultType="member">
+		select u.name as trainerName, u.phone as trainerTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as trainerClientCount, ifnull(sum(p.payment_price*0.9),0) as trainerCal
+		from trainer t
+		left join user u on(t.user_id=u.id)
+		left join member m on(u.id=m.id)
+		left join payment p on(p.user_id=t.user_id)
+		group by u.name, u.phone, u.created_at
+		order by u.name
+	</select>
+	<select id="selectAllClient" resultType="member">
+		select u.name as clientName, u.phone as clientTel, u.created_at as regDate, IFNULL(tu.name, '담당 없음') AS ptTrainer, 
+        IFNULL(SUM(p.payment_price), 0) AS payment 
+    	FROM MEMBER m
+    	LEFT JOIN USER u ON m.user_id = u.id
+    	LEFT JOIN PAYMENT p ON p.user_id = m.user_id
+    	LEFT JOIN TRAINER t ON p.trainer_id = t.id
+    	LEFT JOIN USER tu ON t.user_id = tu.id
+    	GROUP BY u.name, u.phone, u.created_at, tu.name
+    	ORDER BY u.name
+	</select>
+	
+	
+	<select id="selectGymList" parameterType="Map" resultType="member">
+		select g.id as gymId, g.name as gymName, u.phone as gymTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as gymClientCount, ifnull(sum(p.payment_price*0.9),0) as gymCal 
+		from gym g 
+		left join user u on(g.user_id=u.id)
+		left join member m on(u.id=m.id)
+		left join trainer t on(g.id=t.gym_id)
+		left join payment p on(p.user_id=g.user_id)		
+		<where>
+			<if test="gymName != null and gymName != ''">
+				And g.name like concat('%', #{gymName}, '%')
+			</if>
+		</where>
+		group by g.name, u.phone, u.created_at
+		order by 
+		<choose>
+			<when test="sortColumn == 'gymClientCount'">gymClientCount</when>
+			<when test="sortColumn == 'gymCal'">gymCal</when>
+			<when test="sortColumn == 'regDate'">regDate</when>
+			<otherwise>g.name</otherwise>
+		</choose>
+		${sortOrder} limit #{row}, #{pageRow}
+	</select>
+	<select id="selectGymCnt" resultType="Integer">
+		select count(*) from gym
+	</select>
+	
+	<select id="selectTrainerList" parameterType="Map" resultType="member">
+		select t.id as trainerId, u.name as trainerName, u.profile_image ,u.phone as trainerTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as trainerClientCount, ifnull(sum(p.payment_price*0.9),0) as trainerCal
+		from trainer t
+		left join user u on(t.user_id=u.id)
+		left join member m on(u.id=m.id)
+		left join payment p on(p.user_id=t.user_id)
+		
+		<where>
+			<if test="trainerName != null and trainerName != ''">
+				And u.name like concat('%', #{trainerName}, '%')
+			</if>
+		</where>
+    	group by u.name, u.phone, u.created_at, u.profile_image
+    	order by 
+    	<choose>
+        	<when test="sortColumn == 'trainerClientCount'">trainerClientCount</when>
+        	<when test="sortColumn == 'trainerCal'">trainerCal</when>
+        	<when test="sortColumn == 'regDate'">regDate</when>
+        	<otherwise>u.name</otherwise>
+    	</choose>
+    	${sortOrder}
+    	limit #{row}, #{pageRow}
+	</select>
+	<select id="selectTrainerCnt" resultType="Integer">
+		select count(*) from trainer
+	</select>
+	
+	
+	<select id="selectClientList" parameterType="Map" resultType="member">
+		select m.id as clientId, u.name as clientName, u.phone as clientTel, u.created_at as regDate, IFNULL(tu.name, '담당 없음') AS ptTrainer, 
+        IFNULL(SUM(p.payment_price), 0) AS payment
+		from member m
+		left join user u on(m.user_id=u.id)
+		left join payment p on(p.user_id=m.user_id)
+		LEFT JOIN trainer t ON p.trainer_id = t.id
+    	LEFT JOIN user tu ON t.user_id = tu.id
+		
+		<where>
+			<if test="clientName != null and clientName != ''">
+				And u.name like concat('%', #{clientName}, '%')
+			</if>
+		</where>
+		group by u.name, u.phone, u.created_at, tu.name
+    	order by 
+    	<choose>
+        	<when test="sortColumn == 'payment'">payment</when>
+        	<when test="sortColumn == 'regDate'">regDate</when>
+        	<otherwise>u.name</otherwise>
+    	</choose>
+    	${sortOrder}
+    	limit #{row}, #{pageRow}
+	</select>
+	<select id="selectClientCnt" resultType="Integer">
+		select count(*) from member
+	</select>
+	
+	
+	<select id="selectAuthList" resultType="Map">
+		select u.id as userId, g.name as userName, u.created_at as regDate, 'GYM' as authType, g.approval_status as status
+		from user u
+		join gym g on(u.id=g.user_id)
+		where g.approval_status='PENDING' 
+		
+		union all
+		
+		SELECT u.id AS userId, u.name AS userName, u.created_at AS regDate, 'TRAINER' AS authType, t.approval_status AS status
+    	FROM USER u
+    	JOIN TRAINER t ON u.id = t.user_id
+    	WHERE t.approval_status = 'PENDING' 
+    	
+    	ORDER BY regDate DESC
+	</select>
+	<select id="selectGymAuthDetail" parameterType="String" resultType="Map">
+   		 SELECT 
+        	g.name AS name,
+        	u.email,
+        	u.phone AS tel,
+        	u.profile_image as profileImg,
+        	g.address AS address,
+        	g.address_detail AS address_detail,
+        	g.business_registration_num AS bizNum,
+        	g.br_file as authDoc
+    	FROM user u
+    	JOIN gym g ON u.id = g.user_id
+    	WHERE u.id = #{userId}
+	</select>
+
+	<select id="selectTrainerAuthDetail" parameterType="String" resultType="Map">
+    	SELECT 
+        	u.name AS name,
+        	u.email,
+        	u.phone AS tel,
+        	u.profile_image as profileImg,
+ 
+        	t.address AS address,
+
+        	'' AS address_detail, 
+        	t.business_registration_num AS bizNum,
+        	t.br_file AS authDoc,
+			tc.cert_file AS certFile
+    	FROM user u
+    	left JOIN trainer t ON u.id = t.user_id
+    	left JOIN trainer_certification tc ON t.id=tc.trainer_id
+    	WHERE u.id = #{userId}
+	</select>
+	
+	<update id="updateGymStatus" parameterType="Map">
+    	UPDATE gym SET approval_status = #{status} WHERE user_id = #{userId}
+	</update>
+
+	<update id="updateTrainerStatus" parameterType="Map">
+    	UPDATE trainer SET approval_status = #{status} WHERE user_id = #{userId}
+	</update>
+	
+</mapper>	
