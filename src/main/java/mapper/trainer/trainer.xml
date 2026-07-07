@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="trainer">
-    <insert id="insertTrainer" parameterType="dto.trainer.TrainerDTO"
+    <insert id="insertTrainer" parameterType="dto.common.TrainerDTO"
             useGeneratedKeys="true" keyProperty="trainerId">
         INSERT INTO trainer (
             user_id,
@@ -28,7 +28,7 @@
         )
     </insert>
 
-    <update id="updateTrainer" parameterType="dto.trainer.TrainerDTO">
+    <update id="updateTrainer" parameterType="dto.common.TrainerDTO">
         UPDATE trainer SET
             description               = #{description},
             address                   = #{address},

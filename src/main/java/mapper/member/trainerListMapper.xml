@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.member.trainer">
 
-    <select id="findTrainerList" parameterType="map" resultType="dto.member.TrainerDTO">
+    <select id="findTrainerList" parameterType="map" resultType="dto.common.TrainerDTO">
         SELECT
             t.id,
             u.name,

@@ -1,6 +1,6 @@
 package service.trainer;
 
-import dto.trainer.TrainerDTO;
+import dto.common.TrainerDTO;
 import dto.common.UserDTO;
 
 public interface SignupService {

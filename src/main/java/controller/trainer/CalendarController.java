@@ -1,7 +1,7 @@
 package controller.trainer;
 
 import dto.trainer.LessonDTO;
-import dto.trainer.TrainerDTO;
+import dto.common.TrainerDTO;
 import service.trainer.LessonService;
 import service.trainer.LessonServiceImpl;
 

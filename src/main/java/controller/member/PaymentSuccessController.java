@@ -29,7 +29,7 @@ import dto.member.MemberDTO;
 import dto.member.MembershipRegistrationDTO;
 import dto.member.PaymentDTO;
 import dto.member.TossDTO;
-import dto.member.TrainerDTO;
+import dto.common.TrainerDTO;
 import dto.common.UserDTO;
 import util.MybatisSqlSessionFactory;
 

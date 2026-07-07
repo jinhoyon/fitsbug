@@ -2,7 +2,7 @@ package controller.trainer;
 
 import dto.gym.Gym;
 import dto.trainer.PayoutAccountDTO;
-import dto.trainer.TrainerDTO;
+import dto.common.TrainerDTO;
 import service.trainer.TrainerService;
 import service.trainer.TrainerServiceImpl;
 

@@ -3,7 +3,7 @@ package controller.trainer;
 import dao.member.InbodyLogDAO;
 import dao.member.InbodyLogDAOImpl;
 import dto.member.InbodyLogDTO;
-import dto.trainer.TrainerDTO;
+import dto.common.TrainerDTO;
 import service.trainer.ClientService;
 import service.trainer.ClientServiceImpl;
 import dto.trainer.ClientDTO;

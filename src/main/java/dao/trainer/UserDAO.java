@@ -1,6 +1,6 @@
 package dao.trainer;
 
-import dto.trainer.TrainerDTO;
+import dto.common.TrainerDTO;
 import dto.common.UserDTO;
 import org.apache.ibatis.session.SqlSession;
 

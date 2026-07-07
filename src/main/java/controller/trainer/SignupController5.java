@@ -2,7 +2,7 @@ package controller.trainer;
 
 import dto.trainer.AvailabilityDTO;
 import dto.trainer.PricingDTO;
-import dto.trainer.TrainerDTO;
+import dto.common.TrainerDTO;
 import service.trainer.TrainerService;
 import service.trainer.TrainerServiceImpl;
 

@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.TrainerMapper">
 
-    <resultMap id="trainerResultMap" type="dto.member.TrainerDTO">
+    <resultMap id="trainerResultMap" type="dto.common.TrainerDTO">
         <id     property="id"                      column="id"/>
         <result property="userId"                  column="user_id"/>
         <result property="trainerType"             column="trainer_type"/>
@@ -25,7 +25,7 @@
     </resultMap>
 
     <!-- USER JOIN 포함 resultMap -->
-    <resultMap id="trainerWithUserResultMap" type="dto.member.TrainerDTO"
+    <resultMap id="trainerWithUserResultMap" type="dto.common.TrainerDTO"
                extends="trainerResultMap">
         <result property="name"       column="name"/>
         <result property="nickname"   column="nickname"/>
@@ -34,7 +34,7 @@
     </resultMap>
 
     <!-- TRAINER INSERT -->
-    <insert id="insert" parameterType="dto.member.TrainerDTO">
+    <insert id="insert" parameterType="dto.common.TrainerDTO">
         INSERT INTO TRAINER (
             user_id, trainer_type, gym_id, gym_join_code,
             business_registration_num, br_file,

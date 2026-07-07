@@ -2,7 +2,7 @@ package controller.trainer;
 
 import dto.member.WorkoutDetailDTO;
 import dto.member.WorkoutLogDTO;
-import dto.trainer.TrainerDTO;
+import dto.common.TrainerDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import service.trainer.WorkoutService;

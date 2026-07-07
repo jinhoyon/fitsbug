@@ -3,7 +3,7 @@ package service.member;
 import java.util.List;
 import java.util.Map;
 
-import dto.member.TrainerDTO;
+import dto.common.TrainerDTO;
 import dto.trainer.AvailabilityDTO;
 
 public interface TrainerService {

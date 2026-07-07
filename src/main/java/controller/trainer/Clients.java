@@ -8,7 +8,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
-import dto.trainer.TrainerDTO;
+import dto.common.TrainerDTO;
 import service.trainer.ClientService;
 import service.trainer.ClientServiceImpl;
 

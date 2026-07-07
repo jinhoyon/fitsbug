@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dto.member.TrainerDTO;
+import dto.common.TrainerDTO;
 import service.member.TrainerService;
 import service.member.TrainerServiceImpl;
 

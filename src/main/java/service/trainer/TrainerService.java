@@ -4,7 +4,7 @@ import dto.trainer.AvailabilityDTO;
 import dto.trainer.CertificationDTO;
 import dto.trainer.PayoutAccountDTO;
 import dto.trainer.PricingDTO;
-import dto.trainer.TrainerDTO;
+import dto.common.TrainerDTO;
 
 import java.util.List;
 

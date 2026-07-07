@@ -2,7 +2,7 @@ package controller.trainer;
 
 import dao.trainer.ClientDAOImpl;
 import dto.trainer.ClientDTO;
-import dto.trainer.TrainerDTO;
+import dto.common.TrainerDTO;
 import service.trainer.*;
 
 import javax.servlet.*;

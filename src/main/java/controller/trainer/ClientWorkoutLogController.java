@@ -3,7 +3,7 @@ package controller.trainer;
 import dto.member.WorkoutDetailDTO;
 import dto.member.WorkoutLogDTO;
 import dto.trainer.ClientDTO;
-import dto.trainer.TrainerDTO;
+import dto.common.TrainerDTO;
 import service.trainer.ClientService;
 import service.trainer.ClientServiceImpl;
 import service.trainer.WorkoutService;
