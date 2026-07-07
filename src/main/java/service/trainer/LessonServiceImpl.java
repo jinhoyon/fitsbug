@@ -5,7 +5,7 @@ import dao.trainer.ClientDAOImpl;
 import dao.trainer.LessonDAO;
 import dao.trainer.LessonDAOImpl;
 import dto.trainer.ClientDTO;
-import dto.trainer.LessonDTO;
+import dto.common.LessonDTO;
 import dto.trainer.LessonInfoResponse;
 import org.apache.ibatis.session.SqlSession;
 import util.MybatisSqlSessionFactory;

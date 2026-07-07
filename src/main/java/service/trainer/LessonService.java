@@ -1,6 +1,6 @@
 package service.trainer;
 
-import dto.trainer.LessonDTO;
+import dto.common.LessonDTO;
 import dto.trainer.LessonInfoResponse;
 
 import java.time.LocalDate;

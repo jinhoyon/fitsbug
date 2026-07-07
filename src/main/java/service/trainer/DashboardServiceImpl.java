@@ -4,7 +4,7 @@ import dao.trainer.LessonDAO;
 import dao.trainer.LessonDAOImpl;
 import dao.trainer.NotificationDAO;
 import dao.trainer.NotificationDAOImpl;
-import dto.trainer.LessonDTO;
+import dto.common.LessonDTO;
 import dto.trainer.NotificationDTO;
 
 import java.time.LocalDate;

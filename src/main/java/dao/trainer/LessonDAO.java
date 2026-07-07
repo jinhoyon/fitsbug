@@ -1,6 +1,6 @@
 package dao.trainer;
 
-import dto.trainer.LessonDTO;
+import dto.common.LessonDTO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.time.LocalDate;

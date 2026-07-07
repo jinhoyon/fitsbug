@@ -1,7 +1,7 @@
 
 package dao.trainer;
 
-import dto.trainer.LessonDTO;
+import dto.common.LessonDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import util.MybatisSqlSessionFactory;

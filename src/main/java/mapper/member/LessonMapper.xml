@@ -12,7 +12,7 @@
         ※ goal 컬럼은 DB LESSON 테이블에 없음 → 제거
     -->
 
-    <resultMap id="lessonResultMap" type="dto.member.LessonDTO">
+    <resultMap id="lessonResultMap" type="dto.common.LessonDTO">
         <id     property="id"          column="id"/>
         <result property="trainerId"   column="trainer_id"/>
         <result property="clientId"    column="client_id"/>
@@ -25,7 +25,7 @@
     </resultMap>
 
     <!-- 레슨 저장 (goal 컬럼 제거) -->
-    <insert id="insert" parameterType="dto.member.LessonDTO"
+    <insert id="insert" parameterType="dto.common.LessonDTO"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO LESSON (trainer_id, client_id, start_time, end_time, status, notes, lesson_date)
         VALUES (#{trainerId}, #{clientId}, #{startTime}, #{endTime}, #{status}, #{notes}, #{lessonDate})

@@ -39,7 +39,7 @@
         <typeAlias alias="ReportDTO"        type="dto.member.ReportDTO"/>
         <typeAlias alias="MembershipDTO"             type="dto.member.MembershipDTO"/>
 		<typeAlias alias="MembershipRegistrationDTO" type="dto.member.MembershipRegistrationDTO"/>
-		<typeAlias alias="LessonDTO"                 type="dto.member.LessonDTO"/>
+		<typeAlias alias="LessonDTO"                 type="dto.common.LessonDTO"/>
         <typeAlias alias="ReservationDTO"   type="dto.member.ReservationDTO"/>
         <typeAlias alias="InquiryDTO"  		type="dto.member.InquiryDTO"/>
 		<typeAlias alias="MyPageDTO"   		type="dto.member.MyPageDTO"/>        
@@ -50,7 +50,7 @@
 		<!-- Trainer Mapper Alias -->
 		<typeAlias type="dto.trainer.CertificationDTO"  alias="CertificationDTO"/>
 		<typeAlias type="dto.trainer.ClientDTO" alias="ClientDTO"/>
-		<typeAlias type="dto.trainer.LessonDTO" alias="TrainerLessonDTO"/>
+		<typeAlias type="dto.common.LessonDTO" alias="TrainerLessonDTO"/>
 		<typeAlias type="dto.trainer.NotificationDTO" alias="TrainerNotificationDTO"/>
 		<typeAlias type="dto.trainer.PayoutAccountDTO" alias="PayoutAccountDTO"/>
 		<typeAlias type="dto.trainer.PricingDTO" alias="PricingDTO"/>
