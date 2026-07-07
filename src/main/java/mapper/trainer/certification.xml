@@ -5,7 +5,7 @@
 
 <mapper namespace="mapper.certification">
 
-    <insert id="insertCertification" parameterType="dto.trainer.CertificationDTO"
+    <insert id="insertCertification" parameterType="dto.common.CertificationDTO"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO trainer_certification (trainer_id, cert_name, issuing_org, issue_date, expiry_date, cert_file)
         VALUES (#{trainerId}, #{certName}, #{issuingOrg}, #{issueDate}, #{expiryDate}, #{certFile})
@@ -15,7 +15,7 @@
         DELETE FROM trainer_certification WHERE trainer_id = #{trainerId}
     </delete>
 
-    <select id="findByTrainerId" parameterType="int" resultType="dto.trainer.CertificationDTO">
+    <select id="findByTrainerId" parameterType="int" resultType="dto.common.CertificationDTO">
         SELECT id,
                trainer_id  AS trainerId,
                cert_name   AS certName,

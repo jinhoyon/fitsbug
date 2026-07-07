@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.TrainerCertificationMapper">
 
-    <resultMap id="certResultMap" type="dto.member.TrainerCertificationDTO">
+    <resultMap id="certResultMap" type="dto.common.CertificationDTO">
         <id     property="id"          column="id"/>
         <result property="trainerId"   column="trainer_id"/>
         <result property="certName"    column="cert_name"/>
@@ -16,7 +16,7 @@
     </resultMap>
 
     <!-- 자격증 저장 -->
-    <insert id="insert" parameterType="dto.member.TrainerCertificationDTO">
+    <insert id="insert" parameterType="dto.common.CertificationDTO">
         INSERT INTO TRAINER_CERTIFICATION
             (trainer_id, cert_name, issuing_org, issue_date, expiry_date, cert_file)
         VALUES

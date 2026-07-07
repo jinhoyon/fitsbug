@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ibatis.session.SqlSession;
 
-import dto.member.TrainerCertificationDTO;
+import dto.common.CertificationDTO;
 import dto.member.TrainerPricingDTO;
 import dto.member.TrainerSpecializationDTO;
 import util.MybatisSqlSessionFactory;
@@ -36,7 +36,7 @@ public class TrainerDetailController extends HttpServlet {
         Map<String,Object> trainer = null;
         List<TrainerPricingDTO> pricingList = new ArrayList<>();
         List<TrainerSpecializationDTO> specList = new ArrayList<>();
-        List<TrainerCertificationDTO> certList = new ArrayList<>();
+        List<CertificationDTO> certList = new ArrayList<>();
 
         try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
             trainer = sql.selectOne("mapper.TrainerMapper.findById", trainerId);

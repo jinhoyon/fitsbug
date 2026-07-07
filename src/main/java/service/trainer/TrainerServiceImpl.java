@@ -3,7 +3,7 @@ package service.trainer;
 import dao.trainer.TrainerDAO;
 import dao.trainer.TrainerDAOImpl;
 import dto.trainer.AvailabilityDTO;
-import dto.trainer.CertificationDTO;
+import dto.common.CertificationDTO;
 import dto.common.PayoutAccountDTO;
 import dto.trainer.PricingDTO;
 import dto.common.TrainerDTO;
