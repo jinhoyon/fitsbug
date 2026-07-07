@@ -1,17 +1,18 @@
 package service.trainer;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
+import dao.member.UserDAOImpl;
 import dao.trainer.TrainerDAO;
 import dao.trainer.TrainerDAOImpl;
-import dao.trainer.UserDAO;
-import dao.trainer.UserDAOImpl;
+import dao.trainer.TrainerDAOImpl;
 import dto.common.TrainerDTO;
 import dto.common.UserDTO;
 import org.apache.ibatis.session.SqlSession;
 import util.MybatisSqlSessionFactory;
+import util.PasswordUtil;
 
 public class LoginServiceImpl implements LoginService {
-    private UserDAO userDAO = new UserDAOImpl();
+    private dao.trainer.UserDAO trainerUserDAO = new dao.trainer.UserDAOImpl();
+    private dao.member.UserDAO memberUserDAO = new UserDAOImpl();
     private TrainerDAO trainerDAO = new TrainerDAOImpl();
 
     @Override
@@ -22,26 +23,22 @@ public class LoginServiceImpl implements LoginService {
                 .openSession();
 
         try {
-            UserDTO trainer = userDAO.getUserTrainer(session, email);
+            UserDTO trainer = trainerUserDAO.getUserTrainer(session, email);
 
-            // check user exists
             if (trainer == null) {
                 return new LoginResult(LoginResult.Status.ACCOUNT_NOT_FOUND, null);
             }
 
-            // check user is a trainer
             if (!trainer.hasRole("TRAINER")) {
                 return new LoginResult(LoginResult.Status.NOT_TRAINER, null);
             }
 
-            // check password
-            BCrypt.Result result = BCrypt.verifyer().verify(
-                    password.toCharArray(),
-                    trainer.getPassword()
-            );
-
-            if (!result.verified) {
+            if (!PasswordUtil.verify(password, trainer.getPassword())) {
                 return new LoginResult(LoginResult.Status.WRONG_PASSWORD, null);
+            }
+
+            if (!PasswordUtil.isBcryptHash(trainer.getPassword())) {
+                memberUserDAO.updatePassword(email, PasswordUtil.hash(password));
             }
 
             TrainerDTO trainerProfile = trainerDAO.findByUserId(session, trainer.getId());

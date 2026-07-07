@@ -15,6 +15,7 @@ import javax.servlet.http.Part;
 import dao.member.UserDAO;
 import dao.member.UserDAOImpl;
 import dto.common.UserDTO;
+import util.PasswordUtil;
 
 @WebServlet("/member/updateProfile")
 @MultipartConfig(
@@ -57,7 +58,7 @@ public class UpdateProfileController extends HttpServlet {
         loginUser.setNickname(nickname);
 
         if(password != null && !password.isEmpty()){
-            loginUser.setPassword(password);
+            loginUser.setPassword(PasswordUtil.hash(password));
         }
 
         UserDAO dao = new UserDAOImpl();

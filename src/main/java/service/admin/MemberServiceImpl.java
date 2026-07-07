@@ -8,6 +8,7 @@ import dao.admin.MemberDAO;
 import dao.admin.MemberDAOImpl;
 import dto.admin.MemberDTO;
 import util.PageInfo;
+import util.SortOrderUtil;
 
 public class MemberServiceImpl implements MemberService {
 	
@@ -46,7 +47,7 @@ public class MemberServiceImpl implements MemberService {
 		
 		//정렬값 없으면 기본값(이름순, 오름차순) 설정
 		pagingMap.put("sortColumn", (sortColumn == null || sortColumn.isEmpty()) ? "gymName" : sortColumn);
-	    pagingMap.put("sortOrder", (sortOrder == null || sortOrder.isEmpty()) ? "ASC" : sortOrder);
+	    pagingMap.put("sortOrder", SortOrderUtil.sanitize(sortOrder));
 		
 		return memberDAO.selectGymList(pagingMap);
 	}
@@ -78,7 +79,7 @@ public class MemberServiceImpl implements MemberService {
 		pagingMap.put("pageRow", pageRow);
 		pagingMap.put("trainerName", trainerName);
 		pagingMap.put("sortColumn", (sortColumn == null || sortColumn.isEmpty()) ? "trainerName" : sortColumn);
-	    pagingMap.put("sortOrder", (sortOrder == null || sortOrder.isEmpty()) ? "ASC" : sortOrder);
+	    pagingMap.put("sortOrder", SortOrderUtil.sanitize(sortOrder));
 	    
 		return memberDAO.selectTrainerList(pagingMap);
 	}
@@ -110,7 +111,7 @@ public class MemberServiceImpl implements MemberService {
 		pagingMap.put("pageRow", pageRow);
 		pagingMap.put("clientName", clientName);
 		pagingMap.put("sortColumn", (sortColumn == null || sortColumn.isEmpty()) ? "clientName" : sortColumn);
-	    pagingMap.put("sortOrder", (sortOrder == null || sortOrder.isEmpty()) ? "ASC" : sortOrder);
+	    pagingMap.put("sortOrder", SortOrderUtil.sanitize(sortOrder));
 	    
 		return memberDAO.selectClientList(pagingMap);
 	}

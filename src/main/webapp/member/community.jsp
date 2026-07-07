@@ -178,8 +178,8 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
       <img src="${pageContext.request.contextPath}/trainer/profile-img/${post.image}" style="width:100%;max-height:340px;object-fit:cover;" alt="게시글 이미지">
     </c:if>
     <div style="padding:18px;">
-      <h3 style="font-size:15px;font-weight:800;color:#1A1F36;margin-bottom:6px;">${post.title}</h3>
-      <p style="font-size:14px;color:#5A6480;line-height:1.6;">${post.body}</p>
+      <h3 style="font-size:15px;font-weight:800;color:#1A1F36;margin-bottom:6px;"><c:out value="${post.title}"/></h3>
+      <p style="font-size:14px;color:#5A6480;line-height:1.6;"><c:out value="${post.body}"/></p>
       <div style="font-size:13px;color:#00BFA5;font-weight:600;margin-top:8px;">${post.hashtags}</div>
       <div style="display:flex;gap:8px;margin-top:14px;align-items:center;">
         <button onclick="react(this,${post.id},'like')" id="btn-like-${post.id}" class="react-btn">❤️ <span id="like-${post.id}">0</span></button>

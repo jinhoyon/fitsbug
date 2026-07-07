@@ -10,6 +10,7 @@ import dao.member.UserDAO;
 import dao.member.UserDAOImpl;
 import dto.member.MemberDTO;
 import dto.common.UserDTO;
+import util.PasswordUtil;
 
 @WebServlet("/member/step3")
 public class Step3Controller extends HttpServlet {
@@ -63,7 +64,7 @@ public class Step3Controller extends HttpServlet {
 
         UserDTO user = new UserDTO();
         user.setEmail(email);
-        user.setPassword(password);
+        user.setPassword(PasswordUtil.hash(password));
         user.setNickname(nickname);
         user.setName(name);
         user.setPhone(phone);

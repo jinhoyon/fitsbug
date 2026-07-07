@@ -19,4 +19,31 @@
         <filter-name>CharacterEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+    <filter>
+        <filter-name>AdminAuthFilter</filter-name>
+        <filter-class>filter.AdminAuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AdminAuthFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>TrainerAuthFilter</filter-name>
+        <filter-class>filter.TrainerAuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>TrainerAuthFilter</filter-name>
+        <url-pattern>/trainer/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>GymAuthFilter</filter-name>
+        <filter-class>filter.GymAuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>GymAuthFilter</filter-name>
+        <url-pattern>/gym/*</url-pattern>
+    </filter-mapping>
 </web-app>

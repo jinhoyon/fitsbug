@@ -1,6 +1,7 @@
 package util;
 
 import java.io.InputStream;
+import java.util.Properties;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -19,7 +20,8 @@ public class MybatisSqlSessionFactory {
 			SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
 			
 			//SqlSessionFactory 생성
-			sqlSessionFactory = builder.build(inputStream);
+			Properties props = DatabaseConfig.getMybatisProperties();
+			sqlSessionFactory = builder.build(inputStream, props);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

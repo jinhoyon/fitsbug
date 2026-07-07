@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import dto.common.UserDTO;
 import service.gym.GymInfoEditService;
 import service.gym.GymInfoEditServiceImpl;
+import util.PasswordUtil;
 
 @WebServlet("/gym/changePassword")
 public class GymChangePassword extends HttpServlet {
@@ -48,7 +49,7 @@ public class GymChangePassword extends HttpServlet {
 
         Map<String, Object> param = new HashMap<>();
         param.put("userId", user.getId());
-        param.put("password", password);
+        param.put("password", PasswordUtil.hash(password));
 
         int result = service.updatePassword(param);
 

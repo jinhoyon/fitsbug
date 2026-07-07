@@ -1,9 +1,9 @@
 package controller.trainer;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
 import dto.common.UserDTO;
 import service.trainer.SignupService;
 import service.trainer.SignupServiceImpl;
+import util.PasswordUtil;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -51,7 +51,7 @@ public class SignupController extends HttpServlet {
             providerId = null;
         }
 
-        String hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+        String hashedPassword = PasswordUtil.hash(password);
 
         UserDTO dto = new UserDTO();
         dto.setName(name);

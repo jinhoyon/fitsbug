@@ -9,8 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dto.common.UserDTO;
+import dto.common.TrainerDTO;
+import dao.trainer.TrainerDAO;
+import dao.trainer.TrainerDAOImpl;
+import org.apache.ibatis.session.SqlSession;
 import service.member.UserService;
 import service.member.UserServiceImpl;
+import util.MybatisSqlSessionFactory;
 
 @WebServlet("/member/login")
 public class LoginController extends HttpServlet {
@@ -58,7 +63,14 @@ public class LoginController extends HttpServlet {
                 	session.setAttribute("gymId", loginUser.getOtherId());
                     response.sendRedirect(request.getContextPath() + "/gym/dashboard");
                 } else if ("TRAINER".equals(role)) {
-                    response.sendRedirect(request.getContextPath() + "/trainer/main");
+                    try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+                        TrainerDAO trainerDAO = new TrainerDAOImpl();
+                        TrainerDTO trainer = trainerDAO.findByUserId(sqlSession, loginUser.getId());
+                        if (trainer != null) {
+                            session.setAttribute("loginTrainer", trainer);
+                        }
+                    }
+                    response.sendRedirect(request.getContextPath() + "/trainer/dashboard");
                 } else if ("ADMIN".equals(role)) {
                     response.sendRedirect(request.getContextPath() + "/admin/main");
                 } else {

@@ -16,6 +16,7 @@ import dto.member.MemberDTO;
 import dto.common.UserDTO;
 import dto.common.TrainerDTO;
 import util.MybatisSqlSessionFactory;
+import util.PasswordUtil;
 
 public class UserServiceImpl implements UserService {
 
@@ -32,6 +33,9 @@ public class UserServiceImpl implements UserService {
         if (dto.getRole() == null || dto.getRole().isEmpty()) {
             dto.setRole("MEMBER");
         }
+        if (dto.getPassword() != null && !PasswordUtil.isBcryptHash(dto.getPassword())) {
+            dto.setPassword(PasswordUtil.hash(dto.getPassword()));
+        }
         return userDAO.insert(dto);
     }
 
@@ -44,8 +48,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO login(String email, String password) throws Exception {
-        UserDTO user = userDAO.findByEmailAndPassword(email, password);
-        if (user != null && !user.isDeleted()) {
+        UserDTO user = userDAO.findByEmail(email);
+        if (user == null || user.isDeleted()) {
+            return null;
+        }
+        if (!PasswordUtil.verify(password, user.getPassword())) {
+            return null;
+        }
+        if (!PasswordUtil.isBcryptHash(user.getPassword())) {
+            userDAO.updatePassword(email, PasswordUtil.hash(password));
+        }
+        if (!user.isDeleted()) {
         	String role = user.getRole();
         	if(role.equals("GYM")) {
         		Gym gym = gymMainDAO.selectGymByUserId(user.getId());
@@ -88,7 +101,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int updatePassword(String email, String password) {
-        return userDAO.updatePassword(email, password);
+        return userDAO.updatePassword(email, PasswordUtil.hash(password));
     }
 
     @Override
