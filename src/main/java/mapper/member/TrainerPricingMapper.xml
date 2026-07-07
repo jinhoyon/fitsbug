@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.TrainerPricingMapper">
 
-    <resultMap id="pricingResultMap" type="dto.member.TrainerPricingDTO">
+    <resultMap id="pricingResultMap" type="dto.common.PricingDTO">
         <id     property="id"           column="id"/>
         <result property="trainerId"    column="trainer_id"/>
         <result property="label"        column="label"/>
@@ -16,7 +16,7 @@
     </resultMap>
 
     <!-- 이용권 저장 -->
-    <insert id="insert" parameterType="dto.member.TrainerPricingDTO">
+    <insert id="insert" parameterType="dto.common.PricingDTO">
         INSERT INTO trainer_pricing
             (trainer_id, label, session_count, price, is_popular, is_active)
         VALUES
@@ -38,7 +38,7 @@
     </update>
 
     <!-- 이용권 수정 -->
-    <update id="update" parameterType="dto.member.TrainerPricingDTO">
+    <update id="update" parameterType="dto.common.PricingDTO">
         UPDATE trainer_pricing SET
             label         = #{label},
             session_count = #{sessionCount},

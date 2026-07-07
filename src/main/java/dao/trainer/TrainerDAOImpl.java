@@ -3,7 +3,7 @@ package dao.trainer;
 import dto.trainer.AvailabilityDTO;
 import dto.common.CertificationDTO;
 import dto.common.PayoutAccountDTO;
-import dto.trainer.PricingDTO;
+import dto.common.PricingDTO;
 import dto.common.TrainerDTO;
 import org.apache.ibatis.session.SqlSession;
 

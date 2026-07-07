@@ -5,7 +5,7 @@
 
 <mapper namespace="pricingAvailability">
 
-    <insert id="insertPricing" parameterType="dto.trainer.PricingDTO"
+    <insert id="insertPricing" parameterType="dto.common.PricingDTO"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO trainer_pricing (trainer_id, label, session_count, price, is_popular)
         VALUES (#{trainerId}, #{label}, #{sessionCount}, #{price}, #{popular})
@@ -15,7 +15,7 @@
         DELETE FROM trainer_pricing WHERE trainer_id = #{trainerId}
     </delete>
 
-    <select id="findPricingByTrainerId" parameterType="int" resultType="dto.trainer.PricingDTO">
+    <select id="findPricingByTrainerId" parameterType="int" resultType="dto.common.PricingDTO">
         SELECT id,
                trainer_id    AS trainerId,
                label,

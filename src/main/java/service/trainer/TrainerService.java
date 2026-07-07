@@ -3,7 +3,7 @@ package service.trainer;
 import dto.trainer.AvailabilityDTO;
 import dto.common.CertificationDTO;
 import dto.common.PayoutAccountDTO;
-import dto.trainer.PricingDTO;
+import dto.common.PricingDTO;
 import dto.common.TrainerDTO;
 
 import java.util.List;

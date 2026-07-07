@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.ibatis.session.SqlSession;
 
 import dto.common.CertificationDTO;
-import dto.member.TrainerPricingDTO;
+import dto.member.PricingDTO;
 import dto.member.TrainerSpecializationDTO;
 import util.MybatisSqlSessionFactory;
 
@@ -34,7 +34,7 @@ public class TrainerDetailController extends HttpServlet {
         }
 
         Map<String,Object> trainer = null;
-        List<TrainerPricingDTO> pricingList = new ArrayList<>();
+        List<PricingDTO> pricingList = new ArrayList<>();
         List<TrainerSpecializationDTO> specList = new ArrayList<>();
         List<CertificationDTO> certList = new ArrayList<>();
 
