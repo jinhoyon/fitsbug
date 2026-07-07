@@ -16,7 +16,7 @@ import service.member.PaymentServiceImpl;
 @WebServlet("/member/payment")
 public class PaymentController extends HttpServlet {
 
-    private PaymentService service = new PaymentServiceImpl();
+    private final PaymentService service = new PaymentServiceImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -27,27 +27,30 @@ public class PaymentController extends HttpServlet {
 
         resp.setContentType("application/json;charset=UTF-8");
 
-        if(user == null){
+        if (user == null) {
             resp.getWriter().write("{\"error\":\"not_login\"}");
             return;
         }
 
         int amount = Integer.parseInt(req.getParameter("amount"));
         String productName = req.getParameter("productName");
+        String orderId = "MEM-" + user.getId() + "-" + System.currentTimeMillis();
 
-        // ✔ Controller는 DTO만 만든다 (orderId X)
-        Payment dto = new Payment();
+        Payment payment = new Payment();
+        payment.setUserId(user.getId());
+        payment.setUserName(user.getName());
+        payment.setPaymentPrice(amount);
+        payment.setOrderId(orderId);
+        payment.setMethod("TOSS");
+        payment.setPaymentType("MEMBERSHIP");
+        service.createPayment(payment);
 
-        // ✔ Service가 orderId 생성 + DB 저장 담당
-        Payment result = service.createPayment(dto);
-
-        // ✔ response는 result 기준
-        String json = "";
-//               "{"
-//                + "\"orderId\":\"" + result.getOrderId() + "\","
-//                + "\"amount\":" + result.getAmount() + ","
-//                + "\"productName\":\"" + result.getProductName() + "\""
-//                + "}";
+        String safeName = productName == null ? "" : productName.replace("\\", "\\\\").replace("\"", "\\\"");
+        String json = "{"
+                + "\"orderId\":\"" + orderId + "\","
+                + "\"amount\":" + amount + ","
+                + "\"productName\":\"" + safeName + "\""
+                + "}";
 
         resp.getWriter().write(json);
     }

@@ -1,121 +1,68 @@
 package controller.trainer;
 
-import dto.trainer.ClientDTO;
 import dto.common.TossDTO;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
+import dto.common.UserDTO;
 import org.json.JSONObject;
-import util.MybatisSqlSessionFactory;
+import service.common.TossPaymentService;
+import service.common.TossPaymentServiceImpl;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 @WebServlet("/payment/confirm")
 public class PaymentConfirmationController extends HttpServlet {
 
-    private static final String SECRET_KEY = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
-    private static final String TOSS_CONFIRM_URL = "https://api.tosspayments.com/v1/payments/confirm";
+    private final TossPaymentService tossPaymentService = new TossPaymentServiceImpl();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // 1. Read JSON body from client
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         StringBuilder sb = new StringBuilder();
         BufferedReader reader = request.getReader();
         String line;
-
         while ((line = reader.readLine()) != null) {
             sb.append(line);
         }
 
         JSONObject requestBody = new JSONObject(sb.toString());
-
         String paymentKey = requestBody.getString("paymentKey");
         String orderId = requestBody.getString("orderId");
-        int amount = requestBody.getInt("amount");
+        long amount = requestBody.getLong("amount");
 
-        // 2. Encode secret key (Basic Auth)
-        String encodedKey = Base64.getEncoder()
-                .encodeToString((SECRET_KEY + ":").getBytes(StandardCharsets.UTF_8));
+        try {
+            JSONObject tossResponse = tossPaymentService.confirmPayment(paymentKey, orderId, amount);
 
-        // 3. Create Toss API request
-        URL url = new URL(TOSS_CONFIRM_URL);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Authorization", "Basic " + encodedKey);
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setDoOutput(true);
-
-        // 4. Request body to Toss
-        JSONObject tossRequest = new JSONObject();
-        tossRequest.put("paymentKey", paymentKey);
-        tossRequest.put("orderId", orderId);
-        tossRequest.put("amount", amount);
-
-        OutputStream os = conn.getOutputStream();
-        os.write(tossRequest.toString().getBytes(StandardCharsets.UTF_8));
-        os.flush();
-        os.close();
-
-        int statusCode = conn.getResponseCode();
-
-        InputStream is = (statusCode == 200)
-                ? conn.getInputStream()
-                : conn.getErrorStream();
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-
-        StringBuilder responseBody = new StringBuilder();
-        String responseLine;
-
-        while ((responseLine = br.readLine()) != null) {
-            responseBody.append(responseLine.trim());
-        }
-
-        br.close();
-
-        // 5. Return response to frontend
-        response.setStatus(statusCode);
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(responseBody.toString());
-
-        // 6. (Optional but IMPORTANT) Business logic
-        if (statusCode == 200) {
-            JSONObject tossResponse = new JSONObject(responseBody.toString());
-
-            // Toss 응답에서 필드 추출
             TossDTO dto = new TossDTO();
             dto.setPaymentKey(tossResponse.getString("paymentKey"));
             dto.setOrderId(tossResponse.getString("orderId"));
-            dto.setAmount(tossResponse.getInt("totalAmount"));
-            dto.setStatus(tossResponse.getString("status"));       // "DONE"
-            dto.setMethod(tossResponse.getString("method"));       // "카드"
-            dto.setApprovedAt(tossResponse.getString("approvedAt")); // "2024-01-01T00:00:00+09:00"
+            dto.setAmount(tossResponse.getLong("totalAmount"));
+            dto.setStatus(tossResponse.getString("status"));
+            dto.setMethod(tossResponse.optString("method", null));
+            dto.setApprovedAt(tossResponse.optString("approvedAt", null));
 
-            // 세션에서 로그인한 회원 번호 가져오기
-//            HttpSession session = request.getSession(false);
-//            if (session != null && session.getAttribute("loginMember") != null) {
-//                ClientDTO client = (ClientDTO) session.getAttribute("loginMember");
-//                dto.setClientId(client.getClientId());
-//            }
-
-            // MyBatis로 DB 저장
-            try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-                sqlSession.insert("payment.insertPayment", dto);
-                sqlSession.commit();
-            } catch (Exception e) {
-                e.printStackTrace();
-                // 결제는 됐는데 DB 저장 실패 → 로그 필수, 운영에선 알림 처리
-                System.out.println("❌ DB 저장 실패: " + e.getMessage());
+            HttpSession session = request.getSession(false);
+            if (session != null && session.getAttribute("loginUser") != null) {
+                UserDTO user = (UserDTO) session.getAttribute("loginUser");
+                dto.setUserId(user.getId());
             }
 
-            System.out.println("✅ Payment Success & Saved: " + orderId);
+            tossPaymentService.saveToss(dto);
+
+            response.setStatus(200);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(tossResponse.toString());
+        } catch (Exception e) {
+            response.setStatus(500);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"message\":\"" + e.getMessage().replace("\"", "'") + "\"}");
         }
     }
 }

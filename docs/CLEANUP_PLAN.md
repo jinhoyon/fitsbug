@@ -371,7 +371,7 @@ Phases 4 and 5 can be parallelized by different contributors if entity boundarie
 | 2 — Naming/auth | Complete | 2026-07-07 — web.xml display-name, trainer auth unified; gym DAO rename deferred |
 | 3 — DAO pattern | Complete | 2026-07-07 — GymDAO→MyBatis, service-owned SqlSession, DBUtil removed |
 | 4 — Shared DTOs | Complete | 2026-07-07 — User, Trainer, Gym, Payment, Toss, Lesson, Notification, PayoutAccount, Certification, Pricing, Availability → `dto.common` |
-| 5 — Payments | Not started | |
+| 5 — Payments | Complete | 2026-07-07 — common TossPaymentService/PaymentService, unified TOSS mapper, TossPaymentsConfig |
 | 6 — Security | Not started | |
 | 7 — Polish | Not started | |
 | 8 — Docs | In progress | README, ARCHITECTURE, CONVENTIONS, this file |

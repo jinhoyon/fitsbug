@@ -1,29 +1,26 @@
 package controller.trainer;
 
 import dto.common.TossDTO;
+import org.json.JSONObject;
+import service.common.TossPaymentService;
+import service.common.TossPaymentServiceImpl;
 import service.trainer.TrainerPaymentService;
 import service.trainer.TrainerPaymentServiceImpl;
-import org.apache.ibatis.session.SqlSession;
-import org.json.JSONObject;
-import util.MybatisSqlSessionFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 @WebServlet("/payment/cancel")
 public class PaymentCancelController extends HttpServlet {
-    private static final String SECRET_KEY = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
+
+    private final TossPaymentService tossPaymentService = new TossPaymentServiceImpl();
     private final TrainerPaymentService paymentService = new TrainerPaymentServiceImpl();
 
-    // GET: cancel.jsp 보여주기
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -33,7 +30,6 @@ public class PaymentCancelController extends HttpServlet {
         request.setAttribute("payment", payment);
         request.getRequestDispatcher("/trainer/payment/cancel.jsp").forward(request, response);
     }
-
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -47,49 +43,17 @@ public class PaymentCancelController extends HttpServlet {
         String paymentKey = requestBody.getString("paymentKey");
         String cancelReason = requestBody.getString("cancelReason");
 
-        // Toss 취소 API 호출
-        String encodedKey = Base64.getEncoder()
-                .encodeToString((SECRET_KEY + ":").getBytes(StandardCharsets.UTF_8));
+        try {
+            JSONObject tossResponse = tossPaymentService.cancelPayment(paymentKey, cancelReason);
+            tossPaymentService.updateStatus(tossResponse.getString("orderId"), "CANCELED");
 
-        URL url = new URL("https://api.tosspayments.com/v1/payments/" + paymentKey + "/cancel");
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Authorization", "Basic " + encodedKey);
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setDoOutput(true);
-
-        JSONObject tossRequest = new JSONObject();
-        tossRequest.put("cancelReason", cancelReason);
-
-        OutputStream os = conn.getOutputStream();
-        os.write(tossRequest.toString().getBytes(StandardCharsets.UTF_8));
-        os.flush();
-        os.close();
-
-        int statusCode = conn.getResponseCode();
-        InputStream is = (statusCode == 200) ? conn.getInputStream() : conn.getErrorStream();
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-        StringBuilder responseBody = new StringBuilder();
-        String responseLine;
-        while ((responseLine = br.readLine()) != null) responseBody.append(responseLine.trim());
-        br.close();
-
-        if (statusCode == 200) {
-            SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-            try {
-                sqlSession.update("payment.cancelPayment", paymentKey);
-                sqlSession.commit();
-                System.out.println("✅ 환불 성공: " + paymentKey);
-            } catch (Exception e) {
-                sqlSession.rollback();
-                e.printStackTrace();
-            } finally {
-                sqlSession.close();
-            }
+            response.setStatus(200);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(tossResponse.toString());
+        } catch (Exception e) {
+            response.setStatus(500);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"message\":\"" + e.getMessage().replace("\"", "'") + "\"}");
         }
-
-        response.setStatus(statusCode);
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(responseBody.toString());
     }
 }

@@ -94,7 +94,6 @@
 		<mapper resource="mapper/gym/sales.xml"/>
 		<mapper resource="mapper/gym/infoEdit.xml"/>
 		<mapper resource="mapper/gym/payment.xml"/>
-		<mapper resource="mapper/gym/tossPayment.xml"/>
 		
 
 
@@ -134,7 +133,6 @@
 		<mapper resource="mapper/trainer/notification.xml"/>
 		<mapper resource="mapper/trainer/client.xml"/>
 		<mapper resource="mapper/trainer/meal.xml"/>
-		<mapper resource="mapper/trainer/payment.xml"/>
 		<mapper resource="mapper/trainer/user.xml"/>
 		<mapper resource="mapper/trainer/trainer.xml"/>
 		<mapper resource="mapper/trainer/payout_account.xml"/>

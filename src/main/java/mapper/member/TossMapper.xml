@@ -40,4 +40,10 @@
         UPDATE TOSS SET status = #{status} WHERE order_id = #{orderId}
     </update>
 
+    <select id="findPaymentKeyByOrderId" parameterType="string" resultType="string">
+        SELECT payment_key
+        FROM TOSS
+        WHERE order_id = #{orderId}
+    </select>
+
 </mapper>

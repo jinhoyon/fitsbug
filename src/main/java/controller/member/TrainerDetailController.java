@@ -17,6 +17,7 @@ import dto.common.CertificationDTO;
 import dto.common.PricingDTO;
 import dto.member.TrainerSpecializationDTO;
 import util.MybatisSqlSessionFactory;
+import util.TossPaymentsConfig;
 
 @WebServlet("/member/trainerDetail")
 public class TrainerDetailController extends HttpServlet {
@@ -67,10 +68,7 @@ public class TrainerDetailController extends HttpServlet {
         req.setAttribute("pricingList", pricingList);
         req.setAttribute("specList",    specList);
         req.setAttribute("certList",    certList);
-        System.out.println(trainer);
-        System.out.println(pricingList);
-        System.out.println(specList);
-        System.out.println(certList);
+        req.setAttribute("tossClientKey", TossPaymentsConfig.getClientKey());
 
         req.getRequestDispatcher("/member/trainerDetail.jsp").forward(req, resp);
     }

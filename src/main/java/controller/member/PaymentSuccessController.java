@@ -1,15 +1,7 @@
 package controller.member;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +23,8 @@ import dto.common.Payment;
 import dto.common.TossDTO;
 import dto.common.TrainerDTO;
 import dto.common.UserDTO;
+import service.common.TossPaymentService;
+import service.common.TossPaymentServiceImpl;
 import util.MybatisSqlSessionFactory;
 
 @WebServlet("/member/paymentSuccess")
@@ -38,9 +32,9 @@ public class PaymentSuccessController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String TOSS_SECRET_KEY = "test_sk_Ba5PzR0ArnB5zP0Dd4jGrvmYnNeD";
-
     private static final double FEE_RATE = 0.10;
+
+    private final TossPaymentService tossPaymentService = new TossPaymentServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -118,10 +112,10 @@ public class PaymentSuccessController extends HttpServlet {
         try {
 
             approveResult =
-                    confirmTossPayment(
+                    tossPaymentService.confirmPayment(
                             paymentKey,
                             orderId,
-                            amountStr
+                            Long.parseLong(amountStr)
                     );
 
         } catch (Exception e) {
@@ -465,115 +459,5 @@ public class PaymentSuccessController extends HttpServlet {
 
         req.getRequestDispatcher("/member/paymentSuccess.jsp")
                 .forward(req, resp);
-    }
-
-    // ==========================
-    // 토스 결제 승인 API
-    // ==========================
-
-    private JSONObject confirmTossPayment(
-            String paymentKey,
-            String orderId,
-            String amount
-    ) throws Exception {
-
-        URL url =
-                new URL(
-                        "https://api.tosspayments.com/v1/payments/confirm"
-                );
-
-        HttpURLConnection conn =
-                (HttpURLConnection) url.openConnection();
-
-        conn.setRequestMethod("POST");
-
-        conn.setRequestProperty(
-                "Authorization",
-                getBasicToken()
-        );
-
-        conn.setRequestProperty(
-                "Content-Type",
-                "application/json"
-        );
-
-        conn.setDoOutput(true);
-
-        JSONObject body =
-                new JSONObject();
-
-        body.put("paymentKey", paymentKey);
-
-        body.put("orderId", orderId);
-
-        body.put(
-                "amount",
-                Integer.parseInt(amount)
-        );
-
-        try (OutputStream os =
-                     conn.getOutputStream()) {
-
-            byte[] input =
-                    body.toString()
-                            .getBytes(StandardCharsets.UTF_8);
-
-            os.write(input, 0, input.length);
-        }
-
-        int responseCode =
-                conn.getResponseCode();
-
-        InputStream is =
-                (responseCode >= 200
-                        && responseCode < 300)
-                        ? conn.getInputStream()
-                        : conn.getErrorStream();
-
-        BufferedReader br =
-                new BufferedReader(
-                        new InputStreamReader(
-                                is,
-                                StandardCharsets.UTF_8
-                        )
-                );
-
-        StringBuilder sb =
-                new StringBuilder();
-
-        String line;
-
-        while ((line = br.readLine()) != null) {
-
-            sb.append(line.trim());
-        }
-
-        JSONObject result =
-                new JSONObject(sb.toString());
-
-        if (responseCode != 200) {
-
-            throw new RuntimeException(
-                    result.toString()
-            );
-        }
-
-        return result;
-    }
-
-    // ==========================
-    // 토스 인증 토큰
-    // ==========================
-
-    private String getBasicToken() {
-
-        String auth =
-                TOSS_SECRET_KEY + ":";
-
-        return "Basic "
-                + Base64.getEncoder()
-                .encodeToString(
-                        auth.getBytes(StandardCharsets.UTF_8)
-                );
     }
 }

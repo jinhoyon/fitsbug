@@ -32,7 +32,7 @@
         const coupon = document.getElementById("coupon-box");
 
         // ------  결제위젯 초기화 ------
-        const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+        const clientKey = "${tossClientKey}";
         const tossPayments = TossPayments(clientKey);
         // 회원 결제
         // const customerKey = "6nBblz8JUI2bbN07l8OxI";

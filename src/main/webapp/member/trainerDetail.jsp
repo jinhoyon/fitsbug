@@ -260,7 +260,7 @@ function pay() {
   // orderId 형식: PT-{trainerId}-{sessionCount}-{trainerType}-{timestamp}
   // PaymentSuccessController에서 파싱해 gymId/trainerId 분기에 사용
   const orderId      = 'PT-' + TRAINER_ID + '-' + sessionCount + '-' + TRAINER_TYPE + '-' + Date.now();
-  const tossPayments = TossPayments("test_ck_5OWRapdA8dJO4LMYoZWYVo1zEqZK");
+  const tossPayments = TossPayments("${tossClientKey}");
   tossPayments.requestPayment("카드", {
     amount,
     orderId,
