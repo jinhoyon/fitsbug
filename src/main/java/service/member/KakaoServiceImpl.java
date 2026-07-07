@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import dao.member.UserDAO;
 import dao.member.UserDAOImpl;
 import dto.common.UserDTO;
+import util.KakaoConfig;
 
 // ✅ LoginDTO/LoginDAO → UserDTO/UserDAO 로 전면 수정
 public class KakaoServiceImpl implements KakaoService {
@@ -30,8 +31,8 @@ public class KakaoServiceImpl implements KakaoService {
             conn.setDoOutput(true);
 
             String params = "grant_type=authorization_code"
-                    + "&client_id=REST_API_KEY"
-                    + "&redirect_uri=http://localhost:8080/kakaoLogin"
+                    + "&client_id=" + KakaoConfig.getClientId()
+                    + "&redirect_uri=" + KakaoConfig.getRedirectUri()
                     + "&code=" + code;
 
             OutputStream os = conn.getOutputStream();

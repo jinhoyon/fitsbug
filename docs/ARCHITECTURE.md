@@ -132,27 +132,26 @@ Multipart via `@MultipartConfig` on servlets. Files saved under `src/main/webapp
 
 ## External integrations
 
-| Service | Location | Config keys |
-|---------|----------|-------------|
-| Toss Payments | `service.common.TossPaymentService` | `toss.client.key`, `toss.secret.key` |
-| MariaDB | `util.DatabaseConfig` | `db.url`, `db.username`, `db.password` |
-| Kakao OAuth | `service/member/KakaoServiceImpl` | `kakao.client.id` (template only) |
-| Gmail SMTP | `controller/member/SendEmailController` | `mail.username`, `mail.app.password` (template only) |
+| Service | Location | Config |
+|---------|----------|--------|
+| Toss Payments | `service.common.TossPaymentService` | `TossPaymentsConfig` |
+| MariaDB | `util.DatabaseConfig` | `db.*` |
+| Kakao OAuth | `util.KakaoUtil` → `KakaoLoginController` | `KakaoConfig` |
+| Gmail SMTP | `SendEmailController` | `MailConfig` |
 
-Copy `config.properties.example` → `config.properties` for local values. Do not commit `config.properties`.
+All loaders share `util.ConfigLoader`. Copy `config.properties.example` → `config.properties` for local values.
 
 ## Remaining technical debt
 
-| Severity | Issue |
-|----------|-------|
-| Medium | Duplicate `TrainerDAO` in member/trainer packages |
-| Medium | Gym `Dao`/`DaoImpl` naming vs trainer/admin `DAO`/`DAOImpl` |
-| Medium | Some controllers still open DAOs directly (earnings, step3 join, etc.) |
-| Medium | Gmail/Kakao credentials not yet fully externalized in code |
-| Low | Trainer signup spread across 5 servlets |
-| Low | Inconsistent SqlSession ownership in a few legacy DAOs |
+Tracked as post-v1 deferred work in [CLEANUP_PLAN.md](CLEANUP_PLAN.md#post-v1-deferred-work):
 
-Full remediation history: [CLEANUP_PLAN.md](CLEANUP_PLAN.md).
+| ID | Issue |
+|----|-------|
+| D2 | Duplicate `TrainerDAO` name across member/trainer packages | Complete — member uses `TrainerListDAO` |
+| D3 | Gym `Dao`/`DaoImpl` naming vs trainer/admin `DAO`/`DAOImpl` |
+| D4 | Trainer signup spread across 5 servlets |
+| — | Some controllers still open DAOs directly (step3 join, earnings, etc.) |
+| — | Inconsistent SqlSession ownership in a few legacy DAOs |
 
 ## Dependency JARs
 

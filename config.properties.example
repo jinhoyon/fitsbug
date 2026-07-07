@@ -13,7 +13,7 @@ toss.secret.key=test_sk_Ba5PzR0ArnB5zP0Dd4jGrvmYnNeD
 
 # Kakao OAuth (member social login)
 kakao.client.id=
-kakao.redirect.uri=http://localhost:8080/Fitsbug/kakaoLogin
+kakao.redirect.uri=http://localhost:8080/Fitsbug/member/kakaoLogin
 
 # Gmail SMTP (email verification during member signup)
 mail.smtp.host=smtp.gmail.com

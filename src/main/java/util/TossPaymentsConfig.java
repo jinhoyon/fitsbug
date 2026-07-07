@@ -1,10 +1,5 @@
 package util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
@@ -20,7 +15,7 @@ public final class TossPaymentsConfig {
     private static final String clientKey;
 
     static {
-        Properties props = loadProperties();
+        Properties props = ConfigLoader.load();
         secretKey = props.getProperty("toss.secret.key", DEFAULT_SECRET_KEY).trim();
         clientKey = props.getProperty("toss.client.key", DEFAULT_CLIENT_KEY).trim();
     }
@@ -39,25 +34,5 @@ public final class TossPaymentsConfig {
         String token = java.util.Base64.getEncoder()
                 .encodeToString((secretKey + ":").getBytes(java.nio.charset.StandardCharsets.UTF_8));
         return "Basic " + token;
-    }
-
-    private static Properties loadProperties() {
-        Properties props = new Properties();
-        try (InputStream in = TossPaymentsConfig.class.getClassLoader().getResourceAsStream("config.properties")) {
-            if (in != null) {
-                props.load(in);
-                return props;
-            }
-        } catch (IOException ignored) {
-        }
-
-        Path path = Paths.get("config.properties");
-        if (Files.isRegularFile(path)) {
-            try (InputStream in = Files.newInputStream(path)) {
-                props.load(in);
-            } catch (IOException ignored) {
-            }
-        }
-        return props;
     }
 }

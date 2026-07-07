@@ -376,4 +376,41 @@ Phases 4 and 5 can be parallelized by different contributors if entity boundarie
 | 7 — Polish | Complete | 2026-07-07 — UploadController auth, ExerciseGuideDAO rename, service routing, XSS hardening |
 | 8 — Docs | Complete | 2026-07-07 — README, ARCHITECTURE, CONVENTIONS updated; config template finalized |
 
+---
+
+## Post-v1 deferred work
+
+Phases 0–8 are complete. Remaining items are tracked here and implemented one commit at a time.
+
+| ID | Item | Risk | Status |
+|----|------|------|--------|
+| D1 | Kakao/Gmail credential externalization (`KakaoConfig`, `MailConfig`, `ConfigLoader`) | Low | Complete |
+| D2 | Duplicate `TrainerDAO` — rename member discovery DAO → `TrainerListDAO` | Low | Complete |
+| D3 | Gym `Dao`/`DaoImpl` → `DAO`/`DAOImpl` naming | Medium | Not started |
+| D4 | Trainer signup — consolidate 5 servlets into step-routed controller | Medium | Not started |
+
+### D1 — Kakao/Gmail externalization
+
+- Remove hardcoded Gmail app password and Kakao client ID from source
+- `util.ConfigLoader` — shared `config.properties` loader (also used by `DatabaseConfig`, `TossPaymentsConfig`)
+- `util.KakaoConfig` — `kakao.client.id`, `kakao.redirect.uri`
+- `util.MailConfig` — `mail.smtp.*`, `mail.username`, `mail.app.password`
+- `KakaoUtil`, `SendEmailController`, `KakaoServiceImpl` updated
+
+### D2 — TrainerDAO consolidation
+
+Member module uses `TrainerDAO` for **public trainer discovery** (list/detail/availability). Trainer module uses `TrainerDAO` for **trainer profile CRUD** (signup, profile edit). Different responsibilities, same class name.
+
+**Fix:** rename `dao.member.TrainerDAO` → `TrainerListDAO` (+ impl).
+
+### D3 — Gym DAO naming
+
+~16 gym DAO pairs use `Dao`/`DaoImpl` instead of `DAO`/`DAOImpl`. Rename interfaces and implementations; update all gym services/controllers imports.
+
+### D4 — Trainer signup consolidation
+
+`/trainer/signup` through `/trainer/signup/step5` are separate servlets. Target: single `SignupController` with step routing (GET/POST by `step` param), keeping JSP paths unchanged.
+
+---
+
 _Update the progress tracker as phases complete._

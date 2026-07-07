@@ -1,10 +1,5 @@
 package util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
@@ -24,7 +19,7 @@ public final class DatabaseConfig {
     private static final String password;
 
     static {
-        Properties props = loadProperties();
+        Properties props = ConfigLoader.load();
         driver = props.getProperty("db.driver", DEFAULT_DRIVER).trim();
         url = props.getProperty("db.url", DEFAULT_URL).trim();
         username = props.getProperty("db.username", DEFAULT_USERNAME).trim();
@@ -39,26 +34,6 @@ public final class DatabaseConfig {
         props.setProperty("db.url", url);
         props.setProperty("db.username", username);
         props.setProperty("db.password", password);
-        return props;
-    }
-
-    private static Properties loadProperties() {
-        Properties props = new Properties();
-        try (InputStream in = DatabaseConfig.class.getClassLoader().getResourceAsStream("config.properties")) {
-            if (in != null) {
-                props.load(in);
-                return props;
-            }
-        } catch (IOException ignored) {
-        }
-
-        Path path = Paths.get("config.properties");
-        if (Files.isRegularFile(path)) {
-            try (InputStream in = Files.newInputStream(path)) {
-                props.load(in);
-            } catch (IOException ignored) {
-            }
-        }
         return props;
     }
 }

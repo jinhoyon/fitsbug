@@ -34,6 +34,8 @@ Shared cross-domain types: `dto.common.*`, `dao.common.*`, `service.common.*`.
 
 Admin exercise guides use `ExerciseGuideDAO` (not `ExerciseDAO`) to avoid collision with member `ExerciseDAO`.
 
+Member trainer **discovery** uses `TrainerListDAO` (list/detail for members). Trainer **profile CRUD** uses `dao.trainer.TrainerDAO`. Do not conflate the two.
+
 **Target:** gym `Dao`/`DaoImpl` → `DAO`/`DAOImpl` to match trainer/admin.
 
 ### URLs
@@ -217,8 +219,11 @@ Secrets and environment-specific values live in `config.properties` (gitignored)
 
 | Utility | Keys |
 |---------|------|
+| `ConfigLoader` | Shared `config.properties` loader |
 | `DatabaseConfig` | `db.driver`, `db.url`, `db.username`, `db.password` |
 | `TossPaymentsConfig` | `toss.client.key`, `toss.secret.key` |
+| `KakaoConfig` | `kakao.client.id`, `kakao.redirect.uri` |
+| `MailConfig` | `mail.smtp.host`, `mail.smtp.port`, `mail.username`, `mail.app.password` |
 
 Template: `config.properties.example`. Copy to `config.properties` before running locally.
 

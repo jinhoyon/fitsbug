@@ -48,7 +48,7 @@ src/main/java/
   filter/                                    # auth servlet filters
   mapper/{member,trainer,gym,admin}/         # MyBatis XML (on classpath)
   resource/mybatis-config.xml                # MyBatis config (${db.*} placeholders)
-  util/                                      # PasswordUtil, DatabaseConfig, TossPaymentsConfig, …
+  util/                                      # ConfigLoader, PasswordUtil, DatabaseConfig, TossPaymentsConfig, KakaoConfig, MailConfig, …
 
 src/main/webapp/
   member/ trainer/ gym/ admin/               # JSP views per role
@@ -68,7 +68,9 @@ config.properties.example                    # template for local secrets (copy 
 
 ## Cleanup status
 
-Phases 0–8 of the cleanup plan are complete (2026-07-07). Highlights:
+Phases 0–8 of the cleanup plan are complete (2026-07-07). Post-v1 deferred work (D1–D4) continues in [docs/CLEANUP_PLAN.md](docs/CLEANUP_PLAN.md#post-v1-deferred-work).
+
+Highlights from phases 0–8:
 
 - Dead code removed; trainer auth unified; DAO pattern normalized
 - Shared entity DTOs in `dto.common`
@@ -76,7 +78,14 @@ Phases 0–8 of the cleanup plan are complete (2026-07-07). Highlights:
 - Auth filters, BCrypt passwords, XSS hardening on community/gym/admin views
 - Admin `ExerciseGuideDAO` rename; upload/profile flows routed through services
 
-See [docs/CLEANUP_PLAN.md](docs/CLEANUP_PLAN.md) for the full progress tracker.
+## Post-v1 deferred work
+
+| ID | Item | Status |
+|----|------|--------|
+| D1 | Kakao/Gmail config externalization | Complete |
+| D2 | `TrainerListDAO` rename (member discovery vs trainer CRUD) | Complete |
+| D3 | Gym `Dao` → `DAO` naming | Not started |
+| D4 | Trainer signup servlet consolidation | Not started |
 
 ## Remote
 

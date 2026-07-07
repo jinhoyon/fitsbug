@@ -18,61 +18,63 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
+import util.MailConfig;
+
 @WebServlet("/member/sendEmailCode")
 public class SendEmailController extends HttpServlet {
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-		    throws IOException {
 
-				StringBuilder sb = new StringBuilder();
-				BufferedReader br = req.getReader();
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json; charset=UTF-8");
 
-				String line;
-				while ((line = br.readLine()) != null) {
-					sb.append(line);
-				}
+        if (!MailConfig.isConfigured()) {
+            resp.getWriter().write("{\"success\":false,\"message\":\"mail not configured\"}");
+            return;
+        }
 
-				String email = new JSONObject(sb.toString()).getString("email");
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader br = req.getReader()) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+        }
 
-		        // 인증코드 생성
-		        String code = String.valueOf((int)(Math.random()*900000)+100000);
+        String email = new JSONObject(sb.toString()).getString("email");
 
-		        HttpSession session = req.getSession();
-		        session.setAttribute("authCode", code);
-		        session.setAttribute("authTime", System.currentTimeMillis());
-		        session.setAttribute("authEmail", email);
+        String code = String.valueOf((int) (Math.random() * 900000) + 100000);
 
-		        try {
-		        final String username = "qustmdhyun@gmail.com";
-		        final String password = "rrfinnopkspbrzai";
+        HttpSession session = req.getSession();
+        session.setAttribute("authCode", code);
+        session.setAttribute("authTime", System.currentTimeMillis());
+        session.setAttribute("authEmail", email);
 
-		        Properties prop = new Properties();
-		        prop.put("mail.smtp.host", "smtp.gmail.com");
-		        prop.put("mail.smtp.port", "587");
-		        prop.put("mail.smtp.auth", "true");
-		        prop.put("mail.smtp.starttls.enable", "true");
+        try {
+            Properties prop = new Properties();
+            prop.put("mail.smtp.host", MailConfig.getSmtpHost());
+            prop.put("mail.smtp.port", MailConfig.getSmtpPort());
+            prop.put("mail.smtp.auth", "true");
+            prop.put("mail.smtp.starttls.enable", "true");
 
-		        Session mailSession = Session.getInstance(prop,
-		            new javax.mail.Authenticator() {
-		                protected PasswordAuthentication getPasswordAuthentication() {
-		                    return new PasswordAuthentication(username, password);
-		                }
-		            });
+            Session mailSession = Session.getInstance(prop, new javax.mail.Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(MailConfig.getUsername(), MailConfig.getAppPassword());
+                }
+            });
 
-		        	Message message = new MimeMessage(mailSession);
-		            message.setFrom(new InternetAddress(username));
-		            message.setRecipients(Message.RecipientType.TO,
-		                    InternetAddress.parse(email));
-		            message.setSubject("핏츠버그 인증코드");
-		            message.setText("인증코드: " + code);
+            Message message = new MimeMessage(mailSession);
+            message.setFrom(new InternetAddress(MailConfig.getUsername()));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+            message.setSubject("핏츠버그 인증코드");
+            message.setText("인증코드: " + code);
 
-		            Transport.send(message);
+            Transport.send(message);
+            resp.getWriter().write("{\"success\":true}");
 
-		            resp.setContentType("application/json; charset=UTF-8");
-		            resp.getWriter().write("{\"success\":true}");
-
-		        } catch (Exception e) {
-		            e.printStackTrace();
-		            resp.getWriter().write("{\"success\":false}");
-		}
-	}
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.getWriter().write("{\"success\":false}");
+        }
+    }
 }
