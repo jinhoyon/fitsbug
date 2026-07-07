@@ -9,7 +9,7 @@ import dto.gym.PtSessionView;
 import dto.gym.TrainerChoose;
 import util.MybatisSqlSessionFactory;
 
-public class GymScheduleDaoImpl implements GymScheduleDao{
+public class GymScheduleDAOImpl implements GymScheduleDAO{
 	
 	@Override
 	public List<TrainerChoose> selectTrainerListByGym(int gymId) throws Exception {

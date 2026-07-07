@@ -9,7 +9,7 @@ import dto.gym.SalesSummary;
 import dto.gym.SalesTopTrainer;
 import dto.gym.TrainerChoose;
 
-public interface GymSalesDao {
+public interface GymSalesDAO {
 	List<Sales> selectSalesList(Map<String, Object> param) throws Exception;
     int selectSalesCount(Map<String, Object> param) throws Exception;
     SalesSummary selectSalesSummary(Map<String, Object> param) throws Exception;

@@ -7,7 +7,7 @@ import java.util.Map;
 import dto.gym.GymNotice;
 import dto.gym.NoticeImages;
 
-public interface GymNoticeDao {
+public interface GymNoticeDAO {
 	int selectNoticeCount(int gymId) throws Exception;
 	List<GymNotice> selectNoticeList(Map<String, Object> param) throws Exception;
 	GymNotice selectNoticeDetail(int id) throws Exception;

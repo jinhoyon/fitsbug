@@ -148,7 +148,7 @@ Tracked as post-v1 deferred work in [CLEANUP_PLAN.md](CLEANUP_PLAN.md#post-v1-de
 | ID | Issue |
 |----|-------|
 | D2 | Duplicate `TrainerDAO` name across member/trainer packages | Complete — member uses `TrainerListDAO` |
-| D3 | Gym `Dao`/`DaoImpl` naming vs trainer/admin `DAO`/`DAOImpl` |
+| D3 | Gym `Dao`/`DaoImpl` naming vs trainer/admin `DAO`/`DAOImpl` | Complete — all 16 gym DAO pairs renamed |
 | D4 | Trainer signup spread across 5 servlets |
 | — | Some controllers still open DAOs directly (step3 join, earnings, etc.) |
 | — | Inconsistent SqlSession ownership in a few legacy DAOs |

@@ -10,7 +10,7 @@ import org.apache.ibatis.session.SqlSession;
 import dto.gym.GymNotice;
 import util.MybatisSqlSessionFactory;
 
-public class GymNoticeDaoImpl implements GymNoticeDao {
+public class GymNoticeDAOImpl implements GymNoticeDAO {
 	
 	@Override
 	public int selectNoticeCount(int gymId) throws Exception {

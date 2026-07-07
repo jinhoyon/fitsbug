@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import dto.gym.MemberManage;
 import util.MybatisSqlSessionFactory;
 
-public class GymMemberManageDaoImpl implements GymMemberManageDao {
+public class GymMemberManageDAOImpl implements GymMemberManageDAO {
 
 	@Override
 	public List<MemberManage> selectMemberList(Map<String, Object> param) throws Exception {

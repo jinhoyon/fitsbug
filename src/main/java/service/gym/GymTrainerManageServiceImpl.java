@@ -4,15 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dao.gym.TrainerManageDao;
-import dao.gym.TrainerManageDaoImpl;
+import dao.gym.TrainerManageDAO;
+import dao.gym.TrainerManageDAOImpl;
 import dto.gym.TrainerAssign;
 import dto.gym.TrainerList;
 import dto.gym.TrainerMemberView;
 
 public class GymTrainerManageServiceImpl implements GymTrainerManageService {
 
-	private TrainerManageDao dao = new TrainerManageDaoImpl();
+	private TrainerManageDAO dao = new TrainerManageDAOImpl();
 
     @Override
     public List<TrainerMemberView> getCurrentMembers(int trainerId, int gymId) throws Exception{

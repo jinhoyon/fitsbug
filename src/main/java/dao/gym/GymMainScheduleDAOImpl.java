@@ -5,7 +5,7 @@ import org.apache.ibatis.session.SqlSession;
 import dto.gym.Schedule;
 import util.MybatisSqlSessionFactory;
 
-public class GymMainScheduleDaoImpl implements GymMainScheduleDao {
+public class GymMainScheduleDAOImpl implements GymMainScheduleDAO {
 	
 	@Override
 	public Schedule selectScheduleByGym(int gymNum) throws Exception {

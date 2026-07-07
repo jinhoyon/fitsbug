@@ -36,7 +36,7 @@ Admin exercise guides use `ExerciseGuideDAO` (not `ExerciseDAO`) to avoid collis
 
 Member trainer **discovery** uses `TrainerListDAO` (list/detail for members). Trainer **profile CRUD** uses `dao.trainer.TrainerDAO`. Do not conflate the two.
 
-**Target:** gym `Dao`/`DaoImpl` → `DAO`/`DAOImpl` to match trainer/admin.
+Gym module uses `DAO`/`DAOImpl` naming, consistent with trainer/admin.
 
 ### URLs
 

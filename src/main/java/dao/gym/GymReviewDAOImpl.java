@@ -7,7 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import dto.gym.Review;
 import util.MybatisSqlSessionFactory;
 
-public class GymReviewDaoImpl implements GymReviewDao {
+public class GymReviewDAOImpl implements GymReviewDAO {
 
 	@Override
 	public void insertReview(Review review) throws Exception {

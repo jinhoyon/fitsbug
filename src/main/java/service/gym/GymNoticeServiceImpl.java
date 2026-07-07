@@ -3,74 +3,74 @@ package service.gym;
 import java.util.List;
 import java.util.Map;
 
-import dao.gym.GymNoticeDao;
-import dao.gym.GymNoticeDaoImpl;
+import dao.gym.GymNoticeDAO;
+import dao.gym.GymNoticeDAOImpl;
 import dto.gym.GymNotice;
 import dto.gym.NoticeImages;
 
 public class GymNoticeServiceImpl implements GymNoticeService {
-	private GymNoticeDao gymNoticeDao = new GymNoticeDaoImpl();
+	private GymNoticeDAO gymNoticeDAO = new GymNoticeDAOImpl();
 	
 	@Override
 	public int getNoticeCount(int gymId) throws Exception {
-		return gymNoticeDao.selectNoticeCount(gymId);
+		return gymNoticeDAO.selectNoticeCount(gymId);
 	}
 
 	@Override
 	public List<GymNotice> getNoticeList(Map<String, Object> param) throws Exception {
-		return gymNoticeDao.selectNoticeList(param);
+		return gymNoticeDAO.selectNoticeList(param);
 	}
 
 	@Override
 	public GymNotice getNoticeDetail(int id) throws Exception {
-		return gymNoticeDao.selectNoticeDetail(id);
+		return gymNoticeDAO.selectNoticeDetail(id);
 	}
 
 	@Override
 	public void increaseViewCount(int id) throws Exception {
-		gymNoticeDao.updateViewCount(id);
+		gymNoticeDAO.updateViewCount(id);
 	}
 
 	@Override
 	public void writeNotice(GymNotice notice) throws Exception {
-		gymNoticeDao.insertNotice(notice);
+		gymNoticeDAO.insertNotice(notice);
 	}
 	
 	@Override
 	public void updateNotice(GymNotice notice) throws Exception {
-		gymNoticeDao.updateNotice(notice);
+		gymNoticeDAO.updateNotice(notice);
 	}
 	
 	
 	@Override
 	public void addImage(NoticeImages image) throws Exception {
-		gymNoticeDao.insertImages(image);
+		gymNoticeDAO.insertImages(image);
 	}
 	
 	@Override
 	public void removeImages(List<Integer> imageId) throws Exception {
-		gymNoticeDao.deleteImages(imageId);
+		gymNoticeDAO.deleteImages(imageId);
 	}
 
 	@Override
 	public List<NoticeImages> getImagesByNoticeId(int noticeId) throws Exception {
-		return gymNoticeDao.selectImagesByNoticeId(noticeId);
+		return gymNoticeDAO.selectImagesByNoticeId(noticeId);
 	}
 
 	@Override
 	public void deleteNotice(int noticeId) throws Exception {
-		gymNoticeDao.deleteImagesByNoticeId(noticeId);
-	    gymNoticeDao.deleteNotice(noticeId);
+		gymNoticeDAO.deleteImagesByNoticeId(noticeId);
+	    gymNoticeDAO.deleteNotice(noticeId);
 	}
 
 	@Override
 	public void deleteImagesByNoticeId(int noticeId) throws Exception {
-		gymNoticeDao.deleteImagesByNoticeId(noticeId);
+		gymNoticeDAO.deleteImagesByNoticeId(noticeId);
 	}
 
 	@Override
 	public List<GymNotice> selectNoticeList(Integer gymId) throws Exception {
-		return gymNoticeDao.selectNoticeList(gymId);
+		return gymNoticeDAO.selectNoticeList(gymId);
 	}
 
 }

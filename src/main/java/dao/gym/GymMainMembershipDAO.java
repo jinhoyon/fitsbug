@@ -4,7 +4,7 @@ import java.util.List;
 
 import dto.gym.Membership;
 
-public interface GymMainMembershipDao {
+public interface GymMainMembershipDAO {
 	List<Membership> selectMembershipByGym(int gymNum) throws Exception;
 	
 }

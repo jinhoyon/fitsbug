@@ -11,7 +11,7 @@ import dto.gym.TrainerList;
 import dto.gym.TrainerMemberView;
 import util.MybatisSqlSessionFactory;
 
-public class TrainerManageDaoImpl implements TrainerManageDao {
+public class TrainerManageDAOImpl implements TrainerManageDAO {
 
 	@Override
 	public List<TrainerMemberView> selectCurrentMembers(int trainerId, int gymId) throws Exception{

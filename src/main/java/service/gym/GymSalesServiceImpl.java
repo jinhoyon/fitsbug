@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dao.gym.GymSalesDao;
-import dao.gym.GymSalesDaoImpl;
+import dao.gym.GymSalesDAO;
+import dao.gym.GymSalesDAOImpl;
 import dto.gym.Sales;
 import dto.gym.SalesChart;
 import dto.gym.SalesSummary;
@@ -16,7 +16,7 @@ import dto.gym.SalesTopTrainer;
 import dto.gym.TrainerChoose;
 
 public class GymSalesServiceImpl implements GymSalesService {
-	private GymSalesDao dao = new GymSalesDaoImpl();
+	private GymSalesDAO dao = new GymSalesDAOImpl();
 	
 	@Override
 	public List<Sales> getSalesList(Map<String, Object> param) throws Exception {

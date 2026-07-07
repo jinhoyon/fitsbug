@@ -11,7 +11,7 @@ import dto.gym.MembershipRegistration;
 import dto.common.Payment;
 import util.MybatisSqlSessionFactory;
 
-public class GymPaymentDaoImpl implements GymPaymentDao {
+public class GymPaymentDAOImpl implements GymPaymentDAO {
 
 	@Override
 	public int insertMembershipRegistration(MembershipRegistration membershipRegistration) throws Exception {

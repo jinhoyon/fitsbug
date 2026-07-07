@@ -368,7 +368,7 @@ Phases 4 and 5 can be parallelized by different contributors if entity boundarie
 |-------|--------|-----------|
 | 0 — Baseline | Complete | 2026-07-07 — branch `cleanup/phase-1-dead-code` |
 | 1 — Dead weight | Complete | 2026-07-07 — 16 files deleted, admin dead methods removed, mybatis deduped |
-| 2 — Naming/auth | Complete | 2026-07-07 — web.xml display-name, trainer auth unified; gym DAO rename deferred |
+| 2 — Naming/auth | Complete | 2026-07-07 — web.xml display-name, trainer auth unified; gym DAO rename completed in D3 |
 | 3 — DAO pattern | Complete | 2026-07-07 — GymDAO→MyBatis, service-owned SqlSession, DBUtil removed |
 | 4 — Shared DTOs | Complete | 2026-07-07 — User, Trainer, Gym, Payment, Toss, Lesson, Notification, PayoutAccount, Certification, Pricing, Availability → `dto.common` |
 | 5 — Payments | Complete | 2026-07-07 — common TossPaymentService/PaymentService, unified TOSS mapper, TossPaymentsConfig |
@@ -386,7 +386,7 @@ Phases 0–8 are complete. Remaining items are tracked here and implemented one 
 |----|------|------|--------|
 | D1 | Kakao/Gmail credential externalization (`KakaoConfig`, `MailConfig`, `ConfigLoader`) | Low | Complete |
 | D2 | Duplicate `TrainerDAO` — rename member discovery DAO → `TrainerListDAO` | Low | Complete |
-| D3 | Gym `Dao`/`DaoImpl` → `DAO`/`DAOImpl` naming | Medium | Not started |
+| D3 | Gym `Dao`/`DaoImpl` → `DAO`/`DAOImpl` naming | Medium | Complete |
 | D4 | Trainer signup — consolidate 5 servlets into step-routed controller | Medium | Not started |
 
 ### D1 — Kakao/Gmail externalization

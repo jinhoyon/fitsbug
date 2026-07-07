@@ -2,12 +2,12 @@ package service.gym;
 
 import java.util.List;
 
-import dao.gym.GymReviewDao;
-import dao.gym.GymReviewDaoImpl;
+import dao.gym.GymReviewDAO;
+import dao.gym.GymReviewDAOImpl;
 import dto.gym.Review;
 
 public class GymReviewServiceImpl implements GymReviewService {
-	private GymReviewDao dao = new GymReviewDaoImpl();
+	private GymReviewDAO dao = new GymReviewDAOImpl();
 	
 	@Override
 	public void writeReview(Review review) throws Exception {

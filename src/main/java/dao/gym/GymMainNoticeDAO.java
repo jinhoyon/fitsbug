@@ -4,6 +4,6 @@ import java.util.List;
 
 import dto.gym.GymNotice;
 
-public interface GymMainNoticeDao {
+public interface GymMainNoticeDAO {
 	List<GymNotice> selectRecentNoticeByGym(int gymId) throws Exception;
 }

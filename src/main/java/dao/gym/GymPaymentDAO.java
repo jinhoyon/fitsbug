@@ -7,7 +7,7 @@ import dto.gym.Membership;
 import dto.gym.MembershipRegistration;
 import dto.common.Payment;
 
-public interface GymPaymentDao {
+public interface GymPaymentDAO {
 	int insertMembershipRegistration(MembershipRegistration membershipRegistration)throws Exception;
     int insertPayment(Payment payment)throws Exception;
     MembershipRegistration selectMembershipRegistration(int mrNum)throws Exception;

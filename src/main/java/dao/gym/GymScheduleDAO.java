@@ -6,7 +6,7 @@ import java.util.Map;
 import dto.gym.PtSessionView;
 import dto.gym.TrainerChoose;
 
-public interface GymScheduleDao {
+public interface GymScheduleDAO {
 	List<TrainerChoose> selectTrainerListByGym(int gymId) throws Exception;
     List<PtSessionView> selectPtSessionListByGymAndWeek(Map<String, Object> param) throws Exception;
 }

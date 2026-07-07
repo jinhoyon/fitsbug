@@ -6,7 +6,7 @@ import dto.common.Gym;
 import dto.gym.HotTime;
 import dto.common.UserDTO;
 
-public interface GymMainDao {
+public interface GymMainDAO {
 	Map<String,Object> selectGymMainInfo(int gymId) throws Exception;
 	HotTime selectTodayHotTime(Map<String, Object> param) throws Exception;
 	void insertGym(Gym gym) throws Exception;

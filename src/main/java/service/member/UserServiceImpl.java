@@ -3,8 +3,8 @@ package service.member;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 
-import dao.gym.GymMainDao;
-import dao.gym.GymMainDaoImpl;
+import dao.gym.GymMainDAO;
+import dao.gym.GymMainDAOImpl;
 import dao.member.MemberDAO;
 import dao.member.MemberDAOImpl;
 import dao.member.UserDAO;
@@ -21,7 +21,7 @@ import util.PasswordUtil;
 public class UserServiceImpl implements UserService {
 
     private UserDAO userDAO = new UserDAOImpl();
-    private GymMainDao gymMainDAO = new GymMainDaoImpl();
+    private GymMainDAO gymMainDAO = new GymMainDAOImpl();
     private MemberDAO memberDAO = new MemberDAOImpl();
     private TrainerDAO trainerDAO = new TrainerDAOImpl();
 

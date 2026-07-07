@@ -9,7 +9,7 @@ import dto.gym.HotTime;
 import dto.common.UserDTO;
 import util.MybatisSqlSessionFactory;
 
-public class GymMainDaoImpl implements GymMainDao {
+public class GymMainDAOImpl implements GymMainDAO {
 	
 	@Override
 	public Map<String,Object> selectGymMainInfo(int gymId) throws Exception {

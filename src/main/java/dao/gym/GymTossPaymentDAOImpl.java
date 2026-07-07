@@ -5,7 +5,7 @@ import org.apache.ibatis.session.SqlSession;
 import dto.common.TossDTO;
 import util.MybatisSqlSessionFactory;
 
-public class GymTossPaymentDaoImpl implements GymTossPaymentDao {
+public class GymTossPaymentDAOImpl implements GymTossPaymentDAO {
 
 	@Override
 	public void insertTossPayment(TossDTO tossPayment) {

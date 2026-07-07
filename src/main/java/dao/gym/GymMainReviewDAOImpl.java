@@ -7,7 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import dto.gym.Review;
 import util.MybatisSqlSessionFactory;
 
-public class GymMainReviewDaoImpl implements GymMainReviewDao {
+public class GymMainReviewDAOImpl implements GymMainReviewDAO {
 
 	@Override
 	public List<Review> selectRecentReviewByGym(int gymId) throws Exception {

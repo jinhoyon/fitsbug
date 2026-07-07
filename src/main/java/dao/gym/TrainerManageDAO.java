@@ -7,7 +7,7 @@ import dto.gym.TrainerAssign;
 import dto.gym.TrainerList;
 import dto.gym.TrainerMemberView;
 
-public interface TrainerManageDao {
+public interface TrainerManageDAO {
 	List<TrainerList> selectTrainerList(Map<String, Object> param)throws Exception;
     List<TrainerAssign> selectTrainerAssignList(int gymId)throws Exception;
 	List<TrainerMemberView> selectCurrentMembers(int trainerId, int gymId)throws Exception;

@@ -11,7 +11,7 @@ import dto.gym.TodayPtSchedule;
 import dto.gym.TopTrainerRevenue;
 import dto.gym.WeeklyVisitStat;
 
-public interface GymDashboardDao {
+public interface GymDashboardDAO {
 	int selectNewMemberCount(Map<String, Object> param) throws Exception;
     List<TodayPtSchedule> selectTodayScheduleList(Map<String, Object> param) throws Exception;
     BigDecimal selectTotalRevenue(Map<String, Object> param) throws Exception;

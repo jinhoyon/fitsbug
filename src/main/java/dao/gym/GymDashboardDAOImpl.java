@@ -14,7 +14,7 @@ import dto.gym.TopTrainerRevenue;
 import dto.gym.WeeklyVisitStat;
 import util.MybatisSqlSessionFactory;
 
-public class GymDashboardDaoImpl implements GymDashboardDao {
+public class GymDashboardDAOImpl implements GymDashboardDAO {
 
 	@Override
 	public int selectNewMemberCount(Map<String, Object> param) throws Exception {

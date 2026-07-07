@@ -11,7 +11,7 @@ import dto.gym.Schedule;
 import dto.common.UserDTO;
 import util.MybatisSqlSessionFactory;
 
-public class InfoEditDaoImpl implements InfoEditDao{
+public class InfoEditDAOImpl implements InfoEditDAO{
 
 	@Override
 	public Gym selectGymMypage(int gymId) {

@@ -12,7 +12,7 @@ import dto.gym.SalesTopTrainer;
 import dto.gym.TrainerChoose;
 import util.MybatisSqlSessionFactory;
 
-public class GymSalesDaoImpl implements GymSalesDao {
+public class GymSalesDAOImpl implements GymSalesDAO {
 
 	@Override
 	public List<Sales> selectSalesList(Map<String, Object> param) throws Exception {

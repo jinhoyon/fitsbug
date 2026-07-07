@@ -4,7 +4,7 @@ import java.util.List;
 
 import dto.gym.Review;
 
-public interface GymReviewDao {
+public interface GymReviewDAO {
 	void insertReview(Review review) throws Exception;
 	Review selectReviewByReviewNum(int reviewNum) throws Exception;
 	void updateReview(Review review) throws Exception;

@@ -2,14 +2,14 @@ package service.gym;
 
 import java.util.List;
 
-import dao.gym.GymPaymentDao;
-import dao.gym.GymPaymentDaoImpl;
+import dao.gym.GymPaymentDAO;
+import dao.gym.GymPaymentDAOImpl;
 import dto.gym.Membership;
 import dto.gym.MembershipRegistration;
 import dto.common.Payment;
 
 public class GymPaymentServiceImpl implements GymPaymentService{
-	private GymPaymentDao dao = new GymPaymentDaoImpl();
+	private GymPaymentDAO dao = new GymPaymentDAOImpl();
 
 	@Override
 	public int registerMembershipAndPayment(MembershipRegistration membershipRegistration, Payment payment) throws Exception{

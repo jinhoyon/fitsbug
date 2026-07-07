@@ -4,6 +4,6 @@ import java.util.List;
 
 import dto.gym.Review;
 
-public interface GymMainReviewDao {
+public interface GymMainReviewDAO {
 	List<Review> selectRecentReviewByGym(int gymId) throws Exception;
 }

@@ -7,7 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import dto.gym.GymTrainerView;
 import util.MybatisSqlSessionFactory;
 
-public class GymMainTrainerViewDaoImpl implements GymMainTrainerViewDao {
+public class GymMainTrainerViewDAOImpl implements GymMainTrainerViewDAO {
 	
 	@Override
 	public List<GymTrainerView> selectGymTrainerViewByGym(int gymId) throws Exception {
