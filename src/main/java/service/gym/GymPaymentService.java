@@ -4,7 +4,7 @@ import java.util.List;
 
 import dto.gym.Membership;
 import dto.gym.MembershipRegistration;
-import dto.gym.Payment;
+import dto.common.Payment;
 
 public interface GymPaymentService {
 	int registerMembershipAndPayment(MembershipRegistration membershipRegistration, Payment payment)throws Exception;

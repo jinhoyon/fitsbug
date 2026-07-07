@@ -4,7 +4,7 @@ package service.member;
 import dao.member.PaymentDAO;
 import dao.member.PaymentDAOImpl;
 import dto.member.NotificationDTO;
-import dto.member.PaymentDTO;
+import dto.common.Payment;
 
 public class PaymentServiceImpl implements PaymentService {
 
@@ -15,7 +15,7 @@ public class PaymentServiceImpl implements PaymentService {
     // 결제 생성 (READY 상태)
     // =========================
     @Override
-    public PaymentDTO createPayment(PaymentDTO dto) {
+    public Payment createPayment(Payment dto) {
 
         // 상태 초기화
         dto.setStatus("READY");
@@ -46,7 +46,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentDTO getActivePayment(String email) {
+    public Payment getActivePayment(String email) {
         return dao.findActiveByEmail(email);
     }
 

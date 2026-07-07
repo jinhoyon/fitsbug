@@ -1,7 +1,7 @@
 package dao.member;
 
 import org.apache.ibatis.session.SqlSession;
-import dto.member.PaymentDTO;
+import dto.common.Payment;
 import util.MybatisSqlSessionFactory;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +18,7 @@ public class PaymentDAOImpl implements PaymentDAO {
     private static final String NS = "mapper.PaymentMapper.";
 
     @Override
-    public int insert(PaymentDTO dto) {
+    public int insert(Payment dto) {
         SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
@@ -40,12 +40,12 @@ public class PaymentDAOImpl implements PaymentDAO {
     }
 
     @Override
-    public PaymentDTO findActiveByEmail(String email) {
+    public Payment findActiveByEmail(String email) {
         SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-        PaymentDTO result = null;
+        Payment result = null;
         try {
             // USER.email로 최근 결제 1건 조회 (하위 호환)
-            List<PaymentDTO> list = session.selectList(NS + "findByUserId",
+            List<Payment> list = session.selectList(NS + "findByUserId",
                     session.selectOne("mapper.UserMapper.findByEmail", email) != null
                     ? ((dto.common.UserDTO) session.selectOne("mapper.UserMapper.findByEmail", email)).getId()
                     : 0);
@@ -59,9 +59,9 @@ public class PaymentDAOImpl implements PaymentDAO {
     }
 
     @Override
-    public List<PaymentDTO> findByUserId(int userId) {
+    public List<Payment> findByUserId(int userId) {
         SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-        List<PaymentDTO> list = null;
+        List<Payment> list = null;
         try {
             list = session.selectList(NS + "findByUserId", userId);
         } catch (Exception e) {
@@ -73,9 +73,9 @@ public class PaymentDAOImpl implements PaymentDAO {
     }
 
     @Override
-    public PaymentDTO findById(int id) {
+    public Payment findById(int id) {
         SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-        PaymentDTO result = null;
+        Payment result = null;
         try {
             result = session.selectOne(NS + "findById", id);
         } catch (Exception e) {

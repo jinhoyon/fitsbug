@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import dto.gym.Membership;
 import dto.gym.MembershipRegistration;
-import dto.gym.Payment;
+import dto.common.Payment;
 import dto.gym.TossPayment;
 import dto.common.UserDTO;
 import service.gym.GymPaymentService;

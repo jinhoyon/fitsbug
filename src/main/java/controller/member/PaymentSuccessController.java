@@ -27,7 +27,7 @@ import dao.member.MemberDAO;
 import dao.member.MemberDAOImpl;
 import dto.member.MemberDTO;
 import dto.member.MembershipRegistrationDTO;
-import dto.member.PaymentDTO;
+import dto.common.Payment;
 import dto.member.TossDTO;
 import dto.common.TrainerDTO;
 import dto.common.UserDTO;
@@ -361,7 +361,7 @@ public class PaymentSuccessController extends HttpServlet {
             // PAYMENT 저장
             // ==========================
 
-            PaymentDTO payment = new PaymentDTO();
+            Payment payment = new Payment();
 
             payment.setUserId(userId);
 

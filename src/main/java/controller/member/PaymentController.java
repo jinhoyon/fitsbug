@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dto.common.UserDTO;
-import dto.member.PaymentDTO;
+import dto.common.Payment;
 import service.member.PaymentService;
 import service.member.PaymentServiceImpl;
 
@@ -36,10 +36,10 @@ public class PaymentController extends HttpServlet {
         String productName = req.getParameter("productName");
 
         // ✔ Controller는 DTO만 만든다 (orderId X)
-        PaymentDTO dto = new PaymentDTO();
+        Payment dto = new Payment();
 
         // ✔ Service가 orderId 생성 + DB 저장 담당
-        PaymentDTO result = service.createPayment(dto);
+        Payment result = service.createPayment(dto);
 
         // ✔ response는 result 기준
         String json = "";

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dto.gym.MemberManage;
-import dto.gym.Payment;
+import dto.common.Payment;
 import dto.common.UserDTO;
 import service.gym.GymMemberManageService;
 import service.gym.GymMemberManageServiceImpl;

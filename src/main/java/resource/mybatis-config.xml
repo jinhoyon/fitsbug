@@ -34,7 +34,7 @@
 		<typeAlias alias="ChatMessageDTO" 	type="dto.member.ChatMessageDTO"/>
         <typeAlias alias="NotificationDTO"  type="dto.member.NotificationDTO"/>
         <typeAlias alias="TossDTO"  		type="dto.member.TossDTO"/>
-        <typeAlias alias="PaymentDTO"       type="dto.member.PaymentDTO"/>
+        <typeAlias alias="PaymentDTO"       type="dto.common.Payment"/>
         <typeAlias alias="PtFeedbackDTO"    type="dto.member.PtFeedbackDTO"/>
         <typeAlias alias="ReportDTO"        type="dto.member.ReportDTO"/>
         <typeAlias alias="MembershipDTO"             type="dto.member.MembershipDTO"/>

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import dto.gym.Membership;
 import dto.gym.MembershipRegistration;
-import dto.gym.Payment;
+import dto.common.Payment;
 
 public interface GymPaymentDao {
 	int insertMembershipRegistration(MembershipRegistration membershipRegistration)throws Exception;

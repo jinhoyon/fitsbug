@@ -1,16 +1,16 @@
 package service.member;
 
-import dto.member.PaymentDTO;
+import dto.common.Payment;
 
 public interface PaymentService {
 
     // 🔥 결제 생성 (READY 상태)
-    PaymentDTO createPayment(PaymentDTO dto);
+    Payment createPayment(Payment dto);
 
     // 🔥 결제 성공 처리
     void success(String orderId, String email);
     
-    PaymentDTO getActivePayment(String email);
+    Payment getActivePayment(String email);
 
     // 취소 / 환불 요청
     void requestCancel(String orderId);

@@ -37,7 +37,7 @@
     </insert>
 
     <insert id="insertPayment"
-            parameterType="dto.gym.Payment"
+            parameterType="dto.common.Payment"
             useGeneratedKeys="true"
             keyProperty="paymentNum">
         INSERT INTO PAYMENT (
@@ -94,7 +94,7 @@
 
     <select id="selectPayment"
             parameterType="int"
-            resultType="dto.gym.Payment">
+            resultType="dto.common.Payment">
         SELECT
             id AS paymentNum,
             user_id AS userId,
@@ -130,7 +130,7 @@
         WHERE id = #{value}
     </select>
 
-    <select id="selectRefundRequestList" parameterType="int" resultType="dto.gym.Payment">
+    <select id="selectRefundRequestList" parameterType="int" resultType="dto.common.Payment">
         SELECT
             p.id AS paymentNum,
             p.user_id AS userId,
@@ -196,7 +196,7 @@
     
     <select id="selectPaymentByOrderId"
         parameterType="string"
-        resultType="dto.gym.Payment">
+        resultType="dto.common.Payment">
     SELECT
         id AS paymentNum,
         user_id AS userId,

@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import dto.gym.Membership;
 import dto.gym.MembershipRegistration;
-import dto.gym.Payment;
+import dto.common.Payment;
 import util.MybatisSqlSessionFactory;
 
 public class GymPaymentDaoImpl implements GymPaymentDao {

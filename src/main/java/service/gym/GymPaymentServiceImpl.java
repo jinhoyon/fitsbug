@@ -6,7 +6,7 @@ import dao.gym.GymPaymentDao;
 import dao.gym.GymPaymentDaoImpl;
 import dto.gym.Membership;
 import dto.gym.MembershipRegistration;
-import dto.gym.Payment;
+import dto.common.Payment;
 
 public class GymPaymentServiceImpl implements GymPaymentService{
 	private GymPaymentDao dao = new GymPaymentDaoImpl();
