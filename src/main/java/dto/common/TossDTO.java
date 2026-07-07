@@ -1,24 +1,51 @@
-package dto.trainer;
+package dto.common;
 
-public class PaymentDTO {
-    private int paymentId;
-    private String paymentKey;   // Toss 고유 결제 키
-    private String orderId;      // 주문 ID
-    private int amount;          // 결제 금액
-    private String status;       // DONE, CANCELED 등
-    private String method;       // 카드, 가상계좌 등
-    private String approvedAt;   // 승인 시각 (Toss 응답값)
-    private int clientId;        // FK: 결제한 회원 번호
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
+/**
+ * Shared TOSS table DTO for Toss Payments integration across member, gym, and trainer modules.
+ */
+public class TossDTO {
+
+    private int id;
+    private int userId;
+    private String paymentKey;
+    private String orderId;
+    private long amount;
+    private String status;
+    private LocalDateTime createdAt;
+
+    // Trainer checkout extras (not all persisted to TOSS table)
+    private String method;
+    private String approvedAt;
+    private int clientId;
     private int trainerId;
 
+    public TossDTO() {}
 
-    // Getters & Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getPaymentId() {
-        return paymentId;
+        return id;
     }
 
     public void setPaymentId(int paymentId) {
-        this.paymentId = paymentId;
+        this.id = paymentId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getPaymentKey() {
@@ -37,8 +64,12 @@ public class PaymentDTO {
         this.orderId = orderId;
     }
 
-    public int getAmount() {
+    public long getAmount() {
         return amount;
+    }
+
+    public void setAmount(long amount) {
+        this.amount = amount;
     }
 
     public void setAmount(int amount) {
@@ -51,6 +82,18 @@ public class PaymentDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt != null ? createdAt.toLocalDateTime() : null;
     }
 
     public String getMethod() {

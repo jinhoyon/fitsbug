@@ -1,10 +1,10 @@
 package dao.trainer;
 
-import dto.trainer.PaymentDTO;
+import dto.common.TossDTO;
 import org.apache.ibatis.session.SqlSession;
 
 public interface PaymentDAO {
-    int insertPayment(SqlSession session, PaymentDTO dto);
+    int insertPayment(SqlSession session, TossDTO dto);
 
-    PaymentDTO getPaymentByOrderId(SqlSession session, String orderId);
+    TossDTO getPaymentByOrderId(SqlSession session, String orderId);
 }

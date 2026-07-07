@@ -1,7 +1,7 @@
 package service.trainer;
 
-import dto.trainer.PaymentDTO;
+import dto.common.TossDTO;
 
 public interface TrainerPaymentService {
-    PaymentDTO getPaymentByOrderId(String orderId);
+    TossDTO getPaymentByOrderId(String orderId);
 }

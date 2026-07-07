@@ -1,7 +1,7 @@
 package controller.trainer;
 
 import dto.trainer.ClientDTO;
-import dto.trainer.PaymentDTO;
+import dto.common.TossDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.json.JSONObject;
@@ -90,7 +90,7 @@ public class PaymentConfirmationController extends HttpServlet {
             JSONObject tossResponse = new JSONObject(responseBody.toString());
 
             // Toss 응답에서 필드 추출
-            PaymentDTO dto = new PaymentDTO();
+            TossDTO dto = new TossDTO();
             dto.setPaymentKey(tossResponse.getString("paymentKey"));
             dto.setOrderId(tossResponse.getString("orderId"));
             dto.setAmount(tossResponse.getInt("totalAmount"));

@@ -5,7 +5,7 @@
 
 <mapper namespace="mapper.trainerpayment">
 
-    <insert id="insertPayment" parameterType="dto.trainer.PaymentDTO">
+    <insert id="insertPayment" parameterType="dto.common.TossDTO">
         INSERT INTO payment (payment_key,
                              order_id,
                              amount,
@@ -20,7 +20,7 @@
                 #{approvedAt})
     </insert>
 
-    <select id="getPaymentByOrderId" parameterType="String" resultType="dto.trainer.PaymentDTO">
+    <select id="getPaymentByOrderId" parameterType="String" resultType="dto.common.TossDTO">
         SELECT payment_id  AS paymentId,
                payment_key AS paymentKey,
                order_id    AS orderId,

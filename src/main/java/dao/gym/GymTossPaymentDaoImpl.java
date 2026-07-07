@@ -2,13 +2,13 @@ package dao.gym;
 
 import org.apache.ibatis.session.SqlSession;
 
-import dto.gym.TossPayment;
+import dto.common.TossDTO;
 import util.MybatisSqlSessionFactory;
 
 public class GymTossPaymentDaoImpl implements GymTossPaymentDao {
 
 	@Override
-	public void insertTossPayment(TossPayment tossPayment) {
+	public void insertTossPayment(TossDTO tossPayment) {
 		try (SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			session.insert("mapper.tossPayment.insertTossPayment", tossPayment);
 			session.commit();
@@ -17,7 +17,7 @@ public class GymTossPaymentDaoImpl implements GymTossPaymentDao {
 	}
 
 	@Override
-	public TossPayment selectTossPaymentByOrderId(String orderId) {
+	public TossDTO selectTossPaymentByOrderId(String orderId) {
 		try (SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return session.selectOne("mapper.tossPayment.selectTossPaymentByOrderId", orderId);
 
@@ -25,7 +25,7 @@ public class GymTossPaymentDaoImpl implements GymTossPaymentDao {
 	}
 
 	@Override
-	public void updateTossStatus(TossPayment tossPayment) {
+	public void updateTossStatus(TossDTO tossPayment) {
 		try (SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			session.update("mapper.tossPayment.updateTossStatus", tossPayment);
 			session.commit();

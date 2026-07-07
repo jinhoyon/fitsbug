@@ -28,7 +28,7 @@ import dao.member.MemberDAOImpl;
 import dto.member.MemberDTO;
 import dto.member.MembershipRegistrationDTO;
 import dto.common.Payment;
-import dto.member.TossDTO;
+import dto.common.TossDTO;
 import dto.common.TrainerDTO;
 import dto.common.UserDTO;
 import util.MybatisSqlSessionFactory;

@@ -6,7 +6,7 @@
 <mapper namespace="mapper.tossPayment">
 
     <insert id="insertTossPayment"
-            parameterType="dto.gym.TossPayment">
+            parameterType="dto.common.TossDTO">
         INSERT INTO TOSS (
             user_id,
             payment_key,
@@ -27,7 +27,7 @@
 
     <select id="selectTossPaymentByOrderId"
             parameterType="string"
-            resultType="dto.gym.TossPayment">
+            resultType="dto.common.TossDTO">
         SELECT
             id,
             user_id AS userId,
@@ -41,7 +41,7 @@
     </select>
 
     <update id="updateTossStatus"
-            parameterType="dto.gym.TossPayment">
+            parameterType="dto.common.TossDTO">
         UPDATE TOSS
         SET status = #{status}
         WHERE order_id = #{orderId}

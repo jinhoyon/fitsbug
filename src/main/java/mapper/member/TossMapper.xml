@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.TossMapper">
 
-    <resultMap id="tossResultMap" type="dto.member.TossDTO">
+    <resultMap id="tossResultMap" type="dto.common.TossDTO">
         <id     property="id"         column="id"/>
         <result property="userId"     column="user_id"/>
         <result property="paymentKey" column="payment_key"/>
@@ -15,7 +15,7 @@
     </resultMap>
 
     <!-- 토스 결제 저장 -->
-    <insert id="insert" parameterType="dto.member.TossDTO">
+    <insert id="insert" parameterType="dto.common.TossDTO">
         INSERT INTO TOSS (user_id, payment_key, order_id, amount, status, created_at)
         VALUES (#{userId}, #{paymentKey}, #{orderId}, #{amount}, #{status}, NOW())
     </insert>

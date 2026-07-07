@@ -1,6 +1,6 @@
 package controller.trainer;
 
-import dto.trainer.PaymentDTO;
+import dto.common.TossDTO;
 import service.trainer.TrainerPaymentService;
 import service.trainer.TrainerPaymentServiceImpl;
 import org.apache.ibatis.session.SqlSession;
@@ -29,7 +29,7 @@ public class PaymentCancelController extends HttpServlet {
             throws ServletException, IOException {
         String orderId = request.getParameter("orderId");
 
-        PaymentDTO payment = paymentService.getPaymentByOrderId(orderId);
+        TossDTO payment = paymentService.getPaymentByOrderId(orderId);
         request.setAttribute("payment", payment);
         request.getRequestDispatcher("/trainer/payment/cancel.jsp").forward(request, response);
     }

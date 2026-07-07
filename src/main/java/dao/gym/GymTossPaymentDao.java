@@ -1,10 +1,10 @@
 package dao.gym;
 
-import dto.gym.TossPayment;
+import dto.common.TossDTO;
 
 public interface GymTossPaymentDao {
-	void insertTossPayment(TossPayment tossPayment);
-    TossPayment selectTossPaymentByOrderId(String orderId);
-    void updateTossStatus(TossPayment tossPayment);
+	void insertTossPayment(TossDTO tossPayment);
+    TossDTO selectTossPaymentByOrderId(String orderId);
+    void updateTossStatus(TossDTO tossPayment);
     String selectPaymentKeyByOrderId(String orderId) throws Exception;
 }

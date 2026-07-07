@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 import dto.gym.Membership;
 import dto.gym.MembershipRegistration;
 import dto.common.Payment;
-import dto.gym.TossPayment;
+import dto.common.TossDTO;
 import dto.common.UserDTO;
 import service.gym.GymPaymentService;
 import service.gym.GymPaymentServiceImpl;
@@ -75,7 +75,7 @@ public class GymTossPayment extends HttpServlet {
             GymTossPaymentService tossService = new GymTossPaymentServiceImpl();
             GymPaymentService paymentService = new GymPaymentServiceImpl();
 
-			TossPayment tossPayment = new TossPayment();
+			TossDTO tossPayment = new TossDTO();
 			tossPayment.setUserId(user.getId());
 			tossPayment.setPaymentKey(paymentKey);
 			tossPayment.setOrderId(orderId);
