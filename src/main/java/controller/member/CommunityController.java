@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.member.CompleteDAO;
-import dao.member.CompleteDAOImpl;
 import dto.member.PostDTO;
 import dto.common.UserDTO;
 import service.member.PostService;
@@ -20,8 +18,7 @@ import service.member.PostServiceImpl;
 @WebServlet("/member/community")
 public class CommunityController extends HttpServlet {
 
-    private PostService postService = new PostServiceImpl();
-    private CompleteDAO completeDAO = new CompleteDAOImpl();
+    private final PostService postService = new PostServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -35,9 +32,9 @@ public class CommunityController extends HttpServlet {
 
         if (loginUser != null) {
             String email = loginUser.getEmail();
-            request.setAttribute("weekLog", completeDAO.getWeekLog(email));
-            request.setAttribute("streak",  completeDAO.getStreak(email));
-            request.setAttribute("best",    completeDAO.getBestStreak(email));
+            request.setAttribute("weekLog", postService.getWeekLog(email));
+            request.setAttribute("streak", postService.getStreak(email));
+            request.setAttribute("best", postService.getBestStreak(email));
         }
 
         request.getRequestDispatcher("/member/community.jsp").forward(request, response);

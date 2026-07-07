@@ -1,9 +1,9 @@
 package controller.trainer;
 
-import dao.member.InbodyLogDAO;
-import dao.member.InbodyLogDAOImpl;
 import dto.member.InbodyLogDTO;
 import dto.common.TrainerDTO;
+import service.member.InbodyLogService;
+import service.member.InbodyLogServiceImpl;
 import service.trainer.ClientService;
 import service.trainer.ClientServiceImpl;
 import dto.trainer.ClientDTO;
@@ -17,8 +17,8 @@ import java.util.*;
 @WebServlet("/trainer/clientInbodyLog")
 public class ClientInbodyLogController extends HttpServlet {
 
-    private final ClientService  clientService  = new ClientServiceImpl();
-    private final InbodyLogDAO   inbodyLogDAO   = new InbodyLogDAOImpl();
+    private final ClientService clientService = new ClientServiceImpl();
+    private final InbodyLogService inbodyLogService = new InbodyLogServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -50,7 +50,7 @@ public class ClientInbodyLogController extends HttpServlet {
             }
 
             // Fetch inbody logs newest → oldest
-            List<InbodyLogDTO> rawLogs = inbodyLogDAO.findByMemberId(clientId);
+            List<InbodyLogDTO> rawLogs = inbodyLogService.getListByMemberId(clientId);
             if (rawLogs == null) rawLogs = new ArrayList<>();
 
             // Build enriched map list (DTO fields + calculated deltas)

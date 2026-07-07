@@ -63,4 +63,10 @@ public class WorkoutLogServiceImpl implements WorkoutLogService {
     public List<WorkoutLogDTO> getListByEmail(String email) {
         return dao.findByEmail(email);
     }
+
+    @Override
+    public List<WorkoutLogDTO> getTodayByMemberId(int memberId) {
+        List<WorkoutLogDTO> list = dao.findTodayByMemberId(memberId);
+        return list != null ? list : java.util.Collections.emptyList();
+    }
 }

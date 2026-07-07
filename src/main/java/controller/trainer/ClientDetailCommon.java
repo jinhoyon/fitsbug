@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.member.InbodyLogDAO;
-import dao.member.InbodyLogDAOImpl;
 import dto.member.InbodyLogDTO;
 import dto.trainer.ClientDTO;
+import service.member.InbodyLogService;
+import service.member.InbodyLogServiceImpl;
 import service.trainer.ClientService;
 import service.trainer.ClientServiceImpl;
 
@@ -25,8 +25,8 @@ import service.trainer.ClientServiceImpl;
 @WebServlet("/trainer/clientDetailCommon")
 public class ClientDetailCommon extends HttpServlet {
 
-    private final ClientService  clientService  = new ClientServiceImpl();
-    private final InbodyLogDAO   inbodyLogDAO   = new InbodyLogDAOImpl();
+    private final ClientService clientService = new ClientServiceImpl();
+    private final InbodyLogService inbodyLogService = new InbodyLogServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -59,7 +59,7 @@ public class ClientDetailCommon extends HttpServlet {
             }
 
             // 5. Load inbody logs (newest → oldest from DAO)
-            List<InbodyLogDTO> inbodyLogs = inbodyLogDAO.findByMemberId(clientId);
+            List<InbodyLogDTO> inbodyLogs = inbodyLogService.getListByMemberId(clientId);
             if (inbodyLogs == null) inbodyLogs = new ArrayList<>();
 
             InbodyLogDTO latestInbody = inbodyLogs.isEmpty() ? null : inbodyLogs.get(0);

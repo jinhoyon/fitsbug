@@ -4,15 +4,15 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-import dao.member.UserDAO;
-import dao.member.UserDAOImpl;
 import dto.common.UserDTO;
+import service.member.UserService;
+import service.member.UserServiceImpl;
 import util.KakaoUtil;
 
 @WebServlet("/member/kakaoLogin")
 public class KakaoLoginController extends HttpServlet {
 
-    private UserDAO userDao = new UserDAOImpl();
+    private final UserService userService = new UserServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -22,12 +22,12 @@ public class KakaoLoginController extends HttpServlet {
         String accessToken = KakaoUtil.getAccessToken(code);
         String email = KakaoUtil.getUserEmail(accessToken);
 
-        if (email == null) {
+        if (email == null || email.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
 
-        UserDTO user = userDao.findByEmail(email);
+        UserDTO user = userService.findByEmail(email);
 
         if (user == null) {
             user = new UserDTO();
@@ -36,18 +36,17 @@ public class KakaoLoginController extends HttpServlet {
             user.setEmailVerified(true);
             user.setRole("MEMBER");
             user.setProvider("kakao");
-            userDao.insertSocial(user);
-            user = userDao.findByEmail(email);
+            userService.registerSocial(user);
+            user = userService.findByEmail(email);
         }
 
         if (user != null && user.isDeleted()) {
-            request.setAttribute("errorMsg", "탈퇴한 계정입니다.");
             response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
 
         HttpSession session = request.getSession();
-        session.setAttribute("loginUser",  user);
+        session.setAttribute("loginUser", user);
         session.setAttribute("loginEmail", email);
         response.sendRedirect(request.getContextPath() + "/member/main");
     }

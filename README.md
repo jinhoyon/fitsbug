@@ -65,10 +65,11 @@ config.properties.example                    # template for local secrets (copy 
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System design, modules, data flow |
 | [docs/CONVENTIONS.md](docs/CONVENTIONS.md) | Coding standards (trainer + admin as reference) |
 | [docs/CLEANUP_PLAN.md](docs/CLEANUP_PLAN.md) | Phased refactor plan — **all phases complete** |
+| [docs/SMOKE_TEST.md](docs/SMOKE_TEST.md) | Manual smoke test checklist |
 
 ## Cleanup status
 
-Phases 0–8 of the cleanup plan are complete (2026-07-07). Post-v1 deferred work (D1–D4) continues in [docs/CLEANUP_PLAN.md](docs/CLEANUP_PLAN.md#post-v1-deferred-work).
+Phases 0–8 and post-v1 deferred work (D1–D5) are complete (2026-07-07). See [docs/CLEANUP_PLAN.md](docs/CLEANUP_PLAN.md#post-v1-deferred-work) and [docs/SMOKE_TEST.md](docs/SMOKE_TEST.md).
 
 Highlights from phases 0–8:
 
@@ -86,6 +87,7 @@ Highlights from phases 0–8:
 | D2 | `TrainerListDAO` rename (member discovery vs trainer CRUD) | Complete |
 | D3 | Gym `Dao` → `DAO` naming (16 pairs) | Complete |
 | D4 | Trainer signup servlet consolidation | Complete |
+| D5 | Legacy controller → service routing | Complete |
 
 ## Remote
 

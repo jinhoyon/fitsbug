@@ -388,6 +388,7 @@ Phases 0–8 are complete. Remaining items are tracked here and implemented one 
 | D2 | Duplicate `TrainerDAO` — rename member discovery DAO → `TrainerListDAO` | Low | Complete |
 | D3 | Gym `Dao`/`DaoImpl` → `DAO`/`DAOImpl` naming | Medium | Complete |
 | D4 | Trainer signup — consolidate 5 servlets into step-routed controller | Medium | Complete |
+| D5 | Controller → service routing (legacy DAO in controllers) | Low | Complete |
 
 ### D1 — Kakao/Gmail externalization
 
@@ -410,6 +411,10 @@ Member module uses `TrainerDAO` for **public trainer discovery** (list/detail/av
 ### D4 — Trainer signup consolidation
 
 Single `SignupController` handles `/trainer/signup` and `/trainer/signup/step2`–`step5` via `getServletPath()` routing. JSP paths and form action URLs unchanged. Deleted `SignupController2`–`SignupController5`.
+
+### D5 — Controller service routing
+
+See table in progress tracker above. Manual verification: [SMOKE_TEST.md](SMOKE_TEST.md).
 
 ---
 

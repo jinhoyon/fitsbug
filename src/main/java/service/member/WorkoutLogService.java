@@ -7,4 +7,5 @@ public interface WorkoutLogService {
     int save(WorkoutLogDTO dto);
     List<WorkoutLogDTO> getListByMemberId(int memberId);
     List<WorkoutLogDTO> getListByEmail(String email);
+    List<WorkoutLogDTO> getTodayByMemberId(int memberId);
 }

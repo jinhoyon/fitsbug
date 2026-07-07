@@ -12,13 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.member.MemberDAO;
-import dao.member.MemberDAOImpl;
-import dao.member.WorkoutLogDAO;
-import dao.member.WorkoutLogDAOImpl;
 import dto.common.UserDTO;
 import dto.member.WorkoutDetailDTO;
 import dto.member.WorkoutLogDTO;
+import service.member.MemberService;
+import service.member.MemberServiceImpl;
 import service.member.WorkoutLogService;
 import service.member.WorkoutLogServiceImpl;
 
@@ -27,11 +25,8 @@ public class WorkoutRecordController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    private WorkoutLogService service = new WorkoutLogServiceImpl();
-
-    private WorkoutLogDAO logDao = new WorkoutLogDAOImpl();
-
-    private MemberDAO memberDao = new MemberDAOImpl();
+    private final WorkoutLogService workoutLogService = new WorkoutLogServiceImpl();
+    private final MemberService memberService = new MemberServiceImpl();
 
     /**
      * 오늘 운동 기록 조회
@@ -59,8 +54,7 @@ public class WorkoutRecordController extends HttpServlet {
         // ─────────────────────────────────────────────
         // MEMBER.id 조회
         // ─────────────────────────────────────────────
-        Map<String, Object> memberMap =
-                memberDao.findByEmail(user.getEmail());
+        Map<String, Object> memberMap = memberService.findByEmail(user.getEmail());
 
         if (memberMap == null || memberMap.get("id") == null) {
 
@@ -79,8 +73,7 @@ public class WorkoutRecordController extends HttpServlet {
         // ─────────────────────────────────────────────
         // 오늘 운동 기록 조회
         // ─────────────────────────────────────────────
-        List<WorkoutLogDTO> list =
-                logDao.findTodayByMemberId(memberId);
+        List<WorkoutLogDTO> list = workoutLogService.getTodayByMemberId(memberId);
 
         if (list == null) {
             list = new ArrayList<>();
@@ -163,8 +156,7 @@ public class WorkoutRecordController extends HttpServlet {
         // ─────────────────────────────────────────────
         // MEMBER.id 조회
         // ─────────────────────────────────────────────
-        Map<String, Object> memberMap =
-                memberDao.findByEmail(user.getEmail());
+        Map<String, Object> memberMap = memberService.findByEmail(user.getEmail());
 
         if (memberMap == null || memberMap.get("id") == null) {
 
@@ -249,7 +241,7 @@ public class WorkoutRecordController extends HttpServlet {
         // ─────────────────────────────────────────────
         // 저장
         // ─────────────────────────────────────────────
-        int result = service.save(dto);
+        int result = workoutLogService.save(dto);
 
         response.setContentType("application/json;charset=UTF-8");
 

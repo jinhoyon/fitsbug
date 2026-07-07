@@ -29,4 +29,19 @@ public class PostServiceImpl implements PostService {
     public List<PostDTO> getPosts() {
         return dao.getList();
     }
+
+    @Override
+    public List<String> getWeekLog(String email) {
+        return completeDAO.getWeekLog(email);
+    }
+
+    @Override
+    public int getStreak(String email) {
+        return completeDAO.getStreak(email);
+    }
+
+    @Override
+    public int getBestStreak(String email) {
+        return completeDAO.getBestStreak(email);
+    }
 }
