@@ -3,13 +3,13 @@ package service.member;
 import java.util.List;
 import java.util.Map;
 
-import dao.member.TrainerDAO;
-import dao.member.TrainerDAOImpl;
-import dto.common.TrainerDTO;
+import dao.member.TrainerListDAO;
+import dao.member.TrainerListDAOImpl;
 import dto.common.AvailabilityDTO;
+import dto.common.TrainerDTO;
 
 public class TrainerServiceImpl implements TrainerService {
-    private TrainerDAO dao = new TrainerDAOImpl();
+    private TrainerListDAO dao = new TrainerListDAOImpl();
 
     @Override
     public List<TrainerDTO> getTrainerList(String keyword, String category, String sort) {
@@ -21,15 +21,13 @@ public class TrainerServiceImpl implements TrainerService {
         return dao.getTrainerDetail(trainerId);
     }
 
-	@Override
-	public List<AvailabilityDTO> getTrainerAvailabilityList(Integer trainerId) {
-		// TODO Auto-generated method stub
-		return dao.findAvailabilityByTrainerId(trainerId);
-	}
+    @Override
+    public List<AvailabilityDTO> getTrainerAvailabilityList(Integer trainerId) {
+        return dao.findAvailabilityByTrainerId(trainerId);
+    }
 
-	@Override
-	public Map<String, Object> getTrainerInfoByTrainerId(Integer trainerId) {
-		// TODO Auto-generated method stub
-		return dao.findTrainerInfoById(trainerId);
-	}
+    @Override
+    public Map<String, Object> getTrainerInfoByTrainerId(Integer trainerId) {
+        return dao.findTrainerInfoById(trainerId);
+    }
 }

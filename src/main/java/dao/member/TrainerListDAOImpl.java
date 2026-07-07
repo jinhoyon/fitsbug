@@ -1,30 +1,25 @@
 package dao.member;
 
-import dto.common.TrainerDTO;
 import dto.common.AvailabilityDTO;
+import dto.common.TrainerDTO;
 
 import org.apache.ibatis.session.SqlSession;
 import util.MybatisSqlSessionFactory;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TrainerDAOImpl implements TrainerDAO {
-
-    // Kept for interface compatibility — not used by the trainer list feature
-    @Override
-    public void insertTrainer(Connection conn, String id, String pw, String name) throws Exception {}
+public class TrainerListDAOImpl implements TrainerListDAO {
 
     @Override
     public List<TrainerDTO> getTrainerList(String keyword, String category, String sort) {
         try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
             Map<String, Object> params = new HashMap<>();
-            params.put("keyword",  keyword  != null ? keyword  : "");
+            params.put("keyword", keyword != null ? keyword : "");
             params.put("category", category != null ? category : "전체");
-            params.put("sort",     sort     != null ? sort     : "latest");
+            params.put("sort", sort != null ? sort : "latest");
             return sql.selectList("mapper.member.trainer.findTrainerList", params);
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,24 +37,23 @@ public class TrainerDAOImpl implements TrainerDAO {
         }
     }
 
-	@Override
-	public List<AvailabilityDTO> findAvailabilityByTrainerId(Integer trainerId) {
+    @Override
+    public List<AvailabilityDTO> findAvailabilityByTrainerId(Integer trainerId) {
         try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-            return sql.selectList(
-                "pricingAvailability.findAvailabilityByTrainerId", trainerId);
+            return sql.selectList("pricingAvailability.findAvailabilityByTrainerId", trainerId);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-	}
+    }
 
-	@Override
-	public Map<String, Object> findTrainerInfoById(Integer trainerId) {
-		try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sql.selectOne("mapper.TrainerMapper.findById", trainerId);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+    @Override
+    public Map<String, Object> findTrainerInfoById(Integer trainerId) {
+        try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+            return sql.selectOne("mapper.TrainerMapper.findById", trainerId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

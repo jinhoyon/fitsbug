@@ -3,7 +3,6 @@ package service.trainer;
 import dao.member.UserDAOImpl;
 import dao.trainer.TrainerDAO;
 import dao.trainer.TrainerDAOImpl;
-import dao.trainer.TrainerDAOImpl;
 import dto.common.TrainerDTO;
 import dto.common.UserDTO;
 import org.apache.ibatis.session.SqlSession;
