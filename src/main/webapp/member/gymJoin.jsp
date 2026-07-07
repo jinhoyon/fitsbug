@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<%@ page import="dto.member.UserDTO" %>
+<%@ page import="dto.common.UserDTO" %>
 <%
 UserDTO loginUser = (UserDTO)(session.getAttribute("loginUser"));
 String contextPath = request.getContextPath();

@@ -6,7 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.gym.GymPaymentService;
 import service.gym.GymPaymentServiceImpl;
 

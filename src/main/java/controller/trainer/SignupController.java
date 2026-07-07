@@ -1,7 +1,7 @@
 package controller.trainer;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import dto.trainer.UserDTO;
+import dto.common.UserDTO;
 import service.trainer.SignupService;
 import service.trainer.SignupServiceImpl;
 
@@ -61,7 +61,7 @@ public class SignupController extends HttpServlet {
         dto.setNickname(nickname);
         dto.setAge(age);
         dto.setGender(gender);
-        dto.setRole(UserDTO.UserRole.TRAINER);
+        dto.setRole("TRAINER");
         dto.setProvider(provider);
         dto.setProviderId(providerId);
 

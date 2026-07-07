@@ -1,6 +1,6 @@
 package dao.trainer;
 
-import dto.trainer.UserDTO;
+import dto.common.UserDTO;
 import org.apache.ibatis.session.SqlSession;
 
 public class UserDAOImpl implements UserDAO {

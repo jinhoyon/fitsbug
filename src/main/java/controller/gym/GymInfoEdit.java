@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 import dto.gym.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.gym.GymInfoEditService;
 import service.gym.GymInfoEditServiceImpl;
 

@@ -8,7 +8,7 @@ import javax.servlet.http.*;
 import dao.member.NotificationDAO;
 import dao.member.NotificationDAOImpl;
 import dto.member.NotificationDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 
 @WebServlet("/member/notification")
 public class NotificationController extends HttpServlet {

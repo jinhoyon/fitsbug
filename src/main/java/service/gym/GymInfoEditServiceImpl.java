@@ -8,7 +8,7 @@ import dao.gym.InfoEditDaoImpl;
 import dto.gym.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 
 public class GymInfoEditServiceImpl implements GymInfoEditService {
 	private InfoEditDao dao = new InfoEditDaoImpl();

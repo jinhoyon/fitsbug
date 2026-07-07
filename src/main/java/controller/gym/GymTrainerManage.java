@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import dto.gym.TrainerAssign;
 import dto.gym.TrainerList;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.gym.GymTrainerManageService;
 import service.gym.GymTrainerManageServiceImpl;
 

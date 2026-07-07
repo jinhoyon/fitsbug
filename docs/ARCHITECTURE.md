@@ -47,14 +47,14 @@ End-user features: registration (3-step join), community posts, workouts/meals/i
 
 - URL prefix: `/member/*`
 - ~80+ controllers, largest module by file count
-- Session key: `loginUser` (`dto.member.UserDTO`)
+- Session key: `loginUser` (`dto.common.UserDTO`)
 
 ### Trainer (`trainer`)
 
 Reference module for cleanup. Trainer signup (5 steps), client management, calendar, earnings/settlements, meal/workout log views, Toss checkout.
 
 - URL prefix: `/trainer/*` (payment callbacks at `/payment/*`)
-- Session keys: `loginUser` (`dto.trainer.UserDTO`) + `loginTrainer` (`dto.trainer.TrainerDTO`)
+- Session keys: `loginUser` (`dto.common.UserDTO`) + `loginTrainer` (`dto.trainer.TrainerDTO`)
 - Passwords: BCrypt (cost 12)
 
 ### Gym (`gym`)

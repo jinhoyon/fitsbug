@@ -30,7 +30,7 @@ import dto.member.MembershipRegistrationDTO;
 import dto.member.PaymentDTO;
 import dto.member.TossDTO;
 import dto.member.TrainerDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import util.MybatisSqlSessionFactory;
 
 @WebServlet("/member/paymentSuccess")

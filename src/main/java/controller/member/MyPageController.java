@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import dto.member.MemberDTO;
 import dto.member.MyPageDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.member.MyPageService;
 import service.member.MyPageServiceImpl;
 

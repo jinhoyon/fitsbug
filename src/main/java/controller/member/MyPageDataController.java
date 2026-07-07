@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import org.apache.ibatis.session.SqlSession;
 import util.MybatisSqlSessionFactory;
 

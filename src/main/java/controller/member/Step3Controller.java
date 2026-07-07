@@ -9,7 +9,7 @@ import dao.member.MemberDAOImpl;
 import dao.member.UserDAO;
 import dao.member.UserDAOImpl;
 import dto.member.MemberDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 
 @WebServlet("/member/step3")
 public class Step3Controller extends HttpServlet {

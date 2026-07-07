@@ -23,7 +23,7 @@ import dto.gym.HotTime;
 import dto.gym.Membership;
 import dto.gym.Review;
 import dto.gym.Schedule;
-import dto.trainer.UserDTO;
+import dto.common.UserDTO;
 
 public class GymMainServiceImpl implements GymMainService {
 

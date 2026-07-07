@@ -1,7 +1,7 @@
 package service.trainer;
 
 import dto.trainer.TrainerDTO;
-import dto.trainer.UserDTO;
+import dto.common.UserDTO;
 
 public interface LoginService {
     LoginResult loginTrainer(String email, String password);

@@ -17,7 +17,7 @@ import javax.servlet.http.Part;
 import dao.member.CompleteDAO;
 import dao.member.CompleteDAOImpl;
 import dto.member.PostDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.member.PostService;
 import service.member.PostServiceImpl;
 

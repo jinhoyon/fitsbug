@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<%@ page import="dto.member.UserDTO, dto.member.MemberDTO, java.util.Map"%>
+<%@ page import="dto.common.UserDTO, dto.member.MemberDTO, java.util.Map"%>
 <%
 UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 if (loginUser == null) {

@@ -16,7 +16,7 @@ import dao.member.MemberDAO;
 import dao.member.MemberDAOImpl;
 import dao.member.WorkoutLogDAO;
 import dao.member.WorkoutLogDAOImpl;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import dto.member.WorkoutDetailDTO;
 import dto.member.WorkoutLogDTO;
 import service.member.WorkoutLogService;

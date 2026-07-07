@@ -7,7 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import dto.gym.Review;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.gym.GymReviewService;
 import service.gym.GymReviewServiceImpl;
 

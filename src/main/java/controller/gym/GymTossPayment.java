@@ -17,7 +17,7 @@ import dto.gym.Membership;
 import dto.gym.MembershipRegistration;
 import dto.gym.Payment;
 import dto.gym.TossPayment;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.gym.GymPaymentService;
 import service.gym.GymPaymentServiceImpl;
 import service.gym.GymTossPaymentService;

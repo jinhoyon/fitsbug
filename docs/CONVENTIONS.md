@@ -108,7 +108,7 @@ No DI container. Use `new XxxServiceImpl()` / `new XxxDAOImpl()` in controllers 
 On login, set both session keys:
 
 ```java
-session.setAttribute("loginUser", result.getUser());      // dto.trainer.UserDTO
+session.setAttribute("loginUser", result.getUser());      // dto.common.UserDTO
 session.setAttribute("loginTrainer", result.getTrainer()); // dto.trainer.TrainerDTO
 ```
 
@@ -161,7 +161,7 @@ Each table gets a single Java type, ideally in `dto.common`:
 
 | Table | Target DTO | Current duplicates |
 |-------|------------|-------------------|
-| USER | `dto.common.UserDTO` | `dto.member.UserDTO`, `dto.trainer.UserDTO` |
+| USER | `dto.common.UserDTO` | Consolidated (was member + trainer copies) |
 | TRAINER | `dto.common.TrainerDTO` | member + trainer copies |
 | GYM | `dto.common.GymDTO` | `dto.member.GymDTO`, `dto.gym.Gym` |
 

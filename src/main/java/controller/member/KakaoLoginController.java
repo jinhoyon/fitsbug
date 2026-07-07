@@ -6,7 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import dao.member.UserDAO;
 import dao.member.UserDAOImpl;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import util.KakaoUtil;
 
 @WebServlet("/member/kakaoLogin")

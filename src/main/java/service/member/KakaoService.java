@@ -1,6 +1,6 @@
 package service.member;
 
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 
 // ✅ LoginDTO 삭제됨 → UserDTO로 교체
 public interface KakaoService {

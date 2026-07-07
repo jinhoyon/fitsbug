@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import dto.member.PtFeedbackDTO;
 import service.member.PtFeedbackService;
 import service.member.PtFeedbackServiceImpl;

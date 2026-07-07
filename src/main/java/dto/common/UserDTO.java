@@ -1,29 +1,30 @@
-package dto.trainer;
+package dto.common;
 
 import java.time.LocalDateTime;
 
+/**
+ * Shared USER table DTO used across member, trainer, gym, and admin modules.
+ */
 public class UserDTO {
+
     private int id;
     private String email;
     private String password;
     private String name;
     private String phone;
+    private boolean emailVerified;
     private String nickname;
     private String profileImage;
-    private UserRole role;
+    private String role;
     private LocalDateTime createdAt;
     private boolean deleted;
     private String provider;
     private String providerId;
-    private int age;
+    private Integer otherId;
+    private Integer age;
     private String gender;
 
-    public enum UserRole {
-        MEMBER,
-        TRAINER,
-        GYM,
-        ADMIN
-    }
+    public UserDTO() {}
 
     public int getId() {
         return id;
@@ -65,6 +66,14 @@ public class UserDTO {
         this.phone = phone;
     }
 
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
     public String getNickname() {
         return nickname;
     }
@@ -73,21 +82,28 @@ public class UserDTO {
         this.nickname = nickname;
     }
 
+    public String getProfileImage() {
+        return profileImage;
+    }
 
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
 
+    /** Trainer module alias for profile image field. */
     public String getProfileImg() {
-		return profileImage;
-	}
+        return profileImage;
+    }
 
-	public void setProfileImg(String profileImg) {
-		this.profileImage = profileImg;
-	}
+    public void setProfileImg(String profileImg) {
+        this.profileImage = profileImg;
+    }
 
-	public UserRole getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(UserRole role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
@@ -123,8 +139,20 @@ public class UserDTO {
         this.providerId = providerId;
     }
 
-    public int getAge() {
+    public Integer getOtherId() {
+        return otherId;
+    }
+
+    public void setOtherId(Integer otherId) {
+        this.otherId = otherId;
+    }
+
+    public Integer getAge() {
         return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public void setAge(int age) {
@@ -139,12 +167,13 @@ public class UserDTO {
         this.gender = gender;
     }
 
-	@Override
-	public String toString() {
-		return "UserDTO [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", phone=" + phone
-				+ ", nickname=" + nickname + ", profileImage=" + profileImage + ", role=" + role + ", createdAt="
-				+ createdAt + ", deleted=" + deleted + ", provider=" + provider + ", providerId=" + providerId + "]";
-	}
-    
-    
+    public boolean hasRole(String expectedRole) {
+        return expectedRole != null && expectedRole.equals(role);
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO [id=" + id + ", email=" + email + ", name=" + name + ", phone=" + phone
+                + ", nickname=" + nickname + ", role=" + role + "]";
+    }
 }

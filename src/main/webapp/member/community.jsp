@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="dto.member.UserDTO" %>
+<%@ page import="dto.common.UserDTO" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
   UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");

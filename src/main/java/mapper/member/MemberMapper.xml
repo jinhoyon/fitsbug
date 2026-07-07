@@ -106,7 +106,7 @@
     </update>
 
     <!-- 프로필 이미지 업데이트 -->
-    <update id="updateProfileImage" parameterType="dto.member.UserDTO">
+    <update id="updateProfileImage" parameterType="dto.common.UserDTO">
         UPDATE USER SET profile_image = #{profileImage}
         WHERE id = #{id}
     </update>

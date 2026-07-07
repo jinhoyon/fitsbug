@@ -14,7 +14,7 @@ import dao.trainer.TrainerDAO;
 import dao.trainer.TrainerDAOImpl;
 import dto.gym.Gym;
 import dto.member.MemberDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import dto.trainer.TrainerDTO;
 import util.MybatisSqlSessionFactory;
 

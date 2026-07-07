@@ -6,7 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import dto.gym.Gym;
 import dto.gym.HotTime;
-import dto.trainer.UserDTO;
+import dto.common.UserDTO;
 import util.MybatisSqlSessionFactory;
 
 public class GymMainDaoImpl implements GymMainDao {

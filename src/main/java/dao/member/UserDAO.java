@@ -1,6 +1,6 @@
 package dao.member;
 
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import java.util.List;
 
 public interface UserDAO {

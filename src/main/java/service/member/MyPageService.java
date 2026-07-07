@@ -2,7 +2,7 @@ package service.member;
 
 import dto.member.MemberDTO;
 import dto.member.MyPageDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 
 /**
  * ✅ WorkoutPlanDTO 완전 제거

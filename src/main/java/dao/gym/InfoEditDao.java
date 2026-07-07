@@ -6,7 +6,7 @@ import java.util.Map;
 import dto.gym.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 
 public interface InfoEditDao {
 	Gym selectGymMypage(int gymId);

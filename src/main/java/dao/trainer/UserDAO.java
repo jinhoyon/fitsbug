@@ -1,7 +1,7 @@
 package dao.trainer;
 
 import dto.trainer.TrainerDTO;
-import dto.trainer.UserDTO;
+import dto.common.UserDTO;
 import org.apache.ibatis.session.SqlSession;
 
 public interface UserDAO {

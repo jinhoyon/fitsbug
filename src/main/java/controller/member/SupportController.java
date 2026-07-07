@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dto.member.InquiryDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.member.SupportService;
 import service.member.SupportServiceImpl;
 

@@ -1,7 +1,7 @@
 /*
  * package service.member;
  * 
- * import dto.member.UserDTO; import java.util.List;
+ * import dto.common.UserDTO; import java.util.List;
  * 
  * public interface UserService { int register(UserDTO dto); int
  * registerSocial(UserDTO dto); UserDTO login(String email, String password)
@@ -11,7 +11,7 @@
  */
 package service.member;
 
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import java.util.List;
 
 public interface UserService {

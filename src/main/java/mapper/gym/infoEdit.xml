@@ -48,7 +48,7 @@
         WHERE id = #{id}
     </update>
 
-    <update id="updateGymUser" parameterType="dto.member.UserDTO">
+    <update id="updateGymUser" parameterType="dto.common.UserDTO">
     UPDATE `USER`
     SET
         email = #{email},

@@ -4,7 +4,7 @@ import java.util.Map;
 
 import dto.gym.Gym;
 import dto.gym.HotTime;
-import dto.trainer.UserDTO;
+import dto.common.UserDTO;
 
 public interface GymMainDao {
 	Map<String,Object> selectGymMainInfo(int gymId) throws Exception;

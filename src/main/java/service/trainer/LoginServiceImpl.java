@@ -6,7 +6,7 @@ import dao.trainer.TrainerDAOImpl;
 import dao.trainer.UserDAO;
 import dao.trainer.UserDAOImpl;
 import dto.trainer.TrainerDTO;
-import dto.trainer.UserDTO;
+import dto.common.UserDTO;
 import org.apache.ibatis.session.SqlSession;
 import util.MybatisSqlSessionFactory;
 
@@ -30,7 +30,7 @@ public class LoginServiceImpl implements LoginService {
             }
 
             // check user is a trainer
-            if (trainer.getRole() != UserDTO.UserRole.TRAINER) {
+            if (!trainer.hasRole("TRAINER")) {
                 return new LoginResult(LoginResult.Status.NOT_TRAINER, null);
             }
 

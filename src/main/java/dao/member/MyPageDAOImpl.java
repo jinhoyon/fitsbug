@@ -5,7 +5,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import dto.member.MemberDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import util.MybatisSqlSessionFactory;
 
 /**

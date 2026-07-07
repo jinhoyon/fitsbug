@@ -9,7 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import dto.gym.TrainerMemberView;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.gym.GymTrainerManageService;
 import service.gym.GymTrainerManageServiceImpl;
 

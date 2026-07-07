@@ -12,7 +12,7 @@ import service.gym.GymNoticeServiceImpl;
 
 import java.io.File;
 import dto.gym.NoticeImages;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 
 import javax.servlet.annotation.MultipartConfig;
 

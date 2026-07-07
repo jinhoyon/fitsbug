@@ -16,7 +16,7 @@ import javax.servlet.annotation.MultipartConfig;
 
 import dto.gym.GymNotice;
 import dto.gym.NoticeImages;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.gym.GymNoticeService;
 import service.gym.GymNoticeServiceImpl;
 

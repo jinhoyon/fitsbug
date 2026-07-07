@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.member.MyPageServiceImpl;
 
 @WebServlet("/member/uploadProfile")

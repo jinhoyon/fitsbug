@@ -1,6 +1,6 @@
 package controller.trainer;
 
-import dto.trainer.UserDTO;
+import dto.common.UserDTO;
 import service.trainer.TrainerMessageService;
 import service.trainer.TrainerMessageServiceImpl;
 

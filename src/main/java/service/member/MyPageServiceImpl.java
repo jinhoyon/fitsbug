@@ -7,7 +7,7 @@ import dao.member.MyPageDAO;
 import dao.member.MyPageDAOImpl;
 import dto.member.MemberDTO;
 import dto.member.MyPageDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 
 public class MyPageServiceImpl implements MyPageService {
 

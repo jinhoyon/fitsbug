@@ -14,7 +14,7 @@ import javax.servlet.http.Part;
 
 import dao.member.UserDAO;
 import dao.member.UserDAOImpl;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 
 @WebServlet("/member/updateProfile")
 @MultipartConfig(

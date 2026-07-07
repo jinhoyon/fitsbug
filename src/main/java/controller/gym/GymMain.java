@@ -17,7 +17,7 @@ import dto.gym.HotTime;
 import dto.gym.Membership;
 import dto.gym.Review;
 import dto.gym.Schedule;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.gym.GymMainService;
 import service.gym.GymMainServiceImpl;
 import service.gym.GymNoticeService;

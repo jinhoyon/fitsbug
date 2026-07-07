@@ -47,7 +47,7 @@ public class PaymentDAOImpl implements PaymentDAO {
             // USER.email로 최근 결제 1건 조회 (하위 호환)
             List<PaymentDTO> list = session.selectList(NS + "findByUserId",
                     session.selectOne("mapper.UserMapper.findByEmail", email) != null
-                    ? ((dto.member.UserDTO) session.selectOne("mapper.UserMapper.findByEmail", email)).getId()
+                    ? ((dto.common.UserDTO) session.selectOne("mapper.UserMapper.findByEmail", email)).getId()
                     : 0);
             if (list != null && !list.isEmpty()) result = list.get(0);
         } catch (Exception e) {

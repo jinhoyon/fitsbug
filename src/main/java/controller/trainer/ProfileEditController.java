@@ -3,7 +3,7 @@ package controller.trainer;
 import dto.trainer.AvailabilityDTO;
 import dto.trainer.PricingDTO;
 import dto.trainer.TrainerDTO;
-import dto.trainer.UserDTO;
+import dto.common.UserDTO;
 import service.trainer.SignupService;
 import service.trainer.SignupServiceImpl;
 import service.trainer.TrainerService;

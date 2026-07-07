@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dto.member.ChartDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.member.ChartService;
 import service.member.ChartServiceImpl;
 

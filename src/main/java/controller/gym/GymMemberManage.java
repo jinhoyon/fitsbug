@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import dto.gym.MemberManage;
 import dto.gym.Payment;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.gym.GymMemberManageService;
 import service.gym.GymMemberManageServiceImpl;
 import service.gym.GymPaymentService;

@@ -10,7 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import dto.member.InbodyLogDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.member.InbodyLogService;
 import service.member.InbodyLogServiceImpl;
 

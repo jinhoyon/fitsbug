@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import dto.member.ChatMessageDTO;
 import dto.member.ChatRoomDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import service.member.ChatService;
 import service.member.ChatServiceImpl;
 import org.apache.ibatis.session.SqlSession;

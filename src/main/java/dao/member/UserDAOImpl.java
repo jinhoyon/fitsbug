@@ -1,7 +1,7 @@
 package dao.member;
 
 import org.apache.ibatis.session.SqlSession;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 import util.MybatisSqlSessionFactory;
 import java.util.HashMap;
 import java.util.List;

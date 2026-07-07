@@ -6,7 +6,7 @@ import javax.servlet.http.*;
 import dao.member.MyPageDAO;
 import dao.member.MyPageDAOImpl;
 import dto.member.MemberDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 
 @WebServlet("/member/updatePlan")
 public class UpdatePlanController extends HttpServlet {

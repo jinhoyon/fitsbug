@@ -3,7 +3,7 @@ package dao.member;
 import java.util.Map;
 
 import dto.member.MemberDTO;
-import dto.member.UserDTO;
+import dto.common.UserDTO;
 
 /**
  * 마이페이지 DAO
