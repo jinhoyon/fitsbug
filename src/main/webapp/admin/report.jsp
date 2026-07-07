@@ -155,13 +155,13 @@
     		<c:forEach var="r" items="${reportList}">
         	<div onclick="loadDetail(${r.reportId}, this)" class="report-item p-4 bg-white rounded-lg cursor-pointer hover:shadow-md transition-all border border-transparent">
             	<div class="flex justify-between mb-1">
-                	<span class="text-xs font-bold text-error">${r.category}</span>
+                	<span class="text-xs font-bold text-error"><c:out value="${r.category}"/></span>
                 	<span class="text-xs text-gray-400"><fmt:formatDate value="${r.regDate}" pattern="MM.dd HH:mm"/></span>
             	</div>
-            	<h4 class="text-sm font-semibold mb-1 truncate">${r.title}</h4>
+            	<h4 class="text-sm font-semibold mb-1 truncate"><c:out value="${r.title}"/></h4>
             	<p class="text-[11px] text-primary font-medium mt-2">
                 	<span class="material-symbols-outlined text-[12px]">person</span>
-                	신고자: ${r.reporterName} (${r.reporterId})
+                	신고자: <c:out value="${r.reporterName}"/> (<c:out value="${r.reporterId}"/>)
             	</p>
         	</div>
     		</c:forEach>
@@ -318,7 +318,7 @@
             document.getElementById('detTitle').innerText = data.title;
             document.getElementById('detCategory').innerText = '신고유형 : ' + data.category;
             document.getElementById('detReporter').innerText = data.reporterName + ' (' + data.reporterId + ')';
-            document.getElementById('detPostNum').innerHTML = '<span class="text-red-500">' + data.targetName + ' (' + data.targetId + ')</span>';
+            document.getElementById('detPostNum').textContent = data.targetName + ' (' + data.targetId + ')';
             document.getElementById('detContent').innerText = data.content;
 
             // [핵심] 모달에 넘겨줄 데이터 미리 심어두기

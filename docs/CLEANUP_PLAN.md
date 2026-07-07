@@ -373,7 +373,7 @@ Phases 4 and 5 can be parallelized by different contributors if entity boundarie
 | 4 — Shared DTOs | Complete | 2026-07-07 — User, Trainer, Gym, Payment, Toss, Lesson, Notification, PayoutAccount, Certification, Pricing, Availability → `dto.common` |
 | 5 — Payments | Complete | 2026-07-07 — common TossPaymentService/PaymentService, unified TOSS mapper, TossPaymentsConfig |
 | 6 — Security | Complete | 2026-07-07 — auth filters, BCrypt + migration, XSS fix, sort whitelist, DatabaseConfig |
-| 7 — Polish | Not started | |
+| 7 — Polish | Complete | 2026-07-07 — UploadController auth, ExerciseGuideDAO rename, service routing, XSS hardening |
 | 8 — Docs | In progress | README, ARCHITECTURE, CONVENTIONS, this file |
 
 _Update the progress tracker as phases complete._

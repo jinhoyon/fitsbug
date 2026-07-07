@@ -5,7 +5,7 @@ import java.util.Map;
 
 import dto.admin.ExerciseDTO;
 
-public interface ExerciseDAO {
+public interface ExerciseGuideDAO {
 	void insertGuide(ExerciseDTO dto) throws Exception;
 	List<ExerciseDTO> selectAllGuide(Map<String, Object> paramMap) throws Exception;
 	Integer selectGuideCount(Map<String, Object> paramMap) throws Exception;

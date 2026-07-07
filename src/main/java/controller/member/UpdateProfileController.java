@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-import dao.member.UserDAO;
-import dao.member.UserDAOImpl;
 import dto.common.UserDTO;
+import service.member.UserService;
+import service.member.UserServiceImpl;
 import util.PasswordUtil;
 
 @WebServlet("/member/updateProfile")
@@ -25,49 +25,48 @@ import util.PasswordUtil;
 )
 public class UpdateProfileController extends HttpServlet {
 
+    private final UserService userService = new UserServiceImpl();
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
         req.setCharacterEncoding("UTF-8");
 
-        HttpSession session = req.getSession();
-        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+        HttpSession session = req.getSession(false);
+        UserDTO loginUser = session != null ? (UserDTO) session.getAttribute("loginUser") : null;
+        if (loginUser == null) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            resp.getWriter().write("unauthorized");
+            return;
+        }
 
         String nickname = req.getParameter("nickname");
         String password = req.getParameter("password");
 
-        // 🔥 파일 처리
         Part filePart = req.getPart("profile_image");
-
-        String fileName = null;
-
-        if(filePart != null && filePart.getSize() > 0){
-
-            fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
-
+        if (filePart != null && filePart.getSize() > 0) {
+            String fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
             String uploadPath = req.getServletContext().getRealPath("/member/upload");
-
             File dir = new File(uploadPath);
-            if(!dir.exists()) dir.mkdirs();
-
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
             filePart.write(uploadPath + File.separator + fileName);
-
             loginUser.setProfileImage(fileName);
         }
 
-        // 🔥 텍스트 값
         loginUser.setNickname(nickname);
 
-        if(password != null && !password.isEmpty()){
+        if (password != null && !password.isEmpty()) {
             loginUser.setPassword(PasswordUtil.hash(password));
         }
 
-        UserDAO dao = new UserDAOImpl();
-        int result = dao.update(loginUser);
+        int result = userService.update(loginUser);
 
-        if(result > 0){
+        if (result > 0) {
             session.setAttribute("loginUser", loginUser);
             resp.getWriter().write("ok");
-        }else{
+        } else {
             resp.getWriter().write("fail");
         }
     }

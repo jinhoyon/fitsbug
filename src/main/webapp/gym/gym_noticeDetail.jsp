@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -119,7 +120,7 @@
 
 <!-- Article Header -->
 <div class="mb-8">
-<h2 class="text-[2.75rem] font-extrabold text-on-surface leading-tight tracking-tight mb-6">${notice.title}</h2>
+<h2 class="text-[2.75rem] font-extrabold text-on-surface leading-tight tracking-tight mb-6"><c:out value="${notice.title}"/></h2>
 <div class="flex items-center gap-6 text-on-surface-variant">
 <div class="flex items-center gap-2">
 <span class="material-symbols-outlined text-[18px]">calendar_today</span>
@@ -140,9 +141,7 @@
 
 	<!-- Text Content -->
 	<div class="space-y-8 text-on-surface leading-relaxed">
-		<p class="text-on-surface-variant whitespace-pre-line">
-                        ${notice.content}
-		</p>
+		<p class="text-on-surface-variant whitespace-pre-line"><c:out value="${notice.content}"/></p>
 	</div>
      
 	<!-- Attached Images -->
@@ -236,14 +235,14 @@
                 <input name="title"
                        class="w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none font-medium text-lg"
                        type="text"
-                       value="${notice.title}">
+                       value="${fn:escapeXml(notice.title)}">
             </div>
 
             <!-- Content -->
             <div class="space-y-2">
                 <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">내용</label>
                 <textarea name="content"
-                          class="w-full min-h-[300px] p-6 bg-surface-container-lowest border border-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none text-on-surface leading-relaxed">${notice.content}</textarea>
+                          class="w-full min-h-[300px] p-6 bg-surface-container-lowest border border-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none text-on-surface leading-relaxed"><c:out value="${notice.content}"/></textarea>
             </div>
         </div>
 

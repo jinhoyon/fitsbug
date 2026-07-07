@@ -7,30 +7,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.member.UserDAO;
-import dao.member.UserDAOImpl;
+import service.member.UserService;
+import service.member.UserServiceImpl;
 
 @WebServlet("/member/checkEmail")
 public class CheckEmailController extends HttpServlet {
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-		    throws IOException {
-		
-				req.setCharacterEncoding("UTF-8");
 
-		        String email = req.getParameter("email");
-		        
-		        if(email == null || email.isEmpty()){
-		            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-		            return;
-		        }
+    private final UserService userService = new UserServiceImpl();
 
-		        UserDAO dao = new UserDAOImpl();
-		        boolean exists = dao.isEmailExists(email);
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.setCharacterEncoding("UTF-8");
 
-		        resp.setContentType("application/json; charset=UTF-8");
+        String email = req.getParameter("email");
+        if (email == null || email.isEmpty()) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
 
-		        String json = "{\"exists\":" + exists + "}";
+        boolean exists = userService.isEmailExists(email);
 
-		        resp.getWriter().write(json);
-		}
-	}
+        resp.setContentType("application/json; charset=UTF-8");
+        resp.getWriter().write("{\"exists\":" + exists + "}");
+    }
+}

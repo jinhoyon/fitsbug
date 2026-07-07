@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -153,8 +154,8 @@
 						<span class="text-[11px] text-on-surface-variant font-medium">조회수 ${notice.viewCount}</span>
 					</div>	
 				
-					<h4 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors mb-1">${notice.title}</h4>
-					<p class="text-sm text-on-surface-variant line-clamp-1 leading-relaxed">${notice.content}</p>
+					<h4 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors mb-1"><c:out value="${notice.title}"/></h4>
+					<p class="text-sm text-on-surface-variant line-clamp-1 leading-relaxed"><c:out value="${notice.content}"/></p>
 				</div>	
 			
 				<div class="flex-shrink-0 self-center">

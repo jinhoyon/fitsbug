@@ -166,7 +166,7 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
       <div style="display:flex;gap:12px;align-items:center;">
         <img src="${pageContext.request.contextPath}/trainer/profile-img/${post.profileImage}" style="width:42px;height:42px;border-radius:50%;border:2px solid #E8EDF5;" alt="프로필">
         <div>
-          <div style="font-weight:700;font-size:14px;color:#1A1F36;">${not empty post.nickName ? post.nickName : "회원"}</div>
+          <div style="font-weight:700;font-size:14px;color:#1A1F36;"><c:out value="${not empty post.nickName ? post.nickName : '회원'}"/></div>
           <div style="font-size:12px;color:#9DA8C0;">${post.createdAt}</div>
         </div>
       </div>
@@ -180,7 +180,7 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
     <div style="padding:18px;">
       <h3 style="font-size:15px;font-weight:800;color:#1A1F36;margin-bottom:6px;"><c:out value="${post.title}"/></h3>
       <p style="font-size:14px;color:#5A6480;line-height:1.6;"><c:out value="${post.body}"/></p>
-      <div style="font-size:13px;color:#00BFA5;font-weight:600;margin-top:8px;">${post.hashtags}</div>
+      <div style="font-size:13px;color:#00BFA5;font-weight:600;margin-top:8px;"><c:out value="${post.hashtags}"/></div>
       <div style="display:flex;gap:8px;margin-top:14px;align-items:center;">
         <button onclick="react(this,${post.id},'like')" id="btn-like-${post.id}" class="react-btn">❤️ <span id="like-${post.id}">0</span></button>
         <button onclick="react(this,${post.id},'good')" id="btn-good-${post.id}" class="react-btn">👍 <span id="good-${post.id}">0</span></button>

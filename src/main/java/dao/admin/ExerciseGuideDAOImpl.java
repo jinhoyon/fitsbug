@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import dto.admin.ExerciseDTO;
 import util.MybatisSqlSessionFactory;
 
-public class ExerciseDAOImpl implements ExerciseDAO {
+public class ExerciseGuideDAOImpl implements ExerciseGuideDAO {
 
 	@Override
 	public void insertGuide(ExerciseDTO dto) throws Exception {
@@ -75,9 +75,8 @@ public class ExerciseDAOImpl implements ExerciseDAO {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 	    int result = 0;
 	    try {
-	        // 매퍼의 id("updateExerciseGuide")와 파라미터(dto) 전달
 	        result = sqlSession.update("mapper.admin.exercise.updateExerciseGuide", dto);
-	        sqlSession.commit(); // 실제 DB에 반영
+	        sqlSession.commit();
 	    } catch(Exception e) {
 	        sqlSession.rollback();
 	        e.printStackTrace();

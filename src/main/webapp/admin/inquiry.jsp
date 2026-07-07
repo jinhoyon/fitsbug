@@ -83,13 +83,13 @@
                     <c:forEach var="i" items="${inquiryList}">
                         <div onclick="loadDetail(${i.inquiryId}, this)" class="inquiry-item p-4 bg-white rounded-lg cursor-pointer hover:shadow-md transition-all border border-transparent">
                             <div class="flex justify-between mb-1">
-                                <span class="text-xs font-bold text-primary">${i.category}</span>
+                                <span class="text-xs font-bold text-primary"><c:out value="${i.category}"/></span>
                                 <span class="text-xs text-gray-400"><fmt:formatDate value="${i.regDate}" pattern="MM.dd HH:mm"/></span>
                             </div>
-                            <h4 class="text-sm font-semibold mb-1 truncate">${i.title}</h4>
+                            <h4 class="text-sm font-semibold mb-1 truncate"><c:out value="${i.title}"/></h4>
                             <p class="text-[11px] text-gray-500 font-medium mt-2">
                                 <span class="material-symbols-outlined text-[12px]">person</span>
-                                ${i.userName} (${i.userId})
+                                <c:out value="${i.userName}"/> (<c:out value="${i.userId}"/>)
                             </p>
                         </div>
                     </c:forEach>

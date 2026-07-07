@@ -213,7 +213,7 @@
 					   class="flex justify-between items-center p-2 rounded hover:bg-surface-container-low transition-colors group cursor-pointer border-b border-outline-variant/5 last:border-0">
 							<div class="flex items-center space-x-2">
 								<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
-								<span class="text-xs font-medium text-on-surface truncate max-w-[150px]">${notice.title}</span>
+								<span class="text-xs font-medium text-on-surface truncate max-w-[150px]"><c:out value="${notice.title}"/></span>
 							</div>
 							<span class="text-[10px] text-outline">${notice.createdAt}</span>
 					</a>
