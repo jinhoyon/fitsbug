@@ -100,7 +100,7 @@
     </select>
 
     <!-- GYM INFO (used to copy location onto trainer record) -->
-    <select id="findGymInfoById" parameterType="int" resultType="dto.gym.Gym">
+    <select id="findGymInfoById" parameterType="int" resultType="dto.common.Gym">
         SELECT id, name, gym_code AS gymCode, address, address_detail AS addressDetail, postcode, latitude, longitude
         FROM gym WHERE id = #{id}
     </select>

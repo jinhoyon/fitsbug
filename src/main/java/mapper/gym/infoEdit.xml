@@ -5,7 +5,7 @@
   
 <mapper namespace="mapper.infoEdit">
 
-    <select id="selectGymMypage" parameterType="int" resultType="dto.gym.Gym">
+    <select id="selectGymMypage" parameterType="int" resultType="dto.common.Gym">
     SELECT
         g.id,
         g.user_id AS userId,
@@ -30,7 +30,7 @@
     WHERE g.id = #{gymId}
 </select>
 
-    <update id="updateGym" parameterType="dto.gym.Gym">
+    <update id="updateGym" parameterType="dto.common.Gym">
         UPDATE GYM
         SET
             name = #{name},

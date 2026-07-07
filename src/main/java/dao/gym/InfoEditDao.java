@@ -3,7 +3,7 @@ package dao.gym;
 import java.util.List;
 import java.util.Map;
 
-import dto.gym.Gym;
+import dto.common.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
 import dto.common.UserDTO;

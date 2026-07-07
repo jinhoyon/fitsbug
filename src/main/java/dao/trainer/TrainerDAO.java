@@ -28,7 +28,7 @@ public interface TrainerDAO {
 
     Integer findGymIdByGymCode(SqlSession session, String gymCode);
 
-    dto.gym.Gym findGymInfoById(SqlSession session, int gymId);
+    dto.common.Gym findGymInfoById(SqlSession session, int gymId);
 
     int insertPayoutAccount(SqlSession session, PayoutAccountDTO dto);
 

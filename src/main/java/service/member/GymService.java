@@ -1,9 +1,9 @@
 package service.member;
 
-import dto.member.GymDTO;
+import dto.common.Gym;
 import java.util.List;
 
 public interface GymService {
-    List<GymDTO> getGymList(String keyword, String category, String sort, Double lat, Double lng);
-    int insertGym(GymDTO dto);
+    List<Gym> getGymList(String keyword, String category, String sort, Double lat, Double lng);
+    int insertGym(Gym dto);
 }

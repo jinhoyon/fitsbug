@@ -176,7 +176,7 @@ Create `dto.common` (and matching `dao.common`) with one Java type per DB table.
 |----------------|-------------------|------------------------|
 | USER | `dto.member.UserDTO`, `dto.trainer.UserDTO` | `mapper/member/UserMapper.xml` |
 | TRAINER | member + trainer `TrainerDTO` | `mapper/trainer/trainer.xml` |
-| GYM | `dto.member.GymDTO`, `dto.gym.Gym` | TBD |
+| GYM | `dto.member.GymDTO`, `dto.gym.Gym` | `mapper/member/GymMapper.xml` |
 | PAYMENT | `dto.member.PaymentDTO`, `dto.gym.Payment` | `mapper/member/PaymentMapper.xml` |
 | TOSS | `dto.member.TossDTO`, `dto.gym.TossPayment`, trainer `PaymentDTO` (misnamed) | unified toss mapper |
 | LESSON | member + trainer `LessonDTO` | `mapper/trainer/lesson.xml` |
@@ -370,7 +370,7 @@ Phases 4 and 5 can be parallelized by different contributors if entity boundarie
 | 1 — Dead weight | Complete | 2026-07-07 — 16 files deleted, admin dead methods removed, mybatis deduped |
 | 2 — Naming/auth | Complete | 2026-07-07 — web.xml display-name, trainer auth unified; gym DAO rename deferred |
 | 3 — DAO pattern | Complete | 2026-07-07 — GymDAO→MyBatis, service-owned SqlSession, DBUtil removed |
-| 4 — Shared DTOs | In progress | 2026-07-07 — UserDTO → `dto.common.UserDTO`; TrainerDTO → `dto.common.TrainerDTO` |
+| 4 — Shared DTOs | In progress | 2026-07-07 — UserDTO, TrainerDTO, Gym → `dto.common` |
 | 5 — Payments | Not started | |
 | 6 — Security | Not started | |
 | 7 — Polish | Not started | |

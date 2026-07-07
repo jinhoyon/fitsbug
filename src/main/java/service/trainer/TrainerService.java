@@ -23,7 +23,7 @@ public interface TrainerService {
 
     Integer findGymIdByGymCode(String gymCode);
 
-    dto.gym.Gym getGymInfoById(int gymId);
+    dto.common.Gym getGymInfoById(int gymId);
 
     int insertPayoutAccount(PayoutAccountDTO dto);
 

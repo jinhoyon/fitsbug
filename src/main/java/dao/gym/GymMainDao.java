@@ -2,7 +2,7 @@ package dao.gym;
 
 import java.util.Map;
 
-import dto.gym.Gym;
+import dto.common.Gym;
 import dto.gym.HotTime;
 import dto.common.UserDTO;
 

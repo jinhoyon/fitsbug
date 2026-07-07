@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.member.GymDTO;
+import dto.common.Gym;
 import dto.common.UserDTO;
 import service.member.GymService;
 import service.member.GymServiceImpl;
@@ -69,8 +69,8 @@ public class GymJoinController extends HttpServlet {
             if (lngStr != null && !lngStr.isEmpty()) lng = Double.parseDouble(lngStr);
         } catch (NumberFormatException ignored) {}
 
-        // ── GymDTO 구성 ───────────────────────────────────────
-        GymDTO gym = new GymDTO();
+        // ── Gym 구성 ───────────────────────────────────────
+        Gym gym = new Gym();
         gym.setName(gymName);
         gym.setPhoneNum(phone);
         gym.setPostcode(postcode);

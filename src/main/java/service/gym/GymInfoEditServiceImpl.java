@@ -5,7 +5,7 @@ import java.util.Map;
 
 import dao.gym.InfoEditDao;
 import dao.gym.InfoEditDaoImpl;
-import dto.gym.Gym;
+import dto.common.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
 import dto.common.UserDTO;

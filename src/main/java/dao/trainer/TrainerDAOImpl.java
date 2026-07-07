@@ -61,7 +61,7 @@ public class TrainerDAOImpl implements TrainerDAO {
     }
 
     @Override
-    public dto.gym.Gym findGymInfoById(SqlSession session, int gymId) {
+    public dto.common.Gym findGymInfoById(SqlSession session, int gymId) {
         return session.selectOne("trainer.findGymInfoById", gymId);
     }
 

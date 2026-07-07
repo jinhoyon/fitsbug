@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.GymMapper">
 
-    <resultMap id="gymResultMap" type="dto.member.GymDTO">
+    <resultMap id="gymResultMap" type="dto.common.Gym">
         <id     property="id"                      column="id"/>
         <result property="userId"                  column="user_id"/>
         <result property="name"                    column="name"/>
@@ -57,7 +57,7 @@
     </select>
 
     <!-- GYM INSERT -->
-    <insert id="insert" parameterType="dto.member.GymDTO">
+    <insert id="insert" parameterType="dto.common.Gym">
         INSERT INTO GYM (
             user_id, name, background_img, business_registration_num, br_file,
             phone_num, address, address_detail, postcode, latitude, longitude,
@@ -70,7 +70,7 @@
     </insert>
 
     <!-- Gym join flow (minimal fields) -->
-    <insert id="insertGymJoin" parameterType="dto.member.GymDTO">
+    <insert id="insertGymJoin" parameterType="dto.common.Gym">
         INSERT INTO GYM (
             user_id, name, phone_num, address, address_detail, postcode,
             latitude, longitude, approval_status
@@ -86,7 +86,7 @@
     </update>
 
     <!-- GYM 정보 수정 -->
-    <update id="update" parameterType="dto.member.GymDTO">
+    <update id="update" parameterType="dto.common.Gym">
         UPDATE GYM SET
             name        = #{name},
             phone_num   = #{phoneNum},

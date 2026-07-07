@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
-import dto.gym.Gym;
+import dto.common.Gym;
 import dto.gym.HotTime;
 import dto.common.UserDTO;
 import util.MybatisSqlSessionFactory;

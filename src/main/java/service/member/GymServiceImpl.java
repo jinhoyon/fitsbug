@@ -2,7 +2,7 @@ package service.member;
 
 import dao.member.GymDAO;
 import dao.member.GymDAOImpl;
-import dto.member.GymDTO;
+import dto.common.Gym;
 import org.apache.ibatis.session.SqlSession;
 import util.MybatisSqlSessionFactory;
 
@@ -14,11 +14,11 @@ public class GymServiceImpl implements GymService {
     private final GymDAO dao = new GymDAOImpl();
 
     @Override
-    public List<GymDTO> getGymList(String keyword, String category,
+    public List<Gym> getGymList(String keyword, String category,
                                    String sort, Double lat, Double lng) {
         SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         try {
-            List<GymDTO> list = dao.selectGymList(session, keyword, category);
+            List<Gym> list = dao.selectGymList(session, keyword, category);
             return enrichAndSort(list, sort, lat, lng);
         } finally {
             session.close();
@@ -26,7 +26,7 @@ public class GymServiceImpl implements GymService {
     }
 
     @Override
-    public int insertGym(GymDTO dto) {
+    public int insertGym(Gym dto) {
         SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession(false);
         try {
             int result = dao.insertGym(session, dto);
@@ -40,15 +40,17 @@ public class GymServiceImpl implements GymService {
         }
     }
 
-    private List<GymDTO> enrichAndSort(List<GymDTO> list, String sort, Double lat, Double lng) {
+    private List<Gym> enrichAndSort(List<Gym> list, String sort, Double lat, Double lng) {
         if (list == null) {
             return new ArrayList<>();
         }
 
-        for (GymDTO gym : list) {
+        for (Gym gym : list) {
             if (lat != null && lng != null
-                    && gym.getLatitude() != 0 && gym.getLongitude() != 0) {
-                gym.setDistance(haversine(lat, lng, gym.getLatitude(), gym.getLongitude()));
+                    && gym.getLatitude() != null && gym.getLongitude() != null
+                    && gym.getLatitude().doubleValue() != 0 && gym.getLongitude().doubleValue() != 0) {
+                gym.setDistance(haversine(lat, lng,
+                        gym.getLatitude().doubleValue(), gym.getLongitude().doubleValue()));
             } else {
                 gym.setDistance(0.0);
             }

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-import dto.gym.Gym;
+import dto.common.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
 import dto.common.UserDTO;

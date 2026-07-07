@@ -1,6 +1,6 @@
 package dao.member;
 
-import dto.member.GymDTO;
+import dto.common.Gym;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import java.util.Map;
 public class GymDAOImpl implements GymDAO {
 
     @Override
-    public List<GymDTO> selectGymList(SqlSession session, String keyword, String category) {
+    public List<Gym> selectGymList(SqlSession session, String keyword, String category) {
         Map<String, Object> params = new HashMap<>();
         params.put("keyword", keyword);
         params.put("category", category);
@@ -18,7 +18,7 @@ public class GymDAOImpl implements GymDAO {
     }
 
     @Override
-    public int insertGym(SqlSession session, GymDTO dto) {
+    public int insertGym(SqlSession session, Gym dto) {
         return session.insert("mapper.GymMapper.insertGymJoin", dto);
     }
 }

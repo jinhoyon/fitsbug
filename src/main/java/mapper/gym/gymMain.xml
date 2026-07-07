@@ -100,7 +100,7 @@
 		values (#{email},#{password},#{name},'GYM')
 	</insert>
 	
-	<select id="selectGymByUserId" parameterType="Integer" resultType="dto.gym.Gym">
+	<select id="selectGymByUserId" parameterType="Integer" resultType="dto.common.Gym">
     SELECT
         id,
         user_id AS userId,

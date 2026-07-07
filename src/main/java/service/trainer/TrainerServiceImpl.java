@@ -114,7 +114,7 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public dto.gym.Gym getGymInfoById(int gymId) {
+    public dto.common.Gym getGymInfoById(int gymId) {
         SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         try {
             return trainerDAO.findGymInfoById(session, gymId);

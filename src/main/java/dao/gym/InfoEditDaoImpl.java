@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
-import dto.gym.Gym;
+import dto.common.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
 import dto.common.UserDTO;

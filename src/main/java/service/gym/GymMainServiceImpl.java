@@ -16,7 +16,7 @@ import dao.gym.GymMainScheduleDao;
 import dao.gym.GymMainScheduleDaoImpl;
 import dao.gym.GymMainTrainerViewDao;
 import dao.gym.GymMainTrainerViewDaoImpl;
-import dto.gym.Gym;
+import dto.common.Gym;
 import dto.gym.GymNotice;
 import dto.gym.GymTrainerView;
 import dto.gym.HotTime;

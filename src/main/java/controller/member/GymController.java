@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dto.member.GymDTO;
+import dto.common.Gym;
 import service.member.GymService;
 import service.member.GymServiceImpl;
 
@@ -48,7 +48,7 @@ public class GymController extends HttpServlet {
 		System.out.println(sort);
 		System.out.println(latStr);
 		System.out.println(lngStr);
-		List<GymDTO> list = service.getGymList(keyword, category, sort, lat, lng);
+		List<Gym> list = service.getGymList(keyword, category, sort, lat, lng);
 		System.out.println(list);
 		req.setAttribute("gymList", list);
 

@@ -34,7 +34,7 @@ public class ProfileController extends HttpServlet {
             request.setAttribute("pricing",          trainerService.getPricingByTrainerId(tid));
             request.setAttribute("availability",     trainerService.getAvailabilityByTrainerId(tid));
             if (trainer.getGymId() != null && trainer.getGymId() > 0) {
-                dto.gym.Gym gym = trainerService.getGymInfoById(trainer.getGymId());
+                dto.common.Gym gym = trainerService.getGymInfoById(trainer.getGymId());
                 request.setAttribute("gym", gym);
             }
         }

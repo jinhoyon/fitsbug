@@ -18,7 +18,7 @@
 		<typeAlias type="dto.trainer.MealDTO" alias="meal"/>
 		<typeAlias alias="MemberDTO"        type="dto.member.MemberDTO"/>
 		<typeAlias alias="UserDTO"        	type="dto.common.UserDTO"/>
-		<typeAlias alias="GymDTO"     		type="dto.member.GymDTO"/>
+		<typeAlias alias="GymDTO"     		type="dto.common.Gym"/>
     	<typeAlias alias="WorkoutLogDTO" 	type="dto.member.WorkoutLogDTO"/>
     	<typeAlias alias="WorkoutDetailDTO" type="dto.member.WorkoutDetailDTO"/>
         <typeAlias alias="MealLogDTO"    	type="dto.member.MealLogDTO"/>
@@ -45,7 +45,7 @@
 		<typeAlias alias="MyPageDTO"   		type="dto.member.MyPageDTO"/>        
         <typeAlias alias="TrainerReviewDTO" type="dto.member.TrainerReviewDTO"/>
 		<typeAlias type="dto.common.UserDTO" alias="user"/>
-		<typeAlias type="dto.gym.Gym"  alias="gym"/>
+		<typeAlias type="dto.common.Gym"  alias="gym"/>
 
 		<!-- Trainer Mapper Alias -->
 		<typeAlias type="dto.trainer.CertificationDTO"  alias="CertificationDTO"/>

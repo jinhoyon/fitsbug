@@ -61,7 +61,7 @@ public class ProfileEditController extends HttpServlet {
             request.setAttribute("pricingList",      trainerService.getPricingByTrainerId(tid));
             request.setAttribute("availabilityList", trainerService.getAvailabilityByTrainerId(tid));
             if (trainer.getGymId() != null) {
-                dto.gym.Gym currentGym = trainerService.getGymInfoById(trainer.getGymId());
+                dto.common.Gym currentGym = trainerService.getGymInfoById(trainer.getGymId());
                 request.setAttribute("currentGym", currentGym);
             }
         }
@@ -151,7 +151,7 @@ public class ProfileEditController extends HttpServlet {
                 }
                 trainer.setGymId(newGymId);
                 // Copy gym address + coordinates onto trainer record
-                dto.gym.Gym gym = trainerService.getGymInfoById(newGymId);
+                dto.common.Gym gym = trainerService.getGymInfoById(newGymId);
                 if (gym != null) {
                     trainer.setAddress(gym.getAddress());
                     trainer.setAddressDetail(gym.getAddressDetail());

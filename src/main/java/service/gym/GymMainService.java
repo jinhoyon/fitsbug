@@ -3,7 +3,7 @@ package service.gym;
 import java.util.List;
 import java.util.Map;
 
-import dto.gym.Gym;
+import dto.common.Gym;
 import dto.gym.GymNotice;
 import dto.gym.GymTrainerView;
 import dto.gym.HotTime;

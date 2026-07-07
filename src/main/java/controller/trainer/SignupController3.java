@@ -1,6 +1,6 @@
 package controller.trainer;
 
-import dto.gym.Gym;
+import dto.common.Gym;
 import dto.trainer.PayoutAccountDTO;
 import dto.common.TrainerDTO;
 import service.trainer.TrainerService;

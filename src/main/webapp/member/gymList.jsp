@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="java.util.*, dto.member.GymDTO" %>
+<%@ page import="java.util.*, dto.common.Gym" %>
 <%
-List<GymDTO> list = (List<GymDTO>) request.getAttribute("gymList");
+List<Gym> list = (List<Gym>) request.getAttribute("gymList");
 if (list == null) list = new ArrayList<>();
 
 String keyword  = request.getParameter("keyword");

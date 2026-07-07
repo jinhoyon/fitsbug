@@ -1,6 +1,6 @@
 package controller.trainer;
 
-import dto.gym.Gym;
+import dto.common.Gym;
 import service.trainer.TrainerService;
 import service.trainer.TrainerServiceImpl;
 

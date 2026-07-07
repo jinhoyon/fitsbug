@@ -1,14 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="java.util.*, dto.member.GymDTO" %>
+<%@ page import="java.util.*, dto.common.Gym" %>
 <%
-List<GymDTO> list = (List<GymDTO>) request.getAttribute("gymList");
+List<Gym> list = (List<Gym>) request.getAttribute("gymList");
 if (list == null || list.isEmpty()) {
     // 빈 상태는 gymList.jsp의 emptyState div에서 처리
     return;
 }
 String contextPath = request.getContextPath();
 
-for (GymDTO g : list) {
+for (Gym g : list) {
 
     // 거리 표시 문자열
     String distStr;
