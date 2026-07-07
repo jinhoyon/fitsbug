@@ -1,7 +1,7 @@
 package dao.member;
 
 import dto.common.TrainerDTO;
-import dto.trainer.AvailabilityDTO;
+import dto.common.AvailabilityDTO;
 
 import java.sql.Connection;
 import java.util.List;

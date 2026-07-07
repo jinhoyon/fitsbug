@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.TrainerAvailabilityMapper">
 
-    <resultMap id="availResultMap" type="dto.member.TrainerAvailabilityDTO">
+    <resultMap id="availResultMap" type="dto.common.AvailabilityDTO">
         <id     property="id"          column="id"/>
         <result property="trainerId"   column="trainer_id"/>
         <result property="dayOfWeek"   column="day_of_week"/>
@@ -14,7 +14,7 @@
     </resultMap>
 
     <!-- 가능 시간 저장 -->
-    <insert id="insert" parameterType="dto.member.TrainerAvailabilityDTO">
+    <insert id="insert" parameterType="dto.common.AvailabilityDTO">
         INSERT INTO trainer_availability
             (trainer_id, day_of_week, start_time, end_time, is_active)
         VALUES

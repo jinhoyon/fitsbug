@@ -6,7 +6,7 @@ import java.util.Map;
 import dao.member.TrainerDAO;
 import dao.member.TrainerDAOImpl;
 import dto.common.TrainerDTO;
-import dto.trainer.AvailabilityDTO;
+import dto.common.AvailabilityDTO;
 
 public class TrainerServiceImpl implements TrainerService {
     private TrainerDAO dao = new TrainerDAOImpl();

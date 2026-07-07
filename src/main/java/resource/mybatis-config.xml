@@ -54,7 +54,7 @@
 		<typeAlias type="dto.common.NotificationDTO" alias="TrainerNotificationDTO"/>
 		<typeAlias type="dto.common.PayoutAccountDTO" alias="PayoutAccountDTO"/>
 		<typeAlias type="dto.common.PricingDTO" alias="PricingDTO"/>
-		<typeAlias type="dto.trainer.AvailabilityDTO" alias="AvailabilityDTO"/>
+		<typeAlias type="dto.common.AvailabilityDTO" alias="AvailabilityDTO"/>
 		<typeAlias type="dto.common.TrainerDTO" alias="TrainerDTO"/>
 	</typeAliases>
 

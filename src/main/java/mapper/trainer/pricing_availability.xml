@@ -31,7 +31,7 @@
 
     <!-- ── AVAILABILITY ─────────────────────────────────────── -->
 
-    <insert id="insertAvailability" parameterType="dto.trainer.AvailabilityDTO"
+    <insert id="insertAvailability" parameterType="dto.common.AvailabilityDTO"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO trainer_availability (trainer_id, day_of_week, start_time, end_time)
         VALUES (#{trainerId}, #{dayOfWeek}, #{startTime}, #{endTime})
@@ -41,7 +41,7 @@
         DELETE FROM trainer_availability WHERE trainer_id = #{trainerId}
     </delete>
 
-    <select id="findAvailabilityByTrainerId" parameterType="int" resultType="dto.trainer.AvailabilityDTO">
+    <select id="findAvailabilityByTrainerId" parameterType="int" resultType="dto.common.AvailabilityDTO">
         SELECT id,
                trainer_id  AS trainerId,
                day_of_week AS dayOfWeek,

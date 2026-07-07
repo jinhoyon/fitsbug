@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dto.common.UserDTO;
-import dto.trainer.AvailabilityDTO;
+import dto.common.AvailabilityDTO;
 import service.member.MemberService;
 import service.member.MemberServiceImpl;
 import service.member.TrainerService;

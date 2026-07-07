@@ -1,6 +1,6 @@
 package dao.trainer;
 
-import dto.trainer.AvailabilityDTO;
+import dto.common.AvailabilityDTO;
 import dto.common.CertificationDTO;
 import dto.common.PayoutAccountDTO;
 import dto.common.PricingDTO;

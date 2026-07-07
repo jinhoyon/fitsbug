@@ -1,7 +1,7 @@
 package dao.member;
 
 import dto.common.TrainerDTO;
-import dto.trainer.AvailabilityDTO;
+import dto.common.AvailabilityDTO;
 
 import org.apache.ibatis.session.SqlSession;
 import util.MybatisSqlSessionFactory;

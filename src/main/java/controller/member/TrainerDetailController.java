@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.ibatis.session.SqlSession;
 
 import dto.common.CertificationDTO;
-import dto.member.PricingDTO;
+import dto.common.PricingDTO;
 import dto.member.TrainerSpecializationDTO;
 import util.MybatisSqlSessionFactory;
 

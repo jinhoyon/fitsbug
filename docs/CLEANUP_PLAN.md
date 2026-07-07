@@ -370,7 +370,7 @@ Phases 4 and 5 can be parallelized by different contributors if entity boundarie
 | 1 — Dead weight | Complete | 2026-07-07 — 16 files deleted, admin dead methods removed, mybatis deduped |
 | 2 — Naming/auth | Complete | 2026-07-07 — web.xml display-name, trainer auth unified; gym DAO rename deferred |
 | 3 — DAO pattern | Complete | 2026-07-07 — GymDAO→MyBatis, service-owned SqlSession, DBUtil removed |
-| 4 — Shared DTOs | In progress | 2026-07-07 — UserDTO, TrainerDTO, Gym, Payment, TossDTO → `dto.common` |
+| 4 — Shared DTOs | Complete | 2026-07-07 — User, Trainer, Gym, Payment, Toss, Lesson, Notification, PayoutAccount, Certification, Pricing, Availability → `dto.common` |
 | 5 — Payments | Not started | |
 | 6 — Security | Not started | |
 | 7 — Polish | Not started | |

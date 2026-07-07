@@ -1,6 +1,6 @@
 package controller.trainer;
 
-import dto.trainer.AvailabilityDTO;
+import dto.common.AvailabilityDTO;
 import dto.common.PricingDTO;
 import dto.common.TrainerDTO;
 import service.trainer.TrainerService;

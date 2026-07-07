@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import dto.common.TrainerDTO;
-import dto.trainer.AvailabilityDTO;
+import dto.common.AvailabilityDTO;
 
 public interface TrainerService {
     List<TrainerDTO> getTrainerList(String keyword, String category, String sort);
