@@ -387,7 +387,7 @@ Phases 0–8 are complete. Remaining items are tracked here and implemented one 
 | D1 | Kakao/Gmail credential externalization (`KakaoConfig`, `MailConfig`, `ConfigLoader`) | Low | Complete |
 | D2 | Duplicate `TrainerDAO` — rename member discovery DAO → `TrainerListDAO` | Low | Complete |
 | D3 | Gym `Dao`/`DaoImpl` → `DAO`/`DAOImpl` naming | Medium | Complete |
-| D4 | Trainer signup — consolidate 5 servlets into step-routed controller | Medium | Not started |
+| D4 | Trainer signup — consolidate 5 servlets into step-routed controller | Medium | Complete |
 
 ### D1 — Kakao/Gmail externalization
 
@@ -409,7 +409,7 @@ Member module uses `TrainerDAO` for **public trainer discovery** (list/detail/av
 
 ### D4 — Trainer signup consolidation
 
-`/trainer/signup` through `/trainer/signup/step5` are separate servlets. Target: single `SignupController` with step routing (GET/POST by `step` param), keeping JSP paths unchanged.
+Single `SignupController` handles `/trainer/signup` and `/trainer/signup/step2`–`step5` via `getServletPath()` routing. JSP paths and form action URLs unchanged. Deleted `SignupController2`–`SignupController5`.
 
 ---
 

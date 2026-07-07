@@ -43,7 +43,7 @@ Gym module uses `DAO`/`DAOImpl` naming, consistent with trainer/admin.
 | Domain | Prefix | Example |
 |--------|--------|---------|
 | Member | `/member/` | `/member/login`, `/member/post` |
-| Trainer | `/trainer/` | `/trainer/dashboard`, `/trainer/signup/step2` |
+| Trainer | `/trainer/` | `/trainer/dashboard`, `/trainer/signup` (steps 1–5 via one servlet) |
 | Gym | `/gym/` | `/gym/dashboard`, `/gym/notice` |
 | Admin | `/admin/` | `/admin/main`, `/admin/reportList` |
 | Trainer payments | `/payment/` | `/payment/checkout`, `/payment/confirm` |

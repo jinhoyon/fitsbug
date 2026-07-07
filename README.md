@@ -85,7 +85,7 @@ Highlights from phases 0–8:
 | D1 | Kakao/Gmail config externalization | Complete |
 | D2 | `TrainerListDAO` rename (member discovery vs trainer CRUD) | Complete |
 | D3 | Gym `Dao` → `DAO` naming (16 pairs) | Complete |
-| D4 | Trainer signup servlet consolidation | Not started |
+| D4 | Trainer signup servlet consolidation | Complete |
 
 ## Remote
 
