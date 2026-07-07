@@ -101,21 +101,26 @@ public class DashboardServiceImpl implements DashboardService {
         if (todayMemberNames.isEmpty()) {
             notifications = new java.util.ArrayList<>();
         } else {
-            // 선택된 수업의 회원 이름을 기준으로 최근 알림 20개를 가져온다
-            // 단, 오늘 수업이 있는 회원의 알림만 조회한다
             String selectedMemberName =
                     selectedLesson != null ? selectedLesson.getMemberName() : null;
 
             String clientUserId = selectedLesson != null
-                    ? String.valueOf(selectedLesson.getClientId())  // LessonDTO에 clientId 있어야 함
+                    ? String.valueOf(selectedLesson.getClientId())
                     : null;
 
-            notifications = notificationDAO.findRecentByUserAndMember(
-                    clientUserId,
-                    selectedMemberName,
-                    20,
-                    today
-            );
+import org.apache.ibatis.session.SqlSession;
+import util.MybatisSqlSessionFactory;
+            try {
+                notifications = notificationDAO.findRecentByUserAndMember(
+                        session,
+                        clientUserId,
+                        selectedMemberName,
+                        20,
+                        today
+                );
+            } finally {
+                session.close();
+            }
         }
 
         // ── 6. 모든 데이터를 DashboardData에 담아서 반환 ─────────────────

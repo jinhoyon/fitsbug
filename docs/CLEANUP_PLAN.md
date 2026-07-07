@@ -369,7 +369,7 @@ Phases 4 and 5 can be parallelized by different contributors if entity boundarie
 | 0 — Baseline | Complete | 2026-07-07 — branch `cleanup/phase-1-dead-code` |
 | 1 — Dead weight | Complete | 2026-07-07 — 16 files deleted, admin dead methods removed, mybatis deduped |
 | 2 — Naming/auth | Complete | 2026-07-07 — web.xml display-name, trainer auth unified; gym DAO rename deferred |
-| 3 — DAO pattern | Not started | |
+| 3 — DAO pattern | Complete | 2026-07-07 — GymDAO→MyBatis, service-owned SqlSession, DBUtil removed |
 | 4 — Shared DTOs | Not started | |
 | 5 — Payments | Not started | |
 | 6 — Security | Not started | |

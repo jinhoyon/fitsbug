@@ -104,7 +104,7 @@ Core entities: `USER`, `MEMBER`, `TRAINER`, `GYM`, `POST`, `PAYMENT`, `LESSON`, 
 
 ### JDBC legacy
 
-`util.DBUtil` provides raw JDBC with duplicated credentials. Used only by `GymDAOImpl` (member). Scheduled for removal — see cleanup plan.
+`util.DBUtil` was removed in cleanup Phase 3. All database access goes through MyBatis.
 
 ## Authentication & sessions
 

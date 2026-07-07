@@ -1,8 +1,8 @@
 package controller.trainer;
 
-import dao.trainer.PaymentDAO;
-import dao.trainer.PaymentDAOImpl;
 import dto.trainer.PaymentDTO;
+import service.trainer.TrainerPaymentService;
+import service.trainer.TrainerPaymentServiceImpl;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 import util.MybatisSqlSessionFactory;
@@ -21,6 +21,7 @@ import java.util.Base64;
 @WebServlet("/payment/cancel")
 public class PaymentCancelController extends HttpServlet {
     private static final String SECRET_KEY = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
+    private final TrainerPaymentService paymentService = new TrainerPaymentServiceImpl();
 
     // GET: cancel.jsp 보여주기
     @Override
@@ -28,8 +29,7 @@ public class PaymentCancelController extends HttpServlet {
             throws ServletException, IOException {
         String orderId = request.getParameter("orderId");
 
-        PaymentDAOImpl dao = new PaymentDAOImpl();
-        PaymentDTO payment = dao.getPaymentByOrderId(orderId);
+        PaymentDTO payment = paymentService.getPaymentByOrderId(orderId);
         request.setAttribute("payment", payment);
         request.getRequestDispatcher("/trainer/payment/cancel.jsp").forward(request, response);
     }

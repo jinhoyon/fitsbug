@@ -3,6 +3,8 @@ package service.trainer;
 import dao.trainer.MealDAO;
 import dao.trainer.MealDAOImpl;
 import dto.trainer.MealDTO;
+import org.apache.ibatis.session.SqlSession;
+import util.MybatisSqlSessionFactory;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,9 +14,8 @@ import java.util.Map;
 
 public class MealService {
 
-    private MealDAO mealDAO = new MealDAOImpl();
+    private final MealDAO mealDAO = new MealDAOImpl();
 
-    // ── Result container ──────────────────────────────────────────────────
     public static class WeekResult {
         public final List<MealDTO> weekMeals;
         public final List<MealDTO> dayMeals;
@@ -45,51 +46,52 @@ public class MealService {
         }
     }
 
-    // ── Main method the servlet calls ─────────────────────────────────────
     public WeekResult getMealData(int memberId, int weekOffset, String selectedDate) {
-
         boolean isDailyView = (selectedDate != null && !selectedDate.isEmpty());
-        if (!isDailyView) selectedDate = "";
+        if (!isDailyView) {
+            selectedDate = "";
+        }
 
-        // Fetch data
         LocalDate targetDate = LocalDate.now().plusWeeks(weekOffset);
-        List<MealDTO> weekMeals = mealDAO.selectMealsByWeek(memberId, targetDate);
-        List<MealDTO> dayMeals  = isDailyView
-                ? mealDAO.selectMealsByDay(memberId, selectedDate)
-                : new ArrayList<>();
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        try {
+            List<MealDTO> weekMeals = mealDAO.selectMealsByWeek(session, memberId, targetDate);
+            List<MealDTO> dayMeals = isDailyView
+                    ? mealDAO.selectMealsByDay(session, memberId, selectedDate)
+                    : new ArrayList<>();
 
-        // Week averages
-        int totalCal = 0, totalProt = 0, totalCarbs = 0, totalFat = 0;
-        for (MealDTO m : weekMeals) {
-            totalCal   += m.getCalories();
-            totalProt  += m.getProtein();
-            totalCarbs += m.getCarbs();
-            totalFat   += m.getFat();
+            int totalCal = 0, totalProt = 0, totalCarbs = 0, totalFat = 0;
+            for (MealDTO meal : weekMeals) {
+                totalCal   += meal.getCalories();
+                totalProt  += meal.getProtein();
+                totalCarbs += meal.getCarbs();
+                totalFat   += meal.getFat();
+            }
+            long days = weekMeals.stream().map(MealDTO::getMealDate).distinct().count();
+            int divisor = (days > 0) ? (int) days : 1;
+
+            int dayCal = 0, dayProt = 0, dayCarbs = 0, dayFat = 0;
+            for (MealDTO meal : dayMeals) {
+                dayCal   += meal.getCalories();
+                dayProt  += meal.getProtein();
+                dayCarbs += meal.getCarbs();
+                dayFat   += meal.getFat();
+            }
+
+            Map<String, Integer> chartData = new LinkedHashMap<>();
+            for (MealDTO meal : weekMeals) {
+                chartData.merge(meal.getMealDate(), meal.getCalories(), Integer::sum);
+            }
+
+            return new WeekResult(
+                    weekMeals, dayMeals, isDailyView, selectedDate,
+                    totalCal / divisor, totalProt / divisor,
+                    totalCarbs / divisor, totalFat / divisor,
+                    dayCal, dayProt, dayCarbs, dayFat,
+                    chartData
+            );
+        } finally {
+            session.close();
         }
-        long days = weekMeals.stream().map(MealDTO::getMealDate).distinct().count();
-        int divisor = (days > 0) ? (int) days : 1;
-
-        // Daily totals
-        int dayCal = 0, dayProt = 0, dayCarbs = 0, dayFat = 0;
-        for (MealDTO m : dayMeals) {
-            dayCal   += m.getCalories();
-            dayProt  += m.getProtein();
-            dayCarbs += m.getCarbs();
-            dayFat   += m.getFat();
-        }
-
-        // Chart data: date → total calories
-        Map<String, Integer> chartData = new LinkedHashMap<>();
-        for (MealDTO m : weekMeals) {
-            chartData.merge(m.getMealDate(), m.getCalories(), Integer::sum);
-        }
-
-        return new WeekResult(
-                weekMeals, dayMeals, isDailyView, selectedDate,
-                totalCal / divisor, totalProt / divisor,
-                totalCarbs / divisor, totalFat / divisor,
-                dayCal, dayProt, dayCarbs, dayFat,
-                chartData
-        );
     }
 }

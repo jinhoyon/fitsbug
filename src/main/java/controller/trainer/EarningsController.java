@@ -1,8 +1,8 @@
 package controller.trainer;
 
 import dto.trainer.TrainerDTO;
-import org.apache.ibatis.session.SqlSession;
-import util.MybatisSqlSessionFactory;
+import service.trainer.EarningsService;
+import service.trainer.EarningsServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,13 +10,11 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @WebServlet("/trainer/earnings")
 public class EarningsController extends HttpServlet {
+
+    private final EarningsService earningsService = new EarningsServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -29,47 +27,15 @@ public class EarningsController extends HttpServlet {
         }
 
         TrainerDTO trainer = (TrainerDTO) session.getAttribute("loginTrainer");
-        int trainerId = trainer.getTrainerId();
         String currentMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
-        Map<String, Object> currentSettlement = null;
-        List<Map<String, Object>> settlementHistory = new ArrayList<>();
-        List<Map<String, Object>> transactions = new ArrayList<>();
+        EarningsService.EarningsOverview overview =
+                earningsService.getOverview(trainer.getTrainerId(), currentMonth);
 
-        try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-
-            // 1. Current month aggregated from PAYMENT
-            try {
-                Map<String, Object> param = new HashMap<>();
-                param.put("trainerId", trainerId);
-                param.put("month", currentMonth);
-                currentSettlement = sql.selectOne("mapper.trainer.settlement.findCurrentMonth", param);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            // 2. Last 12 months aggregated from PAYMENT
-            try {
-                settlementHistory = sql.selectList("mapper.trainer.settlement.findAllByTrainer", trainerId);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            // 3. All transactions with settlementMonth (for chart bar click filtering)
-            try {
-                transactions = sql.selectList("mapper.PaymentMapper.findAllByTrainerId", trainerId);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        request.setAttribute("currentSettlement", currentSettlement);
-        request.setAttribute("settlementHistory", settlementHistory);
-        request.setAttribute("transactions", transactions);
-        request.setAttribute("currentMonth", currentMonth);
+        request.setAttribute("currentSettlement", overview.currentSettlement);
+        request.setAttribute("settlementHistory", overview.settlementHistory);
+        request.setAttribute("transactions", overview.transactions);
+        request.setAttribute("currentMonth", overview.currentMonth);
         request.getRequestDispatcher("/trainer/earnings.jsp").forward(request, response);
     }
 }

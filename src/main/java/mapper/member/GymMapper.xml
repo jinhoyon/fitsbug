@@ -44,6 +44,18 @@
         ORDER BY id DESC
     </select>
 
+    <!-- Member gym search list -->
+    <select id="selectGymListForSearch" parameterType="map" resultMap="gymResultMap">
+        SELECT id, name, address, address_detail, postcode, background_img,
+               latitude, longitude, facility, approval_status
+        FROM GYM
+        <where>
+            <if test="keyword != null and keyword != '' and keyword != '전체'">
+                name LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+    </select>
+
     <!-- GYM INSERT -->
     <insert id="insert" parameterType="dto.member.GymDTO">
         INSERT INTO GYM (
@@ -54,6 +66,17 @@
             #{userId}, #{name}, #{backgroundImg}, #{businessRegistrationNum}, #{brFile},
             #{phoneNum}, #{address}, #{addressDetail}, #{postcode}, #{latitude}, #{longitude},
             #{description}, #{file}, #{facility}, #{gymCode}, #{bankName}, #{accountNumber}
+        )
+    </insert>
+
+    <!-- Gym join flow (minimal fields) -->
+    <insert id="insertGymJoin" parameterType="dto.member.GymDTO">
+        INSERT INTO GYM (
+            user_id, name, phone_num, address, address_detail, postcode,
+            latitude, longitude, approval_status
+        ) VALUES (
+            #{userId}, #{name}, #{phoneNum}, #{address}, #{addressDetail}, #{postcode},
+            #{latitude}, #{longitude}, 'PENDING'
         )
     </insert>
 
