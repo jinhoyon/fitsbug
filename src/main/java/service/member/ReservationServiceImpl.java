@@ -6,7 +6,7 @@ import dao.member.MembershipDAO;
 import dao.member.MembershipDAOImpl;
 import dao.member.ReservationDAO;
 import dao.member.ReservationDAOImpl;
-import dto.member.NotificationDTO;
+import dto.common.NotificationDTO;
 import dto.member.ReservationDTO;
 
 public class ReservationServiceImpl implements ReservationService {

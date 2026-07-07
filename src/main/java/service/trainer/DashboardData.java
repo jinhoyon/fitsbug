@@ -1,7 +1,7 @@
 package service.trainer;
 
 import dto.common.LessonDTO;
-import dto.trainer.NotificationDTO;
+import dto.common.NotificationDTO;
 
 import java.util.List;
 

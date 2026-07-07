@@ -3,7 +3,7 @@ package service.member;
 
 import dao.member.PaymentDAO;
 import dao.member.PaymentDAOImpl;
-import dto.member.NotificationDTO;
+import dto.common.NotificationDTO;
 import dto.common.Payment;
 
 public class PaymentServiceImpl implements PaymentService {

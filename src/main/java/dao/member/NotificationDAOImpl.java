@@ -1,7 +1,7 @@
 package dao.member;
 
 import org.apache.ibatis.session.SqlSession;
-import dto.member.NotificationDTO;
+import dto.common.NotificationDTO;
 import util.MybatisSqlSessionFactory;
 import java.util.List;
 

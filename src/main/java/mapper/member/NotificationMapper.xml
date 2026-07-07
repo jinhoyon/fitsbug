@@ -11,7 +11,7 @@
 
         수정: 이전 member_email/type/message/url 구조 → 새 구조로 전면 변경
     -->
-    <resultMap id="notiResultMap" type="dto.member.NotificationDTO">
+    <resultMap id="notiResultMap" type="dto.common.NotificationDTO">
         <id     property="id"              column="id"/>
         <result property="sendType"        column="sendType"/>
         <result property="sendName"        column="sendName"/>
@@ -41,7 +41,7 @@
     </select>
 
     <!-- 알림 저장 -->
-    <insert id="insert" parameterType="dto.member.NotificationDTO">
+    <insert id="insert" parameterType="dto.common.NotificationDTO">
         INSERT INTO NOTIFICATION (
             sendType, sendName, title, text,
             sendId, recvId, is_read, notification_img

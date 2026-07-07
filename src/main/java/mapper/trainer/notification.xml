@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mapper.notification">
-    <select id="findRecentByUserAndMember" parameterType="map" resultType="NotificationDTO">
+    <select id="findRecentByUserAndMember" parameterType="map" resultType="dto.common.NotificationDTO">
         SELECT n.*,
         CASE
         WHEN TIMESTAMPDIFF(MINUTE, n.create_date, NOW()) &lt; 1 THEN '방금 전'

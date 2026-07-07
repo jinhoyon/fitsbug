@@ -4,7 +4,7 @@ import java.util.List;
 
 import dao.member.NotificationDAO;
 import dao.member.NotificationDAOImpl;
-import dto.member.NotificationDTO;
+import dto.common.NotificationDTO;
 
 public class NotificationServiceImpl implements NotificationService {
 

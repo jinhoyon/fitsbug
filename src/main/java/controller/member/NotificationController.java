@@ -7,7 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import dao.member.NotificationDAO;
 import dao.member.NotificationDAOImpl;
-import dto.member.NotificationDTO;
+import dto.common.NotificationDTO;
 import dto.common.UserDTO;
 
 @WebServlet("/member/notification")

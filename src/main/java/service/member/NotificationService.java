@@ -2,7 +2,7 @@ package service.member;
 
 import java.util.List;
 
-import dto.member.NotificationDTO;
+import dto.common.NotificationDTO;
 
 public interface NotificationService {
     List<NotificationDTO> getList(String email);

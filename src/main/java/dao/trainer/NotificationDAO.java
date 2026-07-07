@@ -1,6 +1,6 @@
 package dao.trainer;
 
-import dto.trainer.NotificationDTO;
+import dto.common.NotificationDTO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.time.LocalDate;

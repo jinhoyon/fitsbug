@@ -1,6 +1,6 @@
 package dao.member;
 
-import dto.member.NotificationDTO;
+import dto.common.NotificationDTO;
 import java.util.List;
 
 public interface NotificationDAO {

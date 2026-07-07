@@ -7,7 +7,7 @@ import dao.member.PostDAO;
 import dao.member.PostDAOImpl;
 import dao.member.PostReactionDAO;
 import dao.member.PostReactionDAOImpl;
-import dto.member.NotificationDTO;
+import dto.common.NotificationDTO;
 
 public class PostReactionServiceImpl implements PostReactionService {
 

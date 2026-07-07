@@ -14,7 +14,7 @@
 		<typeAlias type="dto.admin.InquiryDTO" alias="inquiry"/>
 		<typeAlias type="dto.admin.SalesDTO" alias="sales"/>
 		<typeAlias type="dto.admin.AdminMainDTO" alias="adminMain"/>
-		<typeAlias type="dto.trainer.NotificationDTO" alias="notification"/>
+		<typeAlias type="dto.common.NotificationDTO" alias="notification"/>
 		<typeAlias type="dto.trainer.MealDTO" alias="meal"/>
 		<typeAlias alias="MemberDTO"        type="dto.member.MemberDTO"/>
 		<typeAlias alias="UserDTO"        	type="dto.common.UserDTO"/>
@@ -32,7 +32,7 @@
         <typeAlias alias="MessageRoomDTO"   type="dto.member.MessageRoomDTO"/>
         <typeAlias alias="ChatRoomDTO"    	type="dto.member.ChatRoomDTO"/>
 		<typeAlias alias="ChatMessageDTO" 	type="dto.member.ChatMessageDTO"/>
-        <typeAlias alias="NotificationDTO"  type="dto.member.NotificationDTO"/>
+        <typeAlias alias="NotificationDTO"  type="dto.common.NotificationDTO"/>
         <typeAlias alias="TossDTO"  		type="dto.common.TossDTO"/>
         <typeAlias alias="PaymentDTO"       type="dto.common.Payment"/>
         <typeAlias alias="PtFeedbackDTO"    type="dto.member.PtFeedbackDTO"/>
@@ -51,7 +51,7 @@
 		<typeAlias type="dto.trainer.CertificationDTO"  alias="CertificationDTO"/>
 		<typeAlias type="dto.trainer.ClientDTO" alias="ClientDTO"/>
 		<typeAlias type="dto.common.LessonDTO" alias="TrainerLessonDTO"/>
-		<typeAlias type="dto.trainer.NotificationDTO" alias="TrainerNotificationDTO"/>
+		<typeAlias type="dto.common.NotificationDTO" alias="TrainerNotificationDTO"/>
 		<typeAlias type="dto.trainer.PayoutAccountDTO" alias="PayoutAccountDTO"/>
 		<typeAlias type="dto.trainer.PricingDTO" alias="PricingDTO"/>
 		<typeAlias type="dto.trainer.AvailabilityDTO" alias="AvailabilityDTO"/>

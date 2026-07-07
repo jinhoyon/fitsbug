@@ -4,7 +4,7 @@ import java.util.List;
 
 import dao.member.PtFeedbackDAO;
 import dao.member.PtFeedbackDAOImpl;
-import dto.member.NotificationDTO;
+import dto.common.NotificationDTO;
 import dto.member.PtFeedbackDTO;
 
 public class PtFeedbackServiceImpl implements PtFeedbackService {
