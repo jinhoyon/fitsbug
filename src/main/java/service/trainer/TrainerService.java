@@ -2,7 +2,7 @@ package service.trainer;
 
 import dto.trainer.AvailabilityDTO;
 import dto.trainer.CertificationDTO;
-import dto.trainer.PayoutAccountDTO;
+import dto.common.PayoutAccountDTO;
 import dto.trainer.PricingDTO;
 import dto.common.TrainerDTO;
 

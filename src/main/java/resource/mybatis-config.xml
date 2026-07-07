@@ -52,7 +52,7 @@
 		<typeAlias type="dto.trainer.ClientDTO" alias="ClientDTO"/>
 		<typeAlias type="dto.common.LessonDTO" alias="TrainerLessonDTO"/>
 		<typeAlias type="dto.common.NotificationDTO" alias="TrainerNotificationDTO"/>
-		<typeAlias type="dto.trainer.PayoutAccountDTO" alias="PayoutAccountDTO"/>
+		<typeAlias type="dto.common.PayoutAccountDTO" alias="PayoutAccountDTO"/>
 		<typeAlias type="dto.trainer.PricingDTO" alias="PricingDTO"/>
 		<typeAlias type="dto.trainer.AvailabilityDTO" alias="AvailabilityDTO"/>
 		<typeAlias type="dto.common.TrainerDTO" alias="TrainerDTO"/>

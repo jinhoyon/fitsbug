@@ -4,7 +4,7 @@ import dao.trainer.TrainerDAO;
 import dao.trainer.TrainerDAOImpl;
 import dto.trainer.AvailabilityDTO;
 import dto.trainer.CertificationDTO;
-import dto.trainer.PayoutAccountDTO;
+import dto.common.PayoutAccountDTO;
 import dto.trainer.PricingDTO;
 import dto.common.TrainerDTO;
 import org.apache.ibatis.session.SqlSession;

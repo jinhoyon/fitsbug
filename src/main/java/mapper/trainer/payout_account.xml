@@ -9,7 +9,7 @@
         DELETE FROM payout_account WHERE trainer_id = #{trainerId}
     </delete>
 
-    <insert id="insertPayoutAccount" parameterType="dto.trainer.PayoutAccountDTO"
+    <insert id="insertPayoutAccount" parameterType="dto.common.PayoutAccountDTO"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO payout_account (
             trainer_id,
@@ -34,7 +34,7 @@
         )
     </insert>
 
-    <select id="findByTrainerId" parameterType="int" resultType="dto.trainer.PayoutAccountDTO">
+    <select id="findByTrainerId" parameterType="int" resultType="dto.common.PayoutAccountDTO">
         SELECT
             id,
             trainer_id                AS trainerId,
