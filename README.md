@@ -67,11 +67,6 @@ The codebase is under active cleanup. See [docs/CLEANUP_PLAN.md](docs/CLEANUP_PL
 
 ## Remote
 
-Create a new GitHub repository named `fitsbug`, then:
+`origin` → [https://github.com/jinhoyon/fitsbug](https://github.com/jinhoyon/fitsbug) (branch: `main`)
 
-```bash
-git remote add origin https://github.com/<your-user>/fitsbug.git
-git push -u origin main
-```
-
-Do **not** push this project to `jun795/Final-Fitsbug` — that repo stays at its original snapshot.
+The original course repo (`jun795/Final-Fitsbug`) is intentionally unchanged.
