@@ -1,6 +1,8 @@
-# Fitsbug (Final-Fitsbug)
+# Fitsbug
 
 핏츠버그 — a Korean fitness platform connecting members, personal trainers, gyms, and platform admins.
+
+This repository is the **active cleanup fork**. The original course repo (`jun795/Final-Fitsbug`) is left unchanged.
 
 ## Stack
 
@@ -65,4 +67,11 @@ The codebase is under active cleanup. See [docs/CLEANUP_PLAN.md](docs/CLEANUP_PL
 
 ## Remote
 
-`origin` → `https://github.com/jun795/Final-Fitsbug.git` (branch: `main`)
+Create a new GitHub repository named `fitsbug`, then:
+
+```bash
+git remote add origin https://github.com/<your-user>/fitsbug.git
+git push -u origin main
+```
+
+Do **not** push this project to `jun795/Final-Fitsbug` — that repo stays at its original snapshot.
