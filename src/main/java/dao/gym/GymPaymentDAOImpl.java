@@ -17,7 +17,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 	public int insertMembershipRegistration(MembershipRegistration membershipRegistration) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			int result = session.insert("mapper.payment.insertMembershipRegistration", membershipRegistration);
+			int result = session.insert("mapper.gym.payment.insertMembershipRegistration", membershipRegistration);
 			session.commit();
 			return result;
 		} catch (Exception e) {
@@ -33,7 +33,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 	public int insertPayment(Payment payment) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			int result = session.insert("mapper.payment.insertPayment", payment);
+			int result = session.insert("mapper.gym.payment.insertPayment", payment);
 			session.commit();
 			return result;
 		} catch (Exception e) {
@@ -48,7 +48,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 	public MembershipRegistration selectMembershipRegistration(int mrNum) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectOne("mapper.payment.selectMembershipRegistration", mrNum);
+			return session.selectOne("mapper.gym.payment.selectMembershipRegistration", mrNum);
 		} finally {
 			session.close();
 		}
@@ -58,7 +58,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 	public Payment selectPayment(int paymentNum) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectOne("mapper.payment.selectPayment", paymentNum);
+			return session.selectOne("mapper.gym.payment.selectPayment", paymentNum);
 		} finally {
 			session.close();
 		}
@@ -68,7 +68,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 	public Membership selectMembership(int membershipNum) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectOne("mapper.payment.selectMembership", membershipNum);
+			return session.selectOne("mapper.gym.payment.selectMembership", membershipNum);
 		} finally {
 			session.close();
 		}
@@ -78,7 +78,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 	public List<Payment> selectRefundRequestList(int gymId) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectList("mapper.payment.selectRefundRequestList", gymId);
+			return session.selectList("mapper.gym.payment.selectRefundRequestList", gymId);
 		} finally {
 			session.close();
 		}
@@ -88,7 +88,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 	public int countRefundRequest(int gymId) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectOne("mapper.payment.countRefundRequest", gymId);
+			return session.selectOne("mapper.gym.payment.countRefundRequest", gymId);
 		} finally {
 			session.close();
 		}
@@ -103,7 +103,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 			param.put("paymentNum", paymentNum);
 			param.put("gymId", gymId);
 
-			session.update("mapper.payment.approveRefund", param);
+			session.update("mapper.gym.payment.approveRefund", param);
 			session.commit();
 
 		} catch (Exception e) {
@@ -119,7 +119,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 	public List<Payment> selectCancelRequestList(Map<String, Object> param) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectList("mapper.payment.selectCancelRequestList", param);
+			return session.selectList("mapper.gym.payment.selectCancelRequestList", param);
 		} finally {
 			session.close();
 		}
@@ -129,7 +129,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 	public int countCancelRequest(int gymId) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectOne("mapper.payment.countCancelRequest", gymId);
+			return session.selectOne("mapper.gym.payment.countCancelRequest", gymId);
 		} finally {
 			session.close();
 		}
@@ -144,7 +144,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 			param.put("paymentNum", paymentNum);
 			param.put("gymId", gymId);
 
-			session.update("mapper.payment.updateCancelApprove", param);
+			session.update("mapper.gym.payment.updateCancelApprove", param);
 			session.commit();
 
 		} catch (Exception e) {
@@ -160,7 +160,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 	public void cancelPtSessionByPayment(int paymentNum) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			session.update("mapper.payment.cancelPtSessionByPayment", paymentNum);
+			session.update("mapper.gym.payment.cancelPtSessionByPayment", paymentNum);
 			session.commit();
 		} catch (Exception e) {
 			session.rollback();
@@ -177,11 +177,11 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 
 		try {
-			int mrResult = session.insert("mapper.payment.insertMembershipRegistration", membershipRegistration);
+			int mrResult = session.insert("mapper.gym.payment.insertMembershipRegistration", membershipRegistration);
 
 			payment.setMrNum(membershipRegistration.getMrNum());
 
-			int paymentResult = session.insert("mapper.payment.insertPayment", payment);
+			int paymentResult = session.insert("mapper.gym.payment.insertPayment", payment);
 
 			session.commit();
 
@@ -199,7 +199,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 	@Override
 	public Payment selectPaymentByOrderId(String orderId) {
 		try (SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return session.selectOne("mapper.payment.selectPaymentByOrderId", orderId);
+			return session.selectOne("mapper.gym.payment.selectPaymentByOrderId", orderId);
 		}
 	}
 
@@ -210,7 +210,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 			param.put("orderId", orderId);
 			param.put("reason", reason);
 
-			int result = session.update("mapper.payment.cancelPaymentByOrderId", param);
+			int result = session.update("mapper.gym.payment.cancelPaymentByOrderId", param);
 			session.commit();
 			return result;
 		}
@@ -220,7 +220,7 @@ public class GymPaymentDAOImpl implements GymPaymentDAO {
 	public void expireMembershipPtByOrderId(String orderId) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			session.update("mapper.payment.expireMembershipPtByOrderId", orderId);
+			session.update("mapper.gym.payment.expireMembershipPtByOrderId", orderId);
 			session.commit();
 		} catch (Exception e) {
 			session.rollback();

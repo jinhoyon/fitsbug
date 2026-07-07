@@ -7,7 +7,7 @@ import java.util.List;
 
 public class MealLogDAOImpl implements MealLogDAO {
 
-    private static final String NS = "mapper.MealLogMapper.";
+    private static final String NS = "mapper.member.meal_log.";
 
     @Override
     public int insert(MealLogDTO dto) {

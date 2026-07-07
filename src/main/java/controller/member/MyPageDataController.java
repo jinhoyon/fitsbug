@@ -26,7 +26,7 @@ import util.MybatisSqlSessionFactory;
 @WebServlet("/member/mypageData")
 public class MyPageDataController extends HttpServlet {
 
-    private static final String NS = "mapper.MyPageMapper.";
+    private static final String NS = "mapper.member.mypage.";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

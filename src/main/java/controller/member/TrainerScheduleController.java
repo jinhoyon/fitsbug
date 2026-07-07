@@ -44,7 +44,7 @@ public class TrainerScheduleController extends HttpServlet {
             params.put("endDate",   endDate);
 
             // LESSON 테이블에서 해당 트레이너의 전체 예약 조회 (취소 제외)
-            List<LessonDTO> lessons = sql.selectList("mapper.LessonMapper.findMyLessonsByDateRange", params);
+            List<LessonDTO> lessons = sql.selectList("mapper.member.mapper.trainer.lesson.findMyLessonsByDateRange", params);
 
             StringBuilder json = new StringBuilder("[");
             for (int i = 0; i < lessons.size(); i++) {

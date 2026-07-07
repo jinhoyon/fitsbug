@@ -182,7 +182,7 @@ public class PaymentSuccessController extends HttpServlet {
 
             MemberDTO memberDto =
                     sql.selectOne(
-                            "mapper.MemberMapper.findByUserId",
+                            "mapper.member.member.findByUserId",
                             userId
                     );
 
@@ -207,7 +207,7 @@ public class PaymentSuccessController extends HttpServlet {
 
             Map<String, Object> trainerMap =
                     sql.selectOne(
-                            "mapper.TrainerMapper.findById",
+                            "mapper.member.trainer_profile.findById",
                             trainerId
                     );
 
@@ -284,7 +284,7 @@ public class PaymentSuccessController extends HttpServlet {
             tossDto.setStatus(status);
 
             sql.insert(
-                    "mapper.TossMapper.insert",
+                    "mapper.member.toss.insert",
                     tossDto
             );
 
@@ -302,7 +302,7 @@ public class PaymentSuccessController extends HttpServlet {
 
             Integer membershipId =
                     sql.selectOne(
-                            "mapper.MembershipMapper.findByTrainerAndCount",
+                            "mapper.member.membership.findByTrainerAndCount",
                             param
                     );
 
@@ -347,7 +347,7 @@ public class PaymentSuccessController extends HttpServlet {
             mpDto.setLessonCount(sessionCount);
 
             sql.insert(
-                    "mapper.MembershipMapper.insertRegistration",
+                    "mapper.member.membership.insertRegistration",
                     mpDto
             );
 
@@ -378,7 +378,7 @@ public class PaymentSuccessController extends HttpServlet {
             payment.setPaymentType("PT");
 
             sql.insert(
-                    "mapper.PaymentMapper.insert",
+                    "mapper.member.payment.insert",
                     payment
             );
 

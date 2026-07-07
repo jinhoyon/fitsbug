@@ -37,7 +37,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService {
                 try {
                     for (WorkoutDetailDTO detail : dto.getDetails()) {
                         detail.setWorkoutId(logId);
-                        session.insert("mapper.WorkoutLogMapper.insertDetail", detail);
+                        session.insert("mapper.member.workout_log.insertDetail", detail);
                     }
                     session.commit();
                 } catch (Exception e) {

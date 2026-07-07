@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="lesson">
+<mapper namespace="mapper.trainer.lesson">
     <select id="findLessonsByDate" parameterType="map" resultType="TrainerLessonDTO">
         SELECT l.id AS lesson_id,
                u.nickname AS member_name,

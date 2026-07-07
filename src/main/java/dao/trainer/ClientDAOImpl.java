@@ -21,7 +21,7 @@ public class ClientDAOImpl implements ClientDAO {
         params.put("search", search);
         params.put("trainerId", trainerId);
 
-        return session.selectList("mapper.client.selectClients", params);
+        return session.selectList("mapper.trainer.client.selectClients", params);
     }
 
     // total client count
@@ -32,12 +32,12 @@ public class ClientDAOImpl implements ClientDAO {
         params.put("search", search);
         params.put("trainerId", trainerId);
 
-        return session.selectOne("mapper.client.countClients", params);
+        return session.selectOne("mapper.trainer.client.countClients", params);
     }
 
     // client by Id
     public ClientDTO selectClientById(SqlSession session, int clientId) {
-            return session.selectOne("mapper.client.selectClientById", clientId);
+            return session.selectOne("mapper.trainer.client.selectClientById", clientId);
     }
 }
 

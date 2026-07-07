@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class PaymentDAOImpl implements PaymentDAO {
 
-    private static final String NS = "mapper.PaymentMapper.";
+    private static final String NS = "mapper.member.payment.";
 
     @Override
     public int insert(SqlSession session, Payment payment) {

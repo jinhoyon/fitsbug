@@ -14,7 +14,7 @@ public class ReservationDAOImpl implements ReservationDAO {
     public void insert(ReservationDTO dto) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         try {
-            sqlSession.insert("mapper.ReservationMapper.insert", dto);
+            sqlSession.insert("mapper.member.reservation.insert", dto);
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();
@@ -32,7 +32,7 @@ public class ReservationDAOImpl implements ReservationDAO {
             Map<String, String> param = new HashMap<>();
             param.put("memberEmail",  memberEmail);
             param.put("trainerEmail", trainerEmail);
-            result = sqlSession.selectOne("mapper.ReservationMapper.getNextReservation", param);
+            result = sqlSession.selectOne("mapper.member.reservation.getNextReservation", param);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

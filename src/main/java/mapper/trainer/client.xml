@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="mapper.client">
+<mapper namespace="mapper.trainer.client">
     <select id="selectClients" resultType="ClientDTO">
         SELECT m.id AS clientId, u.nickname AS name, u.age,
                u.profile_image AS profileImage,

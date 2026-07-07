@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.member.trainer_list">
+
+    <select id="findTrainerList" parameterType="map" resultType="dto.common.TrainerDTO">
+        SELECT
+            t.id,
+            u.name,
+            u.nickname,
+            u.profile_image AS profileImg,
+            t.description,
+            t.trainer_type AS trainerType,
+            t.address,
+            t.is_verified AS isVerified,
+            t.approval_status AS approvalStatus,
+            GROUP_CONCAT(DISTINCT ts.type ORDER BY ts.type SEPARATOR ', ') AS specialty,
+            MIN(CASE WHEN tp.is_active = 1 THEN tp.price END) AS minPrice
+        FROM trainer t
+        JOIN `user` u ON t.user_id = u.id
+        LEFT JOIN trainer_specialization ts ON ts.trainer_id = t.id
+        LEFT JOIN trainer_pricing        tp ON tp.trainer_id = t.id
+        <if test="keyword != null and keyword != ''">
+            AND (u.name     LIKE CONCAT('%', #{keyword}, '%')
+              OR u.nickname  LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="category != null and category != '' and category != '전체'">
+            AND EXISTS (
+                SELECT 1 FROM trainer_specialization ts2
+                WHERE ts2.trainer_id = t.id AND ts2.type = #{category}
+            )
+        </if>
+        GROUP BY t.id, u.name, u.nickname, u.profile_image,
+                 t.description, t.trainer_type, t.address,
+                 t.is_verified, t.approval_status
+        <choose>
+            <when test="sort == 'price'">ORDER BY minPrice ASC</when>
+            <otherwise>ORDER BY t.id DESC</otherwise>
+        </choose>
+    </select>
+
+</mapper>

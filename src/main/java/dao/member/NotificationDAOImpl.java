@@ -7,7 +7,7 @@ import java.util.List;
 
 public class NotificationDAOImpl implements NotificationDAO {
 
-    private static final String NS = "mapper.NotificationMapper.";
+    private static final String NS = "mapper.member.notification.";
 
     @Override
     public List<NotificationDTO> findByRecvId(String recvId) {

@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="mapper.notification">
+<mapper namespace="mapper.trainer.notification">
     <select id="findRecentByUserAndMember" parameterType="map" resultType="dto.common.NotificationDTO">
         SELECT n.*,
         CASE

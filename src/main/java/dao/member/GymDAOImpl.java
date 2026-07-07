@@ -14,11 +14,11 @@ public class GymDAOImpl implements GymDAO {
         Map<String, Object> params = new HashMap<>();
         params.put("keyword", keyword);
         params.put("category", category);
-        return session.selectList("mapper.GymMapper.selectGymListForSearch", params);
+        return session.selectList("mapper.member.gym.selectGymListForSearch", params);
     }
 
     @Override
     public int insertGym(SqlSession session, Gym dto) {
-        return session.insert("mapper.GymMapper.insertGymJoin", dto);
+        return session.insert("mapper.member.gym.insertGymJoin", dto);
     }
 }

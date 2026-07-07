@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dao.gym.GymDashboardDAO;
-import dao.gym.GymDashboardDAOImpl;
+import dao.gym.DashboardDAO;
+import dao.gym.DashboardDAOImpl;
 import dto.gym.Dashboard;
 import dto.gym.WeeklyVisitStat;
 
 public class GymDashboardServiceImpl implements GymDashboardService{
-	private GymDashboardDAO dao = new GymDashboardDAOImpl();
+	private DashboardDAO dao = new DashboardDAOImpl();
 	@Override
 	public Dashboard getDashboard(int gymId, String weekStart, String selectedDate) throws Exception {
 		Map<String, Object> param = new HashMap<>();

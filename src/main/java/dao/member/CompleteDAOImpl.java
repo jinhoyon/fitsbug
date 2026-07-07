@@ -10,7 +10,7 @@ public class CompleteDAOImpl implements CompleteDAO {
     public void insertLog(String userId) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         try {
-            sqlSession.insert("mapper.CompleteMapper.insertLog", userId);
+            sqlSession.insert("mapper.member.complete.insertLog", userId);
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();
@@ -25,7 +25,7 @@ public class CompleteDAOImpl implements CompleteDAO {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         List<String> list = null;
         try {
-            list = sqlSession.selectList("mapper.CompleteMapper.getWeekLog", userId);
+            list = sqlSession.selectList("mapper.member.complete.getWeekLog", userId);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -39,7 +39,7 @@ public class CompleteDAOImpl implements CompleteDAO {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
-            result = sqlSession.selectOne("mapper.CompleteMapper.getStreak", userId);
+            result = sqlSession.selectOne("mapper.member.complete.getStreak", userId);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -53,7 +53,7 @@ public class CompleteDAOImpl implements CompleteDAO {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
-            result = sqlSession.selectOne("mapper.CompleteMapper.getBestStreak", userId);
+            result = sqlSession.selectOne("mapper.member.complete.getBestStreak", userId);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

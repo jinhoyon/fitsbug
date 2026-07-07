@@ -10,7 +10,7 @@ import util.MybatisSqlSessionFactory;
 
 public class SupportDAOImpl implements SupportDAO {
 
-    private static final String NS = "mapper.member.InquiryMapper.";
+    private static final String NS = "mapper.member.inquiry.";
 
     @Override
     public void insertInquiry(InquiryDTO dto) {

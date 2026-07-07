@@ -21,7 +21,7 @@ public class TrainerManageDAOImpl implements TrainerManageDAO {
 	        param.put("trainerId", trainerId);
 	        param.put("gymId", gymId);
 
-	        return session.selectList("mapper.trainerManage.selectCurrentMembers", param);
+	        return session.selectList("mapper.gym.trainer_manage.selectCurrentMembers", param);
 	    } finally {
 	        session.close();
 	    }
@@ -35,7 +35,7 @@ public class TrainerManageDAOImpl implements TrainerManageDAO {
 	        param.put("trainerId", trainerId);
 	        param.put("gymId", gymId);
 
-	        return session.selectList("mapper.trainerManage.selectPastMembers", param);
+	        return session.selectList("mapper.gym.trainer_manage.selectPastMembers", param);
 	    } finally {
 	        session.close();
 	    }
@@ -45,7 +45,7 @@ public class TrainerManageDAOImpl implements TrainerManageDAO {
 	public List<TrainerList> selectTrainerList(Map<String, Object> param) throws Exception{
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectList("mapper.trainerManage.selectTrainerList", param);
+			return session.selectList("mapper.gym.trainer_manage.selectTrainerList", param);
 		}finally {
 			session.close();
 		}
@@ -55,7 +55,7 @@ public class TrainerManageDAOImpl implements TrainerManageDAO {
 	public List<TrainerAssign> selectTrainerAssignList(int gymId) throws Exception{
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectList("mapper.trainerManage.selectTrainerAssignList", gymId);
+			return session.selectList("mapper.gym.trainer_manage.selectTrainerAssignList", gymId);
 		}finally {
 			session.close();
 		}

@@ -4,18 +4,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dao.gym.GymMainDAO;
-import dao.gym.GymMainDAOImpl;
-import dao.gym.GymMainMembershipDAO;
-import dao.gym.GymMainMembershipDAOImpl;
-import dao.gym.GymMainNoticeDAO;
-import dao.gym.GymMainNoticeDAOImpl;
-import dao.gym.GymMainReviewDAO;
-import dao.gym.GymMainReviewDAOImpl;
-import dao.gym.GymMainScheduleDAO;
-import dao.gym.GymMainScheduleDAOImpl;
-import dao.gym.GymMainTrainerViewDAO;
-import dao.gym.GymMainTrainerViewDAOImpl;
+import dao.gym.GymProfileDAO;
+import dao.gym.GymProfileDAOImpl;
+import dao.gym.MembershipCatalogDAO;
+import dao.gym.MembershipCatalogDAOImpl;
+import dao.gym.NoticeDAO;
+import dao.gym.NoticeDAOImpl;
+import dao.gym.ReviewDAO;
+import dao.gym.ReviewDAOImpl;
+import dao.gym.ScheduleDAO;
+import dao.gym.ScheduleDAOImpl;
+import dao.gym.TrainerViewDAO;
+import dao.gym.TrainerViewDAOImpl;
 import dto.common.Gym;
 import dto.gym.GymNotice;
 import dto.gym.GymTrainerView;
@@ -27,21 +27,21 @@ import dto.common.UserDTO;
 
 public class GymMainServiceImpl implements GymMainService {
 
-	private GymMainDAO gymMainDAO = new GymMainDAOImpl();
-    private GymMainNoticeDAO noticeDAO = new GymMainNoticeDAOImpl();
-    private GymMainReviewDAO reviewDAO = new GymMainReviewDAOImpl();
-    private GymMainMembershipDAO membershipDAO = new GymMainMembershipDAOImpl();
-    private GymMainScheduleDAO scheduleDAO = new GymMainScheduleDAOImpl();
-    private GymMainTrainerViewDAO trainerViewDAO = new GymMainTrainerViewDAOImpl();
+	private GymProfileDAO gymProfileDAO = new GymProfileDAOImpl();
+    private NoticeDAO noticeDAO = new NoticeDAOImpl();
+    private ReviewDAO reviewDAO = new ReviewDAOImpl();
+    private MembershipCatalogDAO membershipCatalogDAO = new MembershipCatalogDAOImpl();
+    private ScheduleDAO scheduleDAO = new ScheduleDAOImpl();
+    private TrainerViewDAO trainerViewDAO = new TrainerViewDAOImpl();
     
     @Override
     public Map<String,Object> getGymMainInfo(int gymId) throws Exception {
-        return gymMainDAO.selectGymMainInfo(gymId);
+        return gymProfileDAO.selectGymMainInfo(gymId);
     }
 
     @Override
     public List<GymNotice> getNoticeList(int gymId) throws Exception {
-        return noticeDAO.selectRecentNoticeByGym(gymId);
+        return noticeDAO.selectNoticeList(gymId);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class GymMainServiceImpl implements GymMainService {
 
     @Override
     public List<Membership> getMembershipList(int gymId) throws Exception {
-        return membershipDAO.selectMembershipByGym(gymId);
+        return membershipCatalogDAO.selectMembershipByGym(gymId);
     }
 
     @Override
@@ -69,14 +69,14 @@ public class GymMainServiceImpl implements GymMainService {
 		Map<String, Object> param = new HashMap<>();
 	    param.put("gymId", gymId);
 
-	    return gymMainDAO.selectTodayHotTime(param);
+	    return gymProfileDAO.selectTodayHotTime(param);
 	}
 
 	@Override
 	public void joinGym(UserDTO user, Gym gym) throws Exception {
-		gymMainDAO.insertUserByGym(user);
+		gymProfileDAO.insertUserByGym(user);
 		gym.setUserId(user.getId());
-		gymMainDAO.insertGym(gym);
+		gymProfileDAO.insertGym(gym);
 		
 	}
 

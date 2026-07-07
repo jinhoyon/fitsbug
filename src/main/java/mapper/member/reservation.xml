@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.member.reservation">
+
+    <resultMap id="reservationResultMap" type="dto.member.ReservationDTO">
+        <id     property="id"            column="id"/>
+        <result property="memberEmail"   column="member_email"/>
+        <result property="trainerEmail"  column="trainer_email"/>
+        <result property="classTime"     column="class_time"/>
+        <result property="status"        column="status"/>
+    </resultMap>
+
+    <!-- ──────────────────────────────────────────────────────
+         ReservationDAOImpl.insert(ReservationDTO dto)
+         → param: ReservationDTO
+         ────────────────────────────────────────────────────── -->
+    <insert id="insert" parameterType="ReservationDTO">
+        INSERT INTO reservation (member_email, trainer_email, class_time)
+        VALUES (#{memberEmail}, #{trainerEmail}, #{classTime})
+    </insert>
+
+    <!-- ──────────────────────────────────────────────────────
+         ReservationDAOImpl.getNextReservation(String memberEmail, String trainerEmail)
+         → Map 키: memberEmail / trainerEmail
+         ────────────────────────────────────────────────────── -->
+    <select id="getNextReservation" parameterType="map" resultMap="reservationResultMap">
+        SELECT id, member_email, trainer_email, class_time, status
+        FROM reservation
+        WHERE member_email  = #{memberEmail}
+          AND trainer_email = #{trainerEmail}
+          AND class_time    > NOW()
+        ORDER BY class_time ASC
+        LIMIT 1
+    </select>
+
+</mapper>

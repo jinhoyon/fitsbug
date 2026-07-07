@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class UserDAOImpl implements UserDAO {
 
-    private static final String NS = "mapper.UserMapper.";
+    private static final String NS = "mapper.member.user.";
 
     @Override
     public int insert(UserDTO dto) {

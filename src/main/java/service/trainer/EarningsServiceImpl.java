@@ -37,7 +37,7 @@ public class EarningsServiceImpl implements EarningsService {
             }
 
             try {
-                transactions = session.selectList("mapper.PaymentMapper.findAllByTrainerId", trainerId);
+                transactions = session.selectList("mapper.member.payment.findAllByTrainerId", trainerId);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -101,7 +101,7 @@ public class EarningsServiceImpl implements EarningsService {
                 countParam.put("trainerId", trainerId);
                 countParam.put("dateFrom", dateFrom);
                 countParam.put("dateTo", dateTo);
-                totalCount = session.selectOne("mapper.PaymentMapper.countByTrainerId", countParam);
+                totalCount = session.selectOne("mapper.member.payment.countByTrainerId", countParam);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -115,7 +115,7 @@ public class EarningsServiceImpl implements EarningsService {
                 param.put("sortDir", sortDir);
                 param.put("dateFrom", dateFrom);
                 param.put("dateTo", dateTo);
-                transactions = session.selectList("mapper.PaymentMapper.findByTrainerIdPaged", param);
+                transactions = session.selectList("mapper.member.payment.findByTrainerIdPaged", param);
             } catch (Exception e) {
                 e.printStackTrace();
             }

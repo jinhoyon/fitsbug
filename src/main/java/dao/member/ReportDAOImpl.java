@@ -11,7 +11,7 @@ public class ReportDAOImpl implements ReportDAO {
     public void insert(ReportDTO dto) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         try {
-            sqlSession.insert("mapper.ReportMapper.insert", dto);
+            sqlSession.insert("mapper.member.report.insert", dto);
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.member.post_reaction">
+    <!-- 리액션 등록 (post_reaction 테이블 UNIQUE KEY로 중복 방지) -->
+    <insert id="addReaction" parameterType="map">
+        INSERT IGNORE INTO post_reaction (post_id, user_id, type)
+        VALUES (#{postId}, #{userId}, #{type})
+    </insert>
+
+    <select id="getReactionCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM post_reaction
+        WHERE post_id = #{postId} AND type = #{type}
+    </select>
+
+    <!--
+        타입별 카운트 3개를 한 번의 쿼리로 반환
+        → ReactionCountController AJAX 응답용
+        → PostReactionDTO.type 값('like','good','muscle')을 기준으로 GROUP
+        반환: [{type:'like', cnt:5}, {type:'good', cnt:3}, {type:'muscle', cnt:7}]
+    -->
+    <select id="getAllCounts" parameterType="int" resultType="map">
+        SELECT
+            type,
+            COUNT(*) AS cnt
+        FROM post_reaction
+        WHERE post_id = #{postId}
+        GROUP BY type
+    </select>
+
+    <!-- 특정 유저가 해당 게시글에 해당 타입 리액션 눌렀는지 확인 -->
+    <select id="hasReacted" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM post_reaction
+        WHERE post_id = #{postId}
+          AND user_id = #{userId}
+          AND type    = #{type}
+    </select>
+
+</mapper>

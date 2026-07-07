@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.member.gym">
+
+    <resultMap id="gymResultMap" type="dto.common.Gym">
+        <id     property="id"                      column="id"/>
+        <result property="userId"                  column="user_id"/>
+        <result property="name"                    column="name"/>
+        <result property="backgroundImg"           column="background_img"/>
+        <result property="businessRegistrationNum" column="business_registration_num"/>
+        <result property="brFile"                  column="br_file"/>
+        <result property="phoneNum"                column="phone_num"/>
+        <result property="address"                 column="address"/>
+        <result property="addressDetail"           column="address_detail"/>
+        <result property="postcode"                column="postcode"/>
+        <result property="latitude"                column="latitude"/>
+        <result property="longitude"               column="longitude"/>
+        <result property="description"             column="description"/>
+        <result property="file"                    column="file"/>
+        <result property="facility"                column="facility"/>
+        <result property="approvalStatus"          column="approval_status"/>
+        <result property="gymCode"                 column="gym_code"/>
+        <result property="bankName"                column="bank_name"/>
+        <result property="accountNumber"           column="account_number"/>
+    </resultMap>
+
+    <!-- GYM.id로 조회 -->
+    <select id="findById" parameterType="int" resultMap="gymResultMap">
+        SELECT id, user_id, name, background_img, business_registration_num, br_file,
+               phone_num, address, address_detail, postcode, latitude, longitude,
+               description, file, facility, approval_status, gym_code, bank_name, account_number
+        FROM GYM WHERE id = #{id}
+    </select>
+
+    <!-- 승인된 GYM 전체 목록 -->
+    <select id="findAllApproved" resultMap="gymResultMap">
+        SELECT id, user_id, name, background_img,
+               phone_num, address, latitude, longitude,
+               description, facility, approval_status, gym_code
+        FROM GYM
+        WHERE approval_status = 'APPROVED'
+        ORDER BY id DESC
+    </select>
+
+    <!-- Member gym search list -->
+    <select id="selectGymListForSearch" parameterType="map" resultMap="gymResultMap">
+        SELECT id, name, address, address_detail, postcode, background_img,
+               latitude, longitude, facility, approval_status
+        FROM GYM
+        <where>
+            <if test="keyword != null and keyword != '' and keyword != '전체'">
+                name LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!-- GYM INSERT -->
+    <insert id="insert" parameterType="dto.common.Gym">
+        INSERT INTO GYM (
+            user_id, name, background_img, business_registration_num, br_file,
+            phone_num, address, address_detail, postcode, latitude, longitude,
+            description, file, facility, gym_code, bank_name, account_number
+        ) VALUES (
+            #{userId}, #{name}, #{backgroundImg}, #{businessRegistrationNum}, #{brFile},
+            #{phoneNum}, #{address}, #{addressDetail}, #{postcode}, #{latitude}, #{longitude},
+            #{description}, #{file}, #{facility}, #{gymCode}, #{bankName}, #{accountNumber}
+        )
+    </insert>
+
+    <!-- Gym join flow (minimal fields) -->
+    <insert id="insertGymJoin" parameterType="dto.common.Gym">
+        INSERT INTO GYM (
+            user_id, name, phone_num, address, address_detail, postcode,
+            latitude, longitude, approval_status
+        ) VALUES (
+            #{userId}, #{name}, #{phoneNum}, #{address}, #{addressDetail}, #{postcode},
+            #{latitude}, #{longitude}, 'PENDING'
+        )
+    </insert>
+
+    <!-- 승인 상태 변경 -->
+    <update id="updateApprovalStatus" parameterType="map">
+        UPDATE GYM SET approval_status = #{approvalStatus} WHERE id = #{id}
+    </update>
+
+    <!-- GYM 정보 수정 -->
+    <update id="update" parameterType="dto.common.Gym">
+        UPDATE GYM SET
+            name        = #{name},
+            phone_num   = #{phoneNum},
+            address     = #{address},
+            description = #{description},
+            facility    = #{facility},
+            bank_name   = #{bankName},
+            account_number = #{accountNumber}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

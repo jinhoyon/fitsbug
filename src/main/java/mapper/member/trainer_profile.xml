@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.member.trainer_profile">
+
+    <resultMap id="trainerResultMap" type="dto.common.TrainerDTO">
+        <id     property="id"                      column="id"/>
+        <result property="userId"                  column="user_id"/>
+        <result property="trainerType"             column="trainer_type"/>
+        <result property="gymId"                   column="gym_id"/>
+        <result property="gymJoinCode"             column="gym_join_code"/>
+        <result property="businessRegistrationNum" column="business_registration_num"/>
+        <result property="brFile"                  column="br_file"/>
+        <result property="hasHomeGym"              column="has_homeGym"/>
+        <result property="visitService"            column="visit_service"/>
+        <result property="description"             column="description"/>
+        <result property="address"                 column="address"/>
+        <result property="addressDetail"           column="address_detail"/>
+        <result property="postcode"                column="postcode"/>
+        <result property="latitude"                column="latitude"/>
+        <result property="longitude"               column="longitude"/>
+        <result property="approvalStatus"          column="approval_status"/>
+        <result property="isVerified"              column="is_verified"/>
+    </resultMap>
+
+    <!-- USER JOIN 포함 resultMap -->
+    <resultMap id="trainerWithUserResultMap" type="dto.common.TrainerDTO"
+               extends="trainerResultMap">
+        <result property="name"       column="name"/>
+        <result property="nickname"   column="nickname"/>
+        <result property="email"      column="email"/>
+        <result property="profileImg" column="profileImg"/>
+    </resultMap>
+
+    <!-- TRAINER INSERT -->
+    <insert id="insert" parameterType="dto.common.TrainerDTO">
+        INSERT INTO TRAINER (
+            user_id, trainer_type, gym_id, gym_join_code,
+            business_registration_num, br_file,
+            has_homeGym, visit_service, description,
+            address, address_detail, postcode, latitude, longitude,
+            approval_status
+        ) VALUES (
+            #{userId}, #{trainerType}, #{gymId}, #{gymJoinCode},
+            #{businessRegistrationNum}, #{brFile},
+            #{hasHomeGym}, #{visitService}, #{description},
+            #{address}, #{addressDetail}, #{postcode}, #{latitude}, #{longitude},
+            'PENDING'
+        )
+    </insert>
+
+    <!-- TRAINER.id로 조회 -->
+    <select id="findById" parameterType="Integer" resultType="map">
+        SELECT
+            t.id, t.user_id, t.trainer_type, t.gym_id, t.gym_join_code,
+            t.business_registration_num, t.br_file,
+            t.has_homeGym, t.visit_service, t.description,
+            t.address, t.address_detail, t.postcode, t.latitude, t.longitude,
+            t.approval_status, t.is_verified,
+            u.name, u.nickname, u.email, u.profile_image AS profileImg
+        FROM TRAINER t
+        JOIN USER u ON t.user_id = u.id
+        WHERE t.id = #{trainerId}
+    </select>
+
+    <!-- USER.email로 TRAINER 조회 -->
+    <select id="findByEmail" parameterType="string" resultMap="trainerWithUserResultMap">
+        SELECT
+            t.id, t.user_id, t.trainer_type, t.gym_id, t.gym_join_code,
+            t.business_registration_num, t.br_file,
+            t.has_homeGym, t.visit_service, t.description,
+            t.address, t.address_detail, t.postcode, t.latitude, t.longitude,
+            t.approval_status, t.is_verified,
+            u.name, u.nickname, u.email, u.profile_image AS profileImg
+        FROM TRAINER t
+        JOIN USER u ON t.user_id = u.id
+        WHERE u.email = #{email}
+          AND u.is_deleted = 0
+    </select>
+
+    <!-- 승인된 트레이너 전체 목록 -->
+    <select id="findAllApproved" resultMap="trainerWithUserResultMap">
+        SELECT
+            t.id, t.user_id, t.trainer_type, t.gym_id,
+            t.has_homeGym, t.visit_service, t.description,
+            t.address, t.latitude, t.longitude,
+            t.approval_status, t.is_verified,
+            u.name, u.nickname, u.email, u.profileImg
+        FROM TRAINER t
+        JOIN USER u ON t.user_id = u.id
+        WHERE t.approval_status = 'APPROVED'
+          AND u.is_deleted = 0
+        ORDER BY t.id DESC
+    </select>
+
+    <!-- GYM 소속 트레이너 목록 -->
+    <select id="findByGymId" parameterType="int" resultMap="trainerWithUserResultMap">
+        SELECT
+            t.id, t.user_id, t.trainer_type, t.gym_id,
+            t.description, t.approval_status, t.is_verified,
+            u.name, u.nickname, u.email, u.profileImg
+        FROM TRAINER t
+        JOIN USER u ON t.user_id = u.id
+        WHERE t.gym_id = #{gymId}
+          AND u.is_deleted = 0
+        ORDER BY t.id DESC
+    </select>
+
+    <!-- 승인 상태 변경 -->
+    <update id="updateApprovalStatus" parameterType="map">
+        UPDATE TRAINER SET approval_status = #{approvalStatus} WHERE id = #{id}
+    </update>
+
+    <!-- 인증 여부 변경 -->
+    <!-- ChatController: TRAINER.id → USER.id 변환 -->
+    <select id="findUserIdById" parameterType="int" resultType="int">
+        SELECT user_id FROM TRAINER WHERE id = #{trainerId}
+    </select>
+
+</mapper>

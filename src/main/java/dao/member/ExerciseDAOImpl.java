@@ -10,7 +10,7 @@ import util.MybatisSqlSessionFactory;
 
 public class ExerciseDAOImpl implements ExerciseDAO {
 
-    private static final String NS = "mapper.ExerciseGuideMapper.";
+    private static final String NS = "mapper.member.exercise_guide.";
 
     // ── 전체 조회 ─────────────────────────────────────────────
     @Override

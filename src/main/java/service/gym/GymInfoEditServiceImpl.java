@@ -3,15 +3,15 @@ package service.gym;
 import java.util.List;
 import java.util.Map;
 
-import dao.gym.InfoEditDAO;
-import dao.gym.InfoEditDAOImpl;
+import dao.gym.GymSettingsDAO;
+import dao.gym.GymSettingsDAOImpl;
 import dto.common.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
 import dto.common.UserDTO;
 
 public class GymInfoEditServiceImpl implements GymInfoEditService {
-	private InfoEditDAO dao = new InfoEditDAOImpl();
+	private GymSettingsDAO dao = new GymSettingsDAOImpl();
 	
 	@Override
 	public Gym selectGymMypage(int gymId) {

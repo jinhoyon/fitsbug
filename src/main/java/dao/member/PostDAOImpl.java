@@ -14,7 +14,7 @@ public class PostDAOImpl implements PostDAO {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
-            result = sqlSession.insert("mapper.PostMapper.insert", dto);
+            result = sqlSession.insert("mapper.member.post.insert", dto);
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();
@@ -30,7 +30,7 @@ public class PostDAOImpl implements PostDAO {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         List<PostDTO> list = null;
         try {
-            list = sqlSession.selectList("mapper.PostMapper.getList");
+            list = sqlSession.selectList("mapper.member.post.getList");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -44,7 +44,7 @@ public class PostDAOImpl implements PostDAO {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         String result = null;
         try {
-            result = sqlSession.selectOne("mapper.PostMapper.getWriterEmail", postId);
+            result = sqlSession.selectOne("mapper.member.post.getWriterEmail", postId);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.admin.main">
+<select id="getDashboardStats" resultType="adminMain">
+    SELECT 
+        (SELECT COUNT(*) FROM USER) as totMember,
+        (SELECT COUNT(*) FROM USER WHERE created_at > DATE_SUB(NOW(), INTERVAL 1 MONTH)) as newMember,
+        (SELECT COUNT(*) FROM TRAINER) + (SELECT COUNT(*) FROM GYM) as totPartners,
+        (SELECT IFNULL(SUM(payment_price), 0) FROM PAYMENT WHERE status = '결제완료' AND payment_date > DATE_SUB(NOW(), INTERVAL 1 MONTH)) as salesAmount,
+        (SELECT COUNT(*) FROM TRAINER WHERE approval_status = 'PENDING') 
+        + (SELECT COUNT(*) FROM GYM WHERE approval_status = 'PENDING') as authWaitCount,
+        (SELECT COUNT(*) FROM REPORT WHERE status = 'WAIT') as reportWaitCount,
+        (SELECT COUNT(*) FROM INQUIRY WHERE status = 'WAIT') as inquiryWaitCount,
+        (SELECT COUNT(*) FROM SETTLEMENT WHERE status = '정산대기') as settleWaitCount
+</select>
+</mapper>

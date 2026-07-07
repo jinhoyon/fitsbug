@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dao.gym.GymScheduleDAO;
-import dao.gym.GymScheduleDAOImpl;
+import dao.gym.ScheduleDAO;
+import dao.gym.ScheduleDAOImpl;
 import dto.gym.PtSessionView;
 import dto.gym.ScheduleDay;
 import dto.gym.TrainerChoose;
 
 public class GymScheduleServiceImpl implements GymScheduleService {
-	private GymScheduleDAO dao = new GymScheduleDAOImpl();
+	private ScheduleDAO dao = new ScheduleDAOImpl();
 	@Override
 	public Map<String, Object> getSchedulePageData(int gymId, int weekOffset) throws Exception {
 

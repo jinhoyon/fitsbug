@@ -7,7 +7,7 @@ import java.util.List;
 
 public class InbodyLogDAOImpl implements InbodyLogDAO {
 
-    private static final String NS = "mapper.InbodyLogMapper.";
+    private static final String NS = "mapper.member.inbody_log.";
 
     @Override
     public int insert(InbodyLogDTO dto) {

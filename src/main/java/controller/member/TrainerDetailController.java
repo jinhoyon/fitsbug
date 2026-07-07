@@ -40,22 +40,22 @@ public class TrainerDetailController extends HttpServlet {
         List<CertificationDTO> certList = new ArrayList<>();
 
         try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-            trainer = sql.selectOne("mapper.TrainerMapper.findById", trainerId);
+            trainer = sql.selectOne("mapper.member.trainer_profile.findById", trainerId);
         }
         
         if (trainer != null) {
             try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {        	
-                pricingList = sql.selectList("mapper.TrainerPricingMapper.findByTrainerId", trainerId);
+                pricingList = sql.selectList("mapper.member.trainer_pricing.findByTrainerId", trainerId);
             } catch(Exception e) {
             	e.printStackTrace();
             }
             try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {        	
-                specList    = sql.selectList("mapper.TrainerSpecializationMapper.findByTrainerId", trainerId);
+                specList    = sql.selectList("mapper.member.trainer_specialization.findByTrainerId", trainerId);
             }catch(Exception e) {
             	e.printStackTrace();
             }
             try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {        	
-                certList    = sql.selectList("mapper.TrainerCertificationMapper.findByTrainerId", trainerId);
+                certList    = sql.selectList("mapper.member.trainer_certification.findByTrainerId", trainerId);
             }catch(Exception e) {
             	e.printStackTrace();
             }

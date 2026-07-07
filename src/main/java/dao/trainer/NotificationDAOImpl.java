@@ -30,7 +30,7 @@ public class NotificationDAOImpl implements NotificationDAO {
         params.put("limit", safeLimit);
         params.put("today", today.toString());
 
-        return session.selectList("mapper.notification.findRecentByUserAndMember", params);
+        return session.selectList("mapper.trainer.notification.findRecentByUserAndMember", params);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class NotificationDAOImpl implements NotificationDAO {
         Map<String, Object> params = new HashMap<>();
         params.put("notificationId", notificationId);
         params.put("userId", userId);
-        return session.update("mapper.notification.markAsRead", params);
+        return session.update("mapper.trainer.notification.markAsRead", params);
     }
 
     @Override
@@ -54,6 +54,6 @@ public class NotificationDAOImpl implements NotificationDAO {
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);
         params.put("memberName", memberName);
-        return session.update("mapper.notification.markAllAsRead", params);
+        return session.update("mapper.trainer.notification.markAllAsRead", params);
     }
 }

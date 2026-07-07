@@ -3,8 +3,8 @@ package service.member;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 
-import dao.gym.GymMainDAO;
-import dao.gym.GymMainDAOImpl;
+import dao.gym.GymProfileDAO;
+import dao.gym.GymProfileDAOImpl;
 import dao.member.MemberDAO;
 import dao.member.MemberDAOImpl;
 import dao.member.UserDAO;
@@ -21,7 +21,7 @@ import util.PasswordUtil;
 public class UserServiceImpl implements UserService {
 
     private UserDAO userDAO = new UserDAOImpl();
-    private GymMainDAO gymMainDAO = new GymMainDAOImpl();
+    private GymProfileDAO gymProfileDAO = new GymProfileDAOImpl();
     private MemberDAO memberDAO = new MemberDAOImpl();
     private TrainerDAO trainerDAO = new TrainerDAOImpl();
 
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         if (!user.isDeleted()) {
         	String role = user.getRole();
         	if(role.equals("GYM")) {
-        		Gym gym = gymMainDAO.selectGymByUserId(user.getId());
+        		Gym gym = gymProfileDAO.selectGymByUserId(user.getId());
         		user.setOtherId(gym.getId()); // gymId  userDTO에 추가
         	} else if (role.equals("MEMBER")) {
         		MemberDTO member = memberDAO.selectMemberByUserId(user.getId());

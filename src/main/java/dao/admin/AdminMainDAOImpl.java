@@ -12,7 +12,7 @@ public class AdminMainDAOImpl implements AdminMainDAO {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		AdminMainDTO stats = null;
 		try {
-			stats = sqlSession.selectOne("mapper.admin.adminMain.getDashboardStats");
+			stats = sqlSession.selectOne("mapper.admin.main.getDashboardStats");
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw e;

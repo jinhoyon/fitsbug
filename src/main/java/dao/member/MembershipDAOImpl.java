@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class MembershipDAOImpl implements MembershipDAO {
 
-    private static final String NS = "mapper.MembershipMapper.";
+    private static final String NS = "mapper.member.membership.";
 
     /** @deprecated 레거시 호환용 stub */
     @Override

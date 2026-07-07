@@ -13,7 +13,7 @@ Manual verification after cleanup. Deploy to Tomcat as `Fitsbug` (`/Fitsbug` con
 | Flow | URL | Expected |
 |------|-----|----------|
 | Member login | `/Fitsbug/member/login` | Valid credentials → `/member/main` |
-| Member join step 3 | `/Fitsbug/member/step3` | Completes 3-step signup; BCrypt password stored |
+| Member join step 3 | `/Fitsbug/member/step3` | Completes 3-step signup via `SignupStep3Controller`; BCrypt password stored |
 | Trainer login | `/Fitsbug/trainer/login` | Sets `loginTrainer` → `/trainer/dashboard` |
 | Trainer via unified login | `/Fitsbug/member/login` (TRAINER role) | Sets `loginTrainer` → `/trainer/dashboard` |
 | Gym login | `/Fitsbug/member/login` (GYM role) | Sets `gymId` → `/gym/dashboard` |

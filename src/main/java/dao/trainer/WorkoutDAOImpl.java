@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class WorkoutDAOImpl implements WorkoutDAO {
 
-    private static final String NS = "trainer.workout.";
+    private static final String NS = "mapper.trainer.workout.";
 
     @Override
     public List<WorkoutLogDTO> findAllLogsByClientId(SqlSession session, int clientId) {

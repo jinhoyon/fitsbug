@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class TossDAOImpl implements TossDAO {
 
-    private static final String NS = "mapper.TossMapper.";
+    private static final String NS = "mapper.member.toss.";
 
     @Override
     public int insert(SqlSession session, TossDTO dto) {

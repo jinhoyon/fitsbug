@@ -18,7 +18,7 @@ public class GymSalesDAOImpl implements GymSalesDAO {
 	public List<Sales> selectSalesList(Map<String, Object> param) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectList("mapper.sales.selectSalesList", param);
+			return session.selectList("mapper.gym.sales.selectSalesList", param);
 		}finally {
 			session.close();
 		}
@@ -28,7 +28,7 @@ public class GymSalesDAOImpl implements GymSalesDAO {
 	public int selectSalesCount(Map<String, Object> param) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectOne("mapper.sales.selectSalesCount", param);
+			return session.selectOne("mapper.gym.sales.selectSalesCount", param);
 		}finally {
 			session.close();
 		}
@@ -38,7 +38,7 @@ public class GymSalesDAOImpl implements GymSalesDAO {
 	public SalesSummary selectSalesSummary(Map<String, Object> param) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectOne("mapper.sales.selectSalesSummary", param);
+			return session.selectOne("mapper.gym.sales.selectSalesSummary", param);
 		}finally {
 			session.close();
 		}
@@ -48,7 +48,7 @@ public class GymSalesDAOImpl implements GymSalesDAO {
 	public List<SalesChart> selectSalesChartList(Map<String, Object> param) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectList("mapper.sales.selectSalesChartList", param);
+			return session.selectList("mapper.gym.sales.selectSalesChartList", param);
 		}finally {
 			session.close();
 		}
@@ -58,7 +58,7 @@ public class GymSalesDAOImpl implements GymSalesDAO {
 	public List<SalesTopTrainer> selectTopTrainerList(Map<String, Object> param) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectList("mapper.sales.selectTopTrainerList", param);
+			return session.selectList("mapper.gym.sales.selectTopTrainerList", param);
 		}finally {
 			session.close();
 		}
@@ -68,7 +68,7 @@ public class GymSalesDAOImpl implements GymSalesDAO {
 	public List<TrainerChoose> selectTrainerList(int gymNum) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectList("mapper.sales.selectTrainerList", gymNum);
+			return session.selectList("mapper.gym.sales.selectTrainerList", gymNum);
 		}finally {
 			session.close();
 		}

@@ -118,7 +118,7 @@ public class ChatController extends HttpServlet {
     // ── 헬퍼: TRAINER.id → USER.id ────────────────────────────────
     private int getTrainerUserId(int trainerId) {
         try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-            Integer userId = sql.selectOne("mapper.TrainerMapper.findUserIdById", trainerId);
+            Integer userId = sql.selectOne("mapper.member.trainer_profile.findUserIdById", trainerId);
             return userId != null ? userId : 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -129,7 +129,7 @@ public class ChatController extends HttpServlet {
     // ── 헬퍼: USER.id → nickname ──────────────────────────────────
     private String getTrainerNickname(int userId) {
         try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-            String nickname = sql.selectOne("mapper.UserMapper.findNicknameById", userId);
+            String nickname = sql.selectOne("mapper.member.user.findNicknameById", userId);
             return nickname != null ? nickname : "트레이너";
         } catch (Exception e) {
             return "트레이너";

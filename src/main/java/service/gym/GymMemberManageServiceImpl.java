@@ -3,12 +3,12 @@ package service.gym;
 import java.util.List;
 import java.util.Map;
 
-import dao.gym.GymMemberManageDAO;
-import dao.gym.GymMemberManageDAOImpl;
+import dao.gym.MemberManageDAO;
+import dao.gym.MemberManageDAOImpl;
 import dto.gym.MemberManage;
 
 public class GymMemberManageServiceImpl implements GymMemberManageService {
-	private GymMemberManageDAO dao = new GymMemberManageDAOImpl();
+	private MemberManageDAO dao = new MemberManageDAOImpl();
 	
 	@Override
 	public List<MemberManage> getMemberList(Map<String, Object> param) throws Exception {

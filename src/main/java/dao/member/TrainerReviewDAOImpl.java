@@ -12,7 +12,7 @@ public class TrainerReviewDAOImpl implements TrainerReviewDAO {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
-            result = sqlSession.insert("mapper.TrainerReviewMapper.insert", dto);
+            result = sqlSession.insert("mapper.member.trainer_review.insert", dto);
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();

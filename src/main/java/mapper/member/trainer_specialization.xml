@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.member.trainer_specialization">
+
+    <resultMap id="specResultMap" type="dto.member.TrainerSpecializationDTO">
+        <id     property="id"        column="id"/>
+        <result property="trainerId" column="trainer_id"/>
+        <result property="type"      column="TYPE"/>
+    </resultMap>
+
+    <!-- 전문 분야 저장 -->
+    <insert id="insert" parameterType="dto.member.TrainerSpecializationDTO">
+        INSERT INTO TRAINER_SPECIALIZATION (trainer_id, TYPE)
+        VALUES (#{trainerId}, #{type})
+    </insert>
+
+    <!-- trainer_id로 전문 분야 목록 조회 -->
+    <select id="findByTrainerId" parameterType="int" resultMap="specResultMap">
+        SELECT id, trainer_id, TYPE
+        FROM TRAINER_SPECIALIZATION
+        WHERE trainer_id = #{trainerId}
+        ORDER BY id ASC
+    </select>
+
+    <!-- trainer_id로 전체 삭제 (수정 시 전체 재등록용) -->
+    <delete id="deleteByTrainerId" parameterType="int">
+        DELETE FROM TRAINER_SPECIALIZATION WHERE trainer_id = #{trainerId}
+    </delete>
+
+</mapper>

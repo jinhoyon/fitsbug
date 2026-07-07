@@ -13,7 +13,7 @@ public class CommentDAOImpl implements CommentDAO {
     public void insert(CommentDTO dto) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         try {
-            sqlSession.insert("mapper.CommentMapper.insert", dto);
+            sqlSession.insert("mapper.member.comment.insert", dto);
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();
@@ -28,7 +28,7 @@ public class CommentDAOImpl implements CommentDAO {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         List<CommentDTO> list = null;
         try {
-            list = sqlSession.selectList("mapper.CommentMapper.findByPostNum", postNum);
+            list = sqlSession.selectList("mapper.member.comment.findByPostNum", postNum);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

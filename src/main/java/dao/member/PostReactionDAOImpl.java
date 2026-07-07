@@ -19,7 +19,7 @@ public class PostReactionDAOImpl implements PostReactionDAO {
             param.put("postId", postId);
             param.put("userId", userId);
             param.put("type",   type);
-            result = sqlSession.insert("mapper.PostReactionMapper.addReaction", param);
+            result = sqlSession.insert("mapper.member.post_reaction.addReaction", param);
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();
@@ -38,7 +38,7 @@ public class PostReactionDAOImpl implements PostReactionDAO {
             Map<String, Object> param = new HashMap<>();
             param.put("postId", postId);
             param.put("type",   type);
-            result = sqlSession.selectOne("mapper.PostReactionMapper.getReactionCount", param);
+            result = sqlSession.selectOne("mapper.member.post_reaction.getReactionCount", param);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -52,7 +52,7 @@ public class PostReactionDAOImpl implements PostReactionDAO {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         List<Map<String, Object>> result = null;
         try {
-            result = sqlSession.selectList("mapper.PostReactionMapper.getAllCounts", postId);
+            result = sqlSession.selectList("mapper.member.post_reaction.getAllCounts", postId);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -70,7 +70,7 @@ public class PostReactionDAOImpl implements PostReactionDAO {
             param.put("postId", postId);
             param.put("userId", userId);
             param.put("type",   type);
-            result = sqlSession.selectOne("mapper.PostReactionMapper.hasReacted", param);
+            result = sqlSession.selectOne("mapper.member.post_reaction.hasReacted", param);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

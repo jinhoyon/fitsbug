@@ -19,7 +19,7 @@ public class LessonDAOImpl implements LessonDAO {
         Map<String, Object> params = new HashMap<>();
         params.put("date", date.toString());
         params.put("trainerId", trainerId);
-        return session.selectList("lesson.findLessonsByDate", params);
+        return session.selectList("mapper.trainer.lesson.findLessonsByDate", params);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class LessonDAOImpl implements LessonDAO {
         params.put("startDate", startDate.toString());
         params.put("endDate", endDate.toString());
         params.put("trainerId", trainerId);
-        return session.selectList("lesson.findLessonsByDateRange", params);
+        return session.selectList("mapper.trainer.lesson.findLessonsByDateRange", params);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class LessonDAOImpl implements LessonDAO {
         params.put("year", year);
         params.put("month", month);
         params.put("trainerId", trainerId);
-        return session.selectList("lesson.findLessonCountsByMonth", params);
+        return session.selectList("mapper.trainer.lesson.findLessonCountsByMonth", params);
     }
 }
 

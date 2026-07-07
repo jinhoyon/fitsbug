@@ -20,7 +20,7 @@ public class TrainerListDAOImpl implements TrainerListDAO {
             params.put("keyword", keyword != null ? keyword : "");
             params.put("category", category != null ? category : "전체");
             params.put("sort", sort != null ? sort : "latest");
-            return sql.selectList("mapper.member.trainer.findTrainerList", params);
+            return sql.selectList("mapper.member.trainer_list.findTrainerList", params);
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
@@ -30,7 +30,7 @@ public class TrainerListDAOImpl implements TrainerListDAO {
     @Override
     public TrainerDTO getTrainerDetail(int trainerId) {
         try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-            return sql.selectOne("mapper.TrainerMapper.findById", trainerId);
+            return sql.selectOne("mapper.member.trainer_profile.findById", trainerId);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -40,7 +40,7 @@ public class TrainerListDAOImpl implements TrainerListDAO {
     @Override
     public List<AvailabilityDTO> findAvailabilityByTrainerId(Integer trainerId) {
         try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-            return sql.selectList("pricingAvailability.findAvailabilityByTrainerId", trainerId);
+            return sql.selectList("mapper.trainer.pricing_availability.findAvailabilityByTrainerId", trainerId);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -50,7 +50,7 @@ public class TrainerListDAOImpl implements TrainerListDAO {
     @Override
     public Map<String, Object> findTrainerInfoById(Integer trainerId) {
         try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-            return sql.selectOne("mapper.TrainerMapper.findById", trainerId);
+            return sql.selectOne("mapper.member.trainer_profile.findById", trainerId);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

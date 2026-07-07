@@ -57,8 +57,8 @@ public class ReserveLessonController extends HttpServlet {
             params.put("endTime",    endTime);
             params.put("goal",       null);
 
-            sql.insert("lesson.insertLesson", params);
-            sql.update("mapper.MemberMapper.decrementLessonCount", memberInfo.getId());
+            sql.insert("mapper.trainer.lesson.insertLesson", params);
+            sql.update("mapper.member.member.decrementLessonCount", memberInfo.getId());
             sql.commit();
 
         } catch (Exception e) {

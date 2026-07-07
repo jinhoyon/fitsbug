@@ -10,7 +10,7 @@ import util.MybatisSqlSessionFactory;
 
 public class MemberDAOImpl implements MemberDAO {
 
-    private static final String NS = "mapper.MemberMapper.";
+    private static final String NS = "mapper.member.member.";
 
     @Override
     public int insertMember(MemberDTO dto) {
@@ -121,7 +121,7 @@ public class MemberDAOImpl implements MemberDAO {
 		MemberDTO memberDto = null;
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 
-			memberDto = sqlSession.selectOne("mapper.MemberMapper.selectMemberByUserIdUsingLogin", userId);
+			memberDto = sqlSession.selectOne("mapper.member.member.selectMemberByUserIdUsingLogin", userId);
 		}
 		return memberDto;
 	}

@@ -25,18 +25,32 @@ Shared cross-domain types: `dto.common.*`, `dao.common.*`, `service.common.*`.
 
 | Layer | Pattern | Example |
 |-------|---------|---------|
-| Controller | Feature name; `*Controller` optional | `LoginController`, `Dashboard`, `ReportList` |
+| Controller | `{Feature}Controller` (required) | `LoginController`, `DashboardController`, `ReportListController` |
 | Service | `XxxService` + `XxxServiceImpl` | `ClientService`, `ClientServiceImpl` |
 | DAO | `XxxDAO` + `XxxDAOImpl` | `TrainerDAO`, `TrainerDAOImpl` |
 | DTO | `XxxDTO` suffix (admin/gym read-models may omit) | `TrainerDTO`, `AdminMainDTO` |
-| Mapper XML | lowercase or snake_case per domain | `trainer/trainer.xml`, `admin/report.xml` |
+| Mapper XML | `{feature}.xml` (lowercase snake_case) | `member/user.xml`, `gym/notice.xml` |
 | Filter | `XxxAuthFilter` | `AdminAuthFilter`, `TrainerAuthFilter` |
 
 Admin exercise guides use `ExerciseGuideDAO` (not `ExerciseDAO`) to avoid collision with member `ExerciseDAO`.
 
 Member trainer **discovery** uses `TrainerListDAO` (list/detail for members). Trainer **profile CRUD** uses `dao.trainer.TrainerDAO`. Do not conflate the two.
 
-Gym module uses `DAO`/`DAOImpl` naming, consistent with trainer/admin.
+Gym module uses `DAO`/`DAOImpl` naming. Package `dao.gym` provides domain context — drop redundant `Gym`/`GymMain` prefixes where safe. Keep `Gym` prefix when it avoids clashes with `dao.member` or `dao.admin` (e.g. `GymPaymentDAO`, `GymSalesDAO`). Read-only `GymMain*` DAOs were merged into feature DAOs (`NoticeDAO`, `ReviewDAO`, `ScheduleDAO`).
+
+### Controller file and class names
+
+All HTTP handlers live under `controller.{domain}` and **must** use the `*Controller` suffix for both the Java file and public class name.
+
+| Rule | Example |
+|------|---------|
+| Suffix `Controller` | `LoginController.java` → `public class LoginController` |
+| No `Servlet` suffix | `GymLookupController`, not `GymLookupServlet` |
+| No redundant domain prefix in gym/admin/trainer packages | `controller.gym.DashboardController`, not `GymDashboard` |
+| Expand abbreviations in admin | `ExerciseGuideListController`, not `ExGuideList` |
+| Package provides domain context | `controller.admin.MainController`, `controller.gym.MainController` — same short name, different packages |
+
+`@WebServlet` URL patterns are **not** renamed when controllers are refactored; only class/file names change.
 
 ### URLs
 
@@ -50,14 +64,23 @@ Gym module uses `DAO`/`DAOImpl` naming, consistent with trainer/admin.
 
 ### MyBatis namespaces
 
-| Domain | Namespace pattern | Example |
-|--------|-------------------|---------|
-| Admin | `mapper.admin.{feature}` | `mapper.admin.report` |
-| Trainer | mixed (normalize over time) | `trainer`, `mapper.client`, `mapper.trainer.settlement` |
-| Member | `mapper.{Name}Mapper` or `mapper.member.*` | `mapper.UserMapper` |
-| Gym | `mapper.{feature}` | `mapper.gymMain` |
+All domains use **`mapper.{domain}.{feature}`** — always domain-prefixed, lowercase feature name.
 
-Admin namespaces are the cleanest model — prefer `mapper.{domain}.{feature}` for new mappers.
+| Domain | File path | Namespace | Example statement ID |
+|--------|-----------|-----------|----------------------|
+| Admin | `mapper/admin/{feature}.xml` | `mapper.admin.{feature}` | `mapper.admin.report.selectReportList` |
+| Gym | `mapper/gym/{feature}.xml` | `mapper.gym.{feature}` | `mapper.gym.notice.selectNoticeList` |
+| Member | `mapper/member/{feature}.xml` | `mapper.member.{feature}` | `mapper.member.user.findByEmail` |
+| Trainer | `mapper/trainer/{feature}.xml` | `mapper.trainer.{feature}` | `mapper.trainer.lesson.findLessonsByDate` |
+
+Multi-word features use snake_case in filenames (`trainer_profile.xml`, `info_edit.xml`). Member trainer discovery uses `mapper.member.trainer_list`; public trainer profile reads use `mapper.member.trainer_profile`.
+
+DAO implementations should declare a namespace constant:
+
+```java
+private static final String NS = "mapper.member.user.";
+session.selectOne(NS + "findByEmail", email);
+```
 
 ## Layering rules
 
@@ -178,7 +201,7 @@ Do not merge these into entity DTOs:
 
 ### Servlet mapping
 
-Every HTTP handler must have `@WebServlet`.
+Every HTTP handler must have `@WebServlet`. Class names must end with `Controller` (see naming table above).
 
 ### JSON responses
 

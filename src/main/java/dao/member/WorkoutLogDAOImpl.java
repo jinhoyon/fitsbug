@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class WorkoutLogDAOImpl implements WorkoutLogDAO {
 
-    private static final String NS = "mapper.WorkoutLogMapper.";
+    private static final String NS = "mapper.member.workout_log.";
 
     @Override
     public int insert(WorkoutLogDTO dto) {

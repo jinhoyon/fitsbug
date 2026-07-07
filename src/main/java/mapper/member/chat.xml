@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.member.chat">
+
+  <resultMap id="roomResultMap" type="dto.member.ChatRoomDTO">
+    <id     property="id"               column="id"/>
+    <result property="userOne"          column="user_one"/>
+    <result property="userTwo"          column="user_two"/>
+    <result property="createDate"       column="create_date"/>
+    <result property="userOneNickname"  column="user_one_nickname"/>
+    <result property="userTwoNickname"  column="user_two_nickname"/>
+    <result property="lastMessage"      column="last_message"/>
+    <result property="unreadCount"      column="unread_count"/>
+  </resultMap>
+
+  <resultMap id="msgResultMap" type="dto.member.ChatMessageDTO">
+    <id     property="id"               column="id"/>
+    <result property="roomId"           column="room_id"/>
+    <result property="senderId"         column="sender_id"/>
+    <result property="message"          column="message"/>
+    <result property="isRead"           column="is_read"/>
+    <result property="sendDate"         column="send_date"/>
+    <result property="senderNickname"   column="sender_nickname"/>
+    <result property="senderProfileImg" column="sender_profile_img"/>
+  </resultMap>
+
+  <!-- ─── CHAT_ROOM ─────────────────────────────────────────── -->
+
+  <!-- 채팅방 생성 -->
+  <insert id="insertRoom" parameterType="dto.member.ChatRoomDTO"
+          useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO CHAT_ROOM (user_one, user_two)
+    VALUES (#{userOne}, #{userTwo})
+  </insert>
+
+  <!-- 두 유저 간 기존 채팅방 조회 -->
+  <select id="findRoom" parameterType="map" resultMap="roomResultMap">
+    SELECT id, user_one, user_two, create_date
+    FROM CHAT_ROOM
+    WHERE (user_one = #{userId1} AND user_two = #{userId2})
+       OR (user_one = #{userId2} AND user_two = #{userId1})
+    LIMIT 1
+  </select>
+
+  <!-- user_id로 참여 채팅방 목록 + 마지막 메시지 + 안읽은 수 -->
+  <select id="findRoomListByUserId" parameterType="int" resultMap="roomResultMap">
+    SELECT
+      cr.id, cr.user_one, cr.user_two, cr.create_date,
+      u1.nickname AS user_one_nickname,
+      u2.nickname AS user_two_nickname,
+      (SELECT cm.message FROM CHAT_MESSAGE cm
+       WHERE cm.room_id = cr.id ORDER BY cm.id DESC LIMIT 1) AS last_message,
+      (SELECT COUNT(*) FROM CHAT_MESSAGE cm2
+       WHERE cm2.room_id = cr.id
+         AND cm2.sender_id != #{userId}
+         AND cm2.is_read = 0) AS unread_count
+    FROM CHAT_ROOM cr
+    JOIN USER u1 ON cr.user_one = u1.id
+    JOIN USER u2 ON cr.user_two = u2.id
+    WHERE cr.user_one = #{userId} OR cr.user_two = #{userId}
+    ORDER BY (SELECT MAX(send_date) FROM CHAT_MESSAGE WHERE room_id = cr.id) DESC
+  </select>
+
+  <!-- ─── CHAT_MESSAGE ──────────────────────────────────────── -->
+
+  <!-- 메시지 저장 -->
+  <insert id="insertMessage" parameterType="dto.member.ChatMessageDTO">
+    INSERT INTO CHAT_MESSAGE (room_id, sender_id, message, is_read)
+    VALUES (#{roomId}, #{senderId}, #{message}, 0)
+  </insert>
+
+  <!-- room_id로 메시지 목록 조회 -->
+  <select id="findMessagesByRoomId" parameterType="int" resultMap="msgResultMap">
+    SELECT
+      cm.id, cm.room_id, cm.sender_id,
+      cm.message, cm.is_read, cm.send_date,
+      u.nickname        AS sender_nickname,
+      u.profile_image   AS sender_profile_img
+    FROM CHAT_MESSAGE cm
+    JOIN USER u ON cm.sender_id = u.id
+    WHERE cm.room_id = #{roomId}
+    ORDER BY cm.send_date ASC
+  </select>
+
+  <!-- 안읽은 메시지 일괄 읽음 처리 -->
+  <update id="markAllRead" parameterType="map">
+    UPDATE CHAT_MESSAGE
+    SET is_read = 1
+    WHERE room_id   = #{roomId}
+      AND sender_id != #{userId}
+      AND is_read   = 0
+  </update>
+
+</mapper>

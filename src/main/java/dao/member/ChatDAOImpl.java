@@ -13,7 +13,7 @@ import util.MybatisSqlSessionFactory;
 
 public class ChatDAOImpl implements ChatDAO {
 
-    private static final String NS = "mapper.ChatMapper.";
+    private static final String NS = "mapper.member.chat.";
 
     @Override
     public ChatRoomDTO findRoom(int userId1, int userId2) {

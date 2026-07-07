@@ -3,13 +3,13 @@ package service.gym;
 import java.util.List;
 import java.util.Map;
 
-import dao.gym.GymNoticeDAO;
-import dao.gym.GymNoticeDAOImpl;
+import dao.gym.NoticeDAO;
+import dao.gym.NoticeDAOImpl;
 import dto.gym.GymNotice;
 import dto.gym.NoticeImages;
 
 public class GymNoticeServiceImpl implements GymNoticeService {
-	private GymNoticeDAO gymNoticeDAO = new GymNoticeDAOImpl();
+	private NoticeDAO gymNoticeDAO = new NoticeDAOImpl();
 	
 	@Override
 	public int getNoticeCount(int gymId) throws Exception {

@@ -28,7 +28,7 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment getActivePayment(String email) {
         try (org.apache.ibatis.session.SqlSession session =
                      util.MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-            dto.common.UserDTO user = session.selectOne("mapper.UserMapper.findByEmail", email);
+            dto.common.UserDTO user = session.selectOne("mapper.member.user.findByEmail", email);
             if (user == null) {
                 return null;
             }

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.member.member">
+
+    <!-- MEMBER.id 로 조회 -->
+    <select id="findById" parameterType="int" resultType="MemberDTO">
+        SELECT id, user_id,
+               purpose, experience,
+               height, weight, diet, exerciseCount_goal,
+               address, latitude, longitude, goals
+        FROM MEMBER
+        WHERE id = #{id}
+    </select>
+
+    <!-- USER.id 로 MEMBER 조회 -->
+    <select id="findByUserId" parameterType="int" resultType="MemberDTO">
+        SELECT id, user_id,
+               purpose, experience,
+               height, weight, diet, exerciseCount_goal,
+               address, latitude, longitude, goals
+        FROM MEMBER
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- USER.email 로 MEMBER + USER + 최신 MEMBERSHIP_PT JOIN 조회 -->
+    <select id="findByEmail" parameterType="string" resultType="map">
+        SELECT
+            m.id, m.user_id,
+            m.purpose, m.experience,
+            m.height, m.weight, m.diet, m.exerciseCount_goal,
+            m.address, m.latitude, m.longitude, m.goals,
+            u.email, u.nickname, u.profile_image,
+            u.role, u.email_verified, u.provider,
+            u.age, u.gender,
+            mpt.trainer_id, mpt.gym_id,
+            mpt.next_session, mpt.lesson_count, mpt.last_session, mpt.status
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        LEFT JOIN MEMBERSHIP_PT mpt ON mpt.id = (
+            SELECT id FROM MEMBERSHIP_PT WHERE member_id = m.id ORDER BY id DESC LIMIT 1
+        )
+        WHERE u.email    = #{email}
+          AND u.is_deleted = 0
+    </select>
+
+    <!-- 전체 조회 -->
+    <select id="findAll" resultType="map">
+        SELECT
+            m.id, m.user_id,
+            m.purpose, m.experience,
+            m.height, m.weight, m.diet, m.exerciseCount_goal,
+            m.address, m.latitude, m.longitude, m.goals,
+            u.name, u.email, u.nickname, u.profile_image, u.role, u.age
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        WHERE u.is_deleted = 0
+        ORDER BY m.id DESC
+    </select>
+
+    <!-- MEMBER INSERT (회원가입 step3 완료 시) -->
+    <insert id="insertMember" parameterType="dto.member.MemberDTO">
+        INSERT INTO MEMBER (
+            user_id,
+            purpose, experience,
+            height, weight, diet, exerciseCount_goal,
+            address, latitude, longitude, goals
+        ) VALUES (
+            #{userId},
+            #{purpose}, #{experience},
+            #{height}, #{weight}, #{diet}, #{exerciseCountGoal},
+            #{address}, #{latitude}, #{longitude}, #{goals}
+        )
+    </insert>
+
+    <!-- MEMBER 수정 (마이페이지, 운동계획 수정 통합) -->
+    <update id="update" parameterType="dto.member.MemberDTO">
+        UPDATE MEMBER SET
+            purpose            = #{purpose},
+            experience         = #{experience},
+            height             = #{height},
+            weight             = #{weight},
+            diet               = #{diet},
+            exerciseCount_goal = #{exerciseCountGoal},
+            address            = #{address},
+            latitude           = #{latitude},
+            longitude          = #{longitude},
+            goals              = #{goals}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 운동 계획만 부분 수정 (UpdatePlanController 용) -->
+    <update id="updatePlan" parameterType="dto.member.MemberDTO">
+        UPDATE MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        SET
+            m.purpose            = #{purpose},
+            m.goals              = #{goals},
+            m.experience         = #{experience},
+            m.height             = #{height},
+            m.weight             = #{weight},
+            m.diet               = #{diet},
+            m.exerciseCount_goal = #{exerciseCountGoal}
+        WHERE u.email = #{email}
+    </update>
+
+    <!-- 프로필 이미지 업데이트 -->
+    <update id="updateProfileImage" parameterType="dto.common.UserDTO">
+        UPDATE USER SET profile_image = #{profileImage}
+        WHERE id = #{id}
+    </update>
+
+
+    <!-- MEMBERSHIP_PT: 기존 PT 존재 여부 확인 -->
+    <select id="findMembershipPtByMemberAndTrainer" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM MEMBERSHIP_PT
+        WHERE member_id = #{memberId} AND trainer_id = #{trainerId}
+    </select>
+
+    <!-- MEMBERSHIP_PT: 기존 PT lesson_count 증가 -->
+    <update id="updateMembershipPtLessons" parameterType="map">
+        UPDATE MEMBERSHIP_PT
+        SET lesson_count = lesson_count + #{sessionCount},
+            status = 'active'
+        WHERE member_id = #{memberId} AND trainer_id = #{trainerId}
+        ORDER BY id DESC LIMIT 1
+    </update>
+
+    <!-- MEMBERSHIP_PT: 새 PT 등록 -->
+    <insert id="insertMembershipPt" parameterType="map">
+        INSERT INTO MEMBERSHIP_PT (member_id, trainer_id, lesson_count, status, register_date)
+        VALUES (#{memberId}, #{trainerId}, #{sessionCount}, 'active', CURDATE())
+    </insert>
+
+    <!-- 예약 후: lesson_count 차감 (최신 MEMBERSHIP_PT) -->
+    <update id="decrementLessonCount" parameterType="int">
+        UPDATE MEMBERSHIP_PT
+        SET lesson_count = GREATEST(lesson_count - 1, 0)
+        WHERE member_id = #{value}
+        ORDER BY id DESC LIMIT 1
+    </update>
+
+
+    <!-- trainer_id 로 회원 목록 (MEMBERSHIP_PT 기준) -->
+    <select id="findByTrainerId" parameterType="int" resultType="map">
+        SELECT
+            m.id, m.user_id,
+            m.purpose, m.experience,
+            m.height, m.weight, m.diet, m.exerciseCount_goal,
+            m.address, m.latitude, m.longitude, m.goals,
+            u.name, u.email, u.nickname, u.profile_image, u.role, u.age,
+            mp.trainer_id, mp.gym_id, mp.next_session,
+            mp.lesson_count, mp.last_session,
+            mp.status AS mp_status
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        LEFT JOIN MEMBERSHIP_PT mp ON mp.member_id = m.id
+                                   AND mp.trainer_id = #{trainerId}
+                                   AND mp.status = 'active'
+        WHERE u.is_deleted = 0
+          AND mp.trainer_id = #{trainerId}
+        ORDER BY m.id DESC
+    </select>
+
+ 
+    <!-- USER.id 로 MEMBER 조회 (단순 별칭 쿼리) -->
+    <select id="selectMemberByUserId" parameterType="Integer" resultType="map">
+		SELECT u.email, u.nickname, u.profile_image, u.role,
+            u.age, u.gender,
+            mpt.trainer_id, mpt.gym_id,
+            mpt.next_session, mpt.lesson_count, mpt.last_session, mpt.status
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        JOIN MEMBERSHIP_PT mpt ON mpt.id = (
+            SELECT id FROM MEMBERSHIP_PT
+            WHERE member_id = m.id AND trainer_id = 4
+            ORDER BY id DESC LIMIT 1
+        )
+        WHERE user_id = #{userId} and u.is_deleted = 0
+        ORDER BY m.id DESC
+    </select>
+
+    <!-- gym_id 로 회원 목록 (MEMBERSHIP_PT 기준) -->
+    <select id="findByGymId" parameterType="int" resultType="map">
+        SELECT
+            m.id, m.user_id,
+            m.goals,
+            u.email, u.nickname, u.profile_image, u.role,
+            u.age, u.gender,
+            mpt.trainer_id, mpt.gym_id,
+            mpt.next_session, mpt.lesson_count, mpt.last_session, mpt.status
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        JOIN MEMBERSHIP_PT mpt ON mpt.id = (
+            SELECT id FROM MEMBERSHIP_PT
+            WHERE member_id = m.id AND gym_id = #{gymId}
+            ORDER BY id DESC LIMIT 1
+        )
+        WHERE u.is_deleted = 0
+        ORDER BY m.id DESC
+    </select>
+    
+    <select id="selectMemberByUserIdUsingLogin" parameterType="Integer"  resultType="MemberDTO">
+    	select * from member where user_id=#{userId}
+    </select>
+
+</mapper>

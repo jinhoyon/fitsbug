@@ -14,8 +14,8 @@ import util.MybatisSqlSessionFactory;
  */
 public class MyPageDAOImpl implements MyPageDAO {
 
-    private static final String USER_NS   = "mapper.UserMapper.";
-    private static final String MEMBER_NS = "mapper.MemberMapper.";
+    private static final String USER_NS   = "mapper.member.user.";
+    private static final String MEMBER_NS = "mapper.member.member.";
 
     /** USER 테이블 조회 */
     @Override

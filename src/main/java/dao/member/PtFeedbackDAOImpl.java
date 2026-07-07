@@ -14,7 +14,7 @@ public class PtFeedbackDAOImpl implements PtFeedbackDAO {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         List<PtFeedbackDTO> list = null;
         try {
-            list = sqlSession.selectList("mapper.PtFeedbackMapper.getFeedbackList", email);
+            list = sqlSession.selectList("mapper.member.pt_feedback.getFeedbackList", email);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -28,7 +28,7 @@ public class PtFeedbackDAOImpl implements PtFeedbackDAO {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         PtFeedbackDTO result = null;
         try {
-            result = sqlSession.selectOne("mapper.PtFeedbackMapper.getFeedbackDetail", id);
+            result = sqlSession.selectOne("mapper.member.pt_feedback.getFeedbackDetail", id);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -41,7 +41,7 @@ public class PtFeedbackDAOImpl implements PtFeedbackDAO {
     public void insertFeedback(PtFeedbackDTO dto) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         try {
-            sqlSession.insert("mapper.PtFeedbackMapper.insertFeedback", dto);
+            sqlSession.insert("mapper.member.pt_feedback.insertFeedback", dto);
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();
