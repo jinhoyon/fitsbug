@@ -12,11 +12,12 @@ service.{domain}.*      → business logic
 dao.{domain}.*          → database access
 dto.{domain}.*          → data transfer objects
 mapper/{domain}/*.xml   → MyBatis SQL mappings
+filter.*                → servlet auth filters
 ```
 
 Domains: `member`, `trainer`, `gym`, `admin`.
 
-Shared cross-domain types (planned): `dto.common.*`, `dao.common.*`, `service.common.*`.
+Shared cross-domain types: `dto.common.*`, `dao.common.*`, `service.common.*`.
 
 ## Naming
 
@@ -29,6 +30,9 @@ Shared cross-domain types (planned): `dto.common.*`, `dao.common.*`, `service.co
 | DAO | `XxxDAO` + `XxxDAOImpl` | `TrainerDAO`, `TrainerDAOImpl` |
 | DTO | `XxxDTO` suffix (admin/gym read-models may omit) | `TrainerDTO`, `AdminMainDTO` |
 | Mapper XML | lowercase or snake_case per domain | `trainer/trainer.xml`, `admin/report.xml` |
+| Filter | `XxxAuthFilter` | `AdminAuthFilter`, `TrainerAuthFilter` |
+
+Admin exercise guides use `ExerciseGuideDAO` (not `ExerciseDAO`) to avoid collision with member `ExerciseDAO`.
 
 **Target:** gym `Dao`/`DaoImpl` → `DAO`/`DAOImpl` to match trainer/admin.
 
@@ -63,7 +67,7 @@ Controller  →  Service  →  DAO  →  Mapper XML
 
 - Controllers: parse request, check auth, call service, forward/redirect/write JSON.
 - Services: business rules, open/close `SqlSession`, commit/rollback writes.
-- DAOs: MyBatis calls only; receive `SqlSession` as first parameter.
+- DAOs: MyBatis calls only; receive `SqlSession` as first parameter when session is service-owned.
 
 ### SqlSession ownership (reference: trainer `ClientServiceImpl`)
 
@@ -93,9 +97,8 @@ try {
 
 **Avoid:**
 
-- Controllers opening `SqlSession` directly (exists in trainer earnings — migrate to service)
-- DAOs opening their own session (exists in `MealDAOImpl`, `NotificationDAOImpl` — migrate)
-- Raw JDBC via `DBUtil` (exists in `GymDAOImpl` — migrate to mapper)
+- Controllers opening `SqlSession` directly (exists in a few legacy paths — migrate to service)
+- Controllers calling DAOs directly when a service exists (use `UserService`, `MyPageService`, etc.)
 
 ### Instantiation
 
@@ -103,40 +106,34 @@ No DI container. Use `new XxxServiceImpl()` / `new XxxDAOImpl()` in controllers 
 
 ## Authentication
 
+Servlet filters in `WEB-INF/web.xml` enforce domain-level protection:
+
+| Filter | Pattern | Check |
+|--------|---------|-------|
+| `AdminAuthFilter` | `/admin/*` | `loginUser.role == ADMIN` |
+| `TrainerAuthFilter` | `/trainer/*` | `loginTrainer` or TRAINER `loginUser`; excludes login/signup/gymLookup |
+| `GymAuthFilter` | `/gym/*` | GYM `loginUser` + `gymId` |
+
 ### Trainer (reference)
 
 On login, set both session keys:
 
 ```java
-session.setAttribute("loginUser", result.getUser());      // dto.common.UserDTO
-session.setAttribute("loginTrainer", result.getTrainer()); // dto.trainer.TrainerDTO
+session.setAttribute("loginUser", result.getUser());       // dto.common.UserDTO
+session.setAttribute("loginTrainer", result.getTrainer()); // dto.common.TrainerDTO
 ```
 
-Protected trainer endpoints:
+Per-controller checks are still used in some trainer servlets; the filter is the primary gate.
 
-```java
-HttpSession session = request.getSession(false);
-if (session == null || session.getAttribute("loginTrainer") == null) {
-    response.sendRedirect(request.getContextPath() + "/trainer/login");
-    return;
-}
-```
-
-Redirect failures to the **domain's own login page** (`/trainer/login`, not `/member/login`).
+Redirect failures to the **domain's own login page** (`/trainer/login`, not `/member/login`) for trainer routes.
 
 ### Gym
 
-```java
-if (session == null || session.getAttribute("gymId") == null
-        || session.getAttribute("loginUser") == null) {
-    response.sendRedirect(request.getContextPath() + "/member/login");
-    return;
-}
-```
+Filter checks `loginUser` with role GYM and a non-null `gymId` (set on login).
 
-### Admin (target — not yet implemented)
+### Admin
 
-All `/admin/*` servlets should verify `loginUser.getRole().equals("ADMIN")` before processing. Planned as a servlet filter — see [CLEANUP_PLAN.md](CLEANUP_PLAN.md) Phase 6.
+`AdminAuthFilter` redirects unauthenticated or non-admin users to `/member/login`.
 
 ### Member
 
@@ -144,26 +141,27 @@ Check `loginUser != null` on protected endpoints. Guest-accessible pages (commun
 
 ## Passwords
 
-Trainer module is the reference:
+Use `util.PasswordUtil` for all roles:
 
-| Operation | Where | How |
-|-----------|-------|-----|
-| Signup hash | Controller or service | `BCrypt.withDefaults().hashToString(12, password.toCharArray())` |
-| Login verify | Service | `BCrypt.verifyer().verify(plain, hash)` |
+| Operation | How |
+|-----------|-----|
+| Hash on signup/update | `PasswordUtil.hash(plain)` |
+| Verify on login | `PasswordUtil.verify(plain, stored)` |
+| Legacy migration | Re-hash with `PasswordUtil.hash(plain)` after successful plaintext verify |
 
-Member/gym/admin must adopt the same pattern (cleanup Phase 6). Do not store or compare plaintext passwords in SQL.
+Do not store or compare plaintext passwords in SQL.
 
 ## DTO guidelines
 
-### One DTO per DB table (target state)
+### Shared entity DTOs (`dto.common`)
 
-Each table gets a single Java type, ideally in `dto.common`:
-
-| Table | Target DTO | Current duplicates |
-|-------|------------|-------------------|
-| USER | `dto.common.UserDTO` | Consolidated (was member + trainer copies) |
-| TRAINER | `dto.common.TrainerDTO` | member + trainer copies |
-| GYM | `dto.common.GymDTO` | `dto.member.GymDTO`, `dto.gym.Gym` |
+| Table | DTO |
+|-------|-----|
+| USER | `UserDTO` |
+| TRAINER | `TrainerDTO` |
+| GYM | `Gym` |
+| PAYMENT / TOSS | `Payment`, `TossDTO` |
+| LESSON, NOTIFICATION, … | `LessonDTO`, `NotificationDTO`, etc. |
 
 ### Keep domain-specific view DTOs
 
@@ -174,19 +172,15 @@ Do not merge these into entity DTOs:
 - `dto.gym.Dashboard`, `SalesChart`, etc. — gym-scoped read models
 - `service.trainer.DashboardData` — trainer dashboard aggregate
 
-### Date types
-
-Inconsistent today (`String` in member, `Timestamp` in admin). New shared DTOs should use `java.time` or `Timestamp` consistently — pick one when consolidating.
-
 ## Controllers
 
 ### Servlet mapping
 
-Every HTTP handler must have `@WebServlet`. Unmapped classes (e.g. `LessonInfo`, `NotificationApiServlet`) are dead code.
+Every HTTP handler must have `@WebServlet`.
 
 ### JSON responses
 
-Admin pattern: manual `StringBuilder` / `String.format` in servlet. Acceptable for admin AJAX endpoints. Prefer `org.json.JSONObject` for new code if not introducing a new library.
+Admin pattern: manual `StringBuilder` / `String.format` in servlet. Acceptable for admin AJAX endpoints.
 
 ### File upload
 
@@ -198,9 +192,9 @@ Admin pattern: manual `StringBuilder` / `String.format` in servlet. Acceptable f
 )
 ```
 
-- Require authentication before accepting uploads.
+- Require authentication before accepting uploads (`UploadController` pattern).
 - Generate server-side filenames (`System.currentTimeMillis() + "_" + sanitizedName`).
-- Validate extension/MIME before write (hardening planned).
+- Route persistence through a service (`MyPageService.updateProfile_image`).
 
 ### JSP output
 
@@ -211,15 +205,22 @@ Escape user-generated content:
 <c:out value="${post.body}" />
 ```
 
-Do not use `${post.body}` for community posts or notices.
+Use `fn:escapeXml()` for attribute values in edit forms. Do not use raw `${post.body}` or `${notice.content}` for user-authored text.
 
 ## Error handling
 
-Current codebase uses `e.printStackTrace()` widely. Acceptable for student/project code; when touching a file, prefer logging to stderr with context or a shared logger if one is introduced later. Do not expose stack traces in HTTP responses.
+Current codebase uses `e.printStackTrace()` widely. Acceptable for student/project code; when touching a file, prefer logging to stderr with context. Do not expose stack traces in HTTP responses.
 
-## Configuration (target)
+## Configuration
 
-Secrets and environment-specific values should live in `config.properties` (gitignored), loaded at startup. Template: `config.properties.example`.
+Secrets and environment-specific values live in `config.properties` (gitignored), loaded at startup:
+
+| Utility | Keys |
+|---------|------|
+| `DatabaseConfig` | `db.driver`, `db.url`, `db.username`, `db.password` |
+| `TossPaymentsConfig` | `toss.client.key`, `toss.secret.key` |
+
+Template: `config.properties.example`. Copy to `config.properties` before running locally.
 
 **Do not commit:** DB passwords, Gmail app passwords, Toss secret keys, Kakao client secrets.
 

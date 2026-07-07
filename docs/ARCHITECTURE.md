@@ -1,6 +1,6 @@
 # Architecture
 
-Agent-agnostic overview of the Fitsbug application structure, data flow, and known technical debt.
+Agent-agnostic overview of the Fitsbug application structure, data flow, and remaining technical debt.
 
 ## System context
 
@@ -8,6 +8,9 @@ Fitsbug is a monolithic Java web application (WAR-style Eclipse project). All HT
 
 ```
 Browser (JSP + fetch/AJAX)
+        │
+        ▼
+Servlet filters (encoding, AdminAuth, TrainerAuth, GymAuth)
         │
         ▼
 @WebServlet Controllers  ──session──►  HttpSession (loginUser, loginTrainer, gymId, …)
@@ -35,27 +38,24 @@ MariaDB (database: fitsbug)
 | Compiled classes | `src/main/java/` → `WEB-INF/classes/` |
 | Canonical `web.xml` | `src/main/webapp/WEB-INF/web.xml` |
 
-> **Note:** A stale empty `web/WEB-INF/web.xml` may exist at repo root — it is not the deployable config. See [CLEANUP_PLAN.md](CLEANUP_PLAN.md) Phase 1.
-
 ## Module map
 
-Four vertical domains share one database and one MyBatis `SqlSessionFactory` (`util.MybatisSqlSessionFactory`).
+Four vertical domains share one database and one MyBatis `SqlSessionFactory` (`util.MybatisSqlSessionFactory`), with DB credentials loaded from `config.properties` via `util.DatabaseConfig`.
 
 ### Member (`member`)
 
 End-user features: registration (3-step join), community posts, workouts/meals/inbody logs, trainer discovery, PT booking, chat, payments, mypage.
 
 - URL prefix: `/member/*`
-- ~80+ controllers, largest module by file count
 - Session key: `loginUser` (`dto.common.UserDTO`)
 
 ### Trainer (`trainer`)
 
-Reference module for cleanup. Trainer signup (5 steps), client management, calendar, earnings/settlements, meal/workout log views, Toss checkout.
+Trainer signup (5 steps), client management, calendar, earnings/settlements, meal/workout log views, Toss checkout.
 
 - URL prefix: `/trainer/*` (payment callbacks at `/payment/*`)
-- Session keys: `loginUser` (`dto.common.UserDTO`) + `loginTrainer` (`dto.trainer.TrainerDTO`)
-- Passwords: BCrypt (cost 12)
+- Session keys: `loginUser` + `loginTrainer` (`dto.common.TrainerDTO`)
+- Protected by `TrainerAuthFilter` (public: login, logout, signup*, gymLookup)
 
 ### Gym (`gym`)
 
@@ -63,16 +63,14 @@ Gym-owner dashboard: member/trainer management, schedules, notices, reviews, sal
 
 - URL prefix: `/gym/*`
 - Session keys: `loginUser` + `gymId`
-- DAO naming uses `Dao`/`DaoImpl` (inconsistent with trainer/admin — being normalized)
+- Protected by `GymAuthFilter`
 
 ### Admin (`admin`)
 
 Platform oversight: certification approvals, member/gym/trainer lists, exercise guides, reports, inquiries, sales settlements.
 
 - URL prefix: `/admin/*`
-- Symmetric 6-domain stack (dashboard, members, exercises, reports, inquiries, sales)
-- Mapper namespace: `mapper.admin.*`
-- **No servlet-level auth checks today** (planned fix in cleanup Phase 6)
+- Protected by `AdminAuthFilter` (`loginUser.role == ADMIN`)
 
 ## Cross-module dependencies
 
@@ -81,11 +79,11 @@ Some modules intentionally reach across package boundaries:
 | Consumer | Uses from | Example |
 |----------|-----------|---------|
 | Trainer controllers | member DAOs/DTOs | `InbodyLogDTO`, `WorkoutLogDTO` for client detail pages |
-| Trainer earnings | member mappers | `mapper/member/PaymentMapper.xml` for settlement queries |
 | Member controllers | trainer DTOs | `AvailabilityDTO` in trainer listing |
+| `service.common` | member mappers | Unified `TossPaymentService`, `PaymentService` |
 | Admin | — | Self-contained; no cross-domain service calls |
 
-This cross-usage is a major source of duplicate DTOs/DAOs documented in [CLEANUP_PLAN.md](CLEANUP_PLAN.md).
+Shared entity types live in `dto.common` (User, Trainer, Gym, Payment, Toss, Lesson, Notification, PayoutAccount, Certification, Pricing, Availability).
 
 ## Data layer
 
@@ -99,66 +97,62 @@ Core entities: `USER`, `MEMBER`, `TRAINER`, `GYM`, `POST`, `PAYMENT`, `LESSON`, 
 
 - Config: `src/main/java/resource/mybatis-config.xml`
 - Global setting: `mapUnderscoreToCamelCase=true`
-- Type aliases: per-module short names (some collide across admin/member — cleanup planned)
+- Datasource: `${db.driver}`, `${db.url}`, `${db.username}`, `${db.password}` from `DatabaseConfig`
 - Connection pool: POOLED, max 500 active (high for local dev)
 
-### JDBC legacy
-
-`util.DBUtil` was removed in cleanup Phase 3. All database access goes through MyBatis.
+All database access goes through MyBatis (raw JDBC `DBUtil` was removed in Phase 3).
 
 ## Authentication & sessions
 
-| Role | Login entry | Session attributes | Protected check (target) |
-|------|-------------|-------------------|------------------------|
-| MEMBER | `/member/login` | `loginUser` | Per-controller `loginUser != null` |
-| TRAINER | `/trainer/login` | `loginUser`, `loginTrainer` | `loginTrainer != null` |
-| GYM | `/member/login` (role GYM) | `loginUser`, `gymId` | `loginUser` + `gymId` |
-| ADMIN | `/member/login` (role ADMIN) | `loginUser` | `role == ADMIN` (not enforced yet) |
+| Role | Login entry | Session attributes | Protection |
+|------|-------------|-------------------|------------|
+| MEMBER | `/member/login` | `loginUser` | Per-controller checks |
+| TRAINER | `/trainer/login` or `/member/login` | `loginUser`, `loginTrainer` | `TrainerAuthFilter` |
+| GYM | `/member/login` (role GYM) | `loginUser`, `gymId` | `GymAuthFilter` |
+| ADMIN | `/member/login` (role ADMIN) | `loginUser` | `AdminAuthFilter` |
 
-Password handling is **inconsistent**:
-
-- Trainer: BCrypt hash on signup, verify on login
-- Member/Gym: plaintext compare in SQL (`UserMapper.findByEmailAndPassword`)
+Password handling uses `util.PasswordUtil` (BCrypt cost 12). Legacy plaintext passwords are verified once and re-hashed on successful login.
 
 ## Payments (Toss)
 
-Three parallel implementations exist today:
+Member and trainer Toss flows are unified under `service.common`:
 
-| Domain | Controllers | Persistence |
-|--------|-------------|-------------|
-| Member | `PaymentController`, `PaymentSuccessController`, … | `mapper/member/PaymentMapper.xml`, `TossMapper.xml` |
-| Gym | `GymPayment`, `GymTossPayment`, `GymPaymentCancel` | `mapper/gym/payment.xml`, `tossPayment.xml` |
-| Trainer | `PaymentCheckout`, `PaymentConfirmationController`, `PaymentCancelController` | `mapper/trainer/payment.xml` |
+| Component | Role |
+|-----------|------|
+| `TossPaymentsConfig` | Loads client/secret keys from `config.properties` |
+| `TossPaymentService` | Toss API confirm/cancel |
+| `PaymentService` | Payment row persistence |
+| `mapper/member/TossMapper.xml` | Single TOSS mapper for all domains |
 
-Unification is planned in [CLEANUP_PLAN.md](CLEANUP_PLAN.md) Phase 5.
+Gym PortOne/Iamport cancel (`GymTossCancelService`) and gym registration payment logic remain gym-specific.
 
 ## File uploads
 
-Multipart via `@MultipartConfig` on servlets. Files saved under `src/main/webapp/` subdirs (`/member/upload/`, `/uploads/`, etc.) using `getRealPath()`. Extension/MIME validation is minimal — hardening planned.
+Multipart via `@MultipartConfig` on servlets. Files saved under `src/main/webapp/` subdirs (`/member/upload/`, `/uploads/`, etc.) using `getRealPath()`. `UploadController` requires an authenticated `loginUser` and routes through `MyPageService`.
 
 ## External integrations
 
-| Service | Location | Status |
-|---------|----------|--------|
-| Toss Payments | `controller/trainer/Payment*Controller`, gym/member equivalents | Test secret keys hardcoded |
-| Kakao OAuth | `service/member/KakaoServiceImpl` | `REST_API_KEY` placeholder |
-| Gmail SMTP | `controller/member/SendEmailController` | App password hardcoded — rotate |
+| Service | Location | Config keys |
+|---------|----------|-------------|
+| Toss Payments | `service.common.TossPaymentService` | `toss.client.key`, `toss.secret.key` |
+| MariaDB | `util.DatabaseConfig` | `db.url`, `db.username`, `db.password` |
+| Kakao OAuth | `service/member/KakaoServiceImpl` | `kakao.client.id` (template only) |
+| Gmail SMTP | `controller/member/SendEmailController` | `mail.username`, `mail.app.password` (template only) |
 
-## Known issues (summary)
+Copy `config.properties.example` → `config.properties` for local values. Do not commit `config.properties`.
 
-Full remediation plan: [CLEANUP_PLAN.md](CLEANUP_PLAN.md).
+## Remaining technical debt
 
 | Severity | Issue |
 |----------|-------|
-| Critical | Hardcoded secrets (DB, Gmail, Toss) in source |
-| Critical | Member/gym plaintext passwords |
-| Critical | Admin endpoints unauthenticated |
-| High | Duplicate DTOs/DAOs for same DB tables across modules |
-| High | Three parallel payment stacks |
-| High | XSS in community JSPs (`${post.body}` unescaped) |
-| Medium | Inconsistent SqlSession ownership (service vs DAO vs controller) |
-| Medium | Dead code: `LoginCheck`, `DBUtil`, orphan JSPs, unmapped servlets |
-| Low | `web.xml` display-name still says `BankProj` |
+| Medium | Duplicate `TrainerDAO` in member/trainer packages |
+| Medium | Gym `Dao`/`DaoImpl` naming vs trainer/admin `DAO`/`DAOImpl` |
+| Medium | Some controllers still open DAOs directly (earnings, step3 join, etc.) |
+| Medium | Gmail/Kakao credentials not yet fully externalized in code |
+| Low | Trainer signup spread across 5 servlets |
+| Low | Inconsistent SqlSession ownership in a few legacy DAOs |
+
+Full remediation history: [CLEANUP_PLAN.md](CLEANUP_PLAN.md).
 
 ## Dependency JARs
 

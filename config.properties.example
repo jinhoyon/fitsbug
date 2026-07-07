@@ -1,21 +1,21 @@
 # Fitsbug configuration template
 # Copy to config.properties and fill in values. Do not commit config.properties.
 
-# Database (loaded by DatabaseConfig / MybatisSqlSessionFactory)
+# Database (loaded by DatabaseConfig → MybatisSqlSessionFactory)
 db.driver=org.mariadb.jdbc.Driver
 db.url=jdbc:mariadb://localhost:3306/fitsbug
 db.username=root
-db.password=
+db.password=your_password_here
 
 # Toss Payments (test keys — use matching client/secret pair from Toss dashboard)
 toss.client.key=test_ck_5OWRapdA8dJO4LMYoZWYVo1zEqZK
 toss.secret.key=test_sk_Ba5PzR0ArnB5zP0Dd4jGrvmYnNeD
 
-# Kakao OAuth
+# Kakao OAuth (member social login)
 kakao.client.id=
 kakao.redirect.uri=http://localhost:8080/Fitsbug/kakaoLogin
 
-# Gmail SMTP (email verification)
+# Gmail SMTP (email verification during member signup)
 mail.smtp.host=smtp.gmail.com
 mail.smtp.port=587
 mail.username=
