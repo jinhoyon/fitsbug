@@ -17,21 +17,6 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<MemberDTO> getGymlist() throws Exception {
-		return memberDAO.selectAllGym();
-	}
-
-	@Override
-	public List<MemberDTO> getTrainerlist() throws Exception {
-		return memberDAO.selectAllTrainer();
-	}
-
-	@Override
-	public List<MemberDTO> getClientlist() throws Exception {
-		return memberDAO.selectAllClient();
-	}
-
-	@Override
 	public List<MemberDTO> gymList(Map<String, Object> paramMap) throws Exception {
 		int pageRow = 4; // 한 페이지에 보여줄 데이터 수
 		int btnCnt = 4; // 화면 하단에 보여줄 페이지 번호 버튼 갯수

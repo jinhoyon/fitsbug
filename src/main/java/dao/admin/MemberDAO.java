@@ -7,10 +7,6 @@ import dto.admin.MemberDTO;
 
 public interface MemberDAO {
 	
-	List<MemberDTO> selectAllGym() throws Exception;
-	List<MemberDTO> selectAllTrainer() throws Exception;
-	List<MemberDTO> selectAllClient() throws Exception;
-	
 	List<MemberDTO> selectGymList(Map<String, Object> paramMap) throws Exception;
 	List<MemberDTO> selectTrainerList(Map<String, Object> paramMap) throws Exception;
 	List<MemberDTO> selectClientList(Map<String, Object> pagramMap) throws Exception;

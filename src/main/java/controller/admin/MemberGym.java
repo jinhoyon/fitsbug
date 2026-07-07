@@ -110,16 +110,5 @@ public class MemberGym extends HttpServlet {
 			request.getRequestDispatcher("error.jsp").forward(request, response);
 		}
 		
-//		try {
-//			MemberService service = new MemberServiceImpl();
-//			List<Member> list = service.getGymlist();
-//			request.setAttribute("list", list);
-//			request.getRequestDispatcher("/adminMember/memberGym.jsp").forward(request, response);
-//		}catch(Exception e) {
-//			e.printStackTrace();
-//			request.setAttribute("err", "오류가 발생했습니다.");
-//			request.getRequestDispatcher("error.jsp").forward(request, response);
-//		}
-		
 	}
 }

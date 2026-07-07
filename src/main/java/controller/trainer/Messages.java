@@ -21,7 +21,7 @@ public class Messages extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
+        if (session == null || session.getAttribute("loginTrainer") == null) {
             response.sendRedirect(request.getContextPath() + "/trainer/login");
             return;
         }
@@ -80,7 +80,7 @@ public class Messages extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
+        if (session == null || session.getAttribute("loginTrainer") == null) {
             response.sendRedirect(request.getContextPath() + "/trainer/login");
             return;
         }

@@ -6,8 +6,6 @@ import dto.trainer.ClientDTO;
 import dto.trainer.TrainerDTO;
 import service.trainer.ClientService;
 import service.trainer.ClientServiceImpl;
-import service.trainer.TrainerService;
-import service.trainer.TrainerServiceImpl;
 import service.trainer.WorkoutService;
 import service.trainer.WorkoutServiceImpl;
 
@@ -22,7 +20,6 @@ import java.util.*;
 public class ClientWorkoutLogController extends HttpServlet {
 
     private final ClientService  clientService  = new ClientServiceImpl();
-    private final TrainerService trainerService = new TrainerServiceImpl();
     private final WorkoutService workoutService = new WorkoutServiceImpl();
 
     @Override
@@ -30,13 +27,12 @@ public class ClientWorkoutLogController extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
+        if (session == null || session.getAttribute("loginTrainer") == null) {
             response.sendRedirect(request.getContextPath() + "/trainer/login");
             return;
         }
 
-        TrainerDTO trainer = trainerService.getTrainerByUserId(
-                ((dto.trainer.UserDTO) session.getAttribute("loginUser")).getId());
+        TrainerDTO trainer = (TrainerDTO) session.getAttribute("loginTrainer");
         int trainerId = trainer.getTrainerId();
 
         String idParam = request.getParameter("clientId");

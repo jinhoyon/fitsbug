@@ -10,3 +10,6 @@ build/
 classes/
 out/
 target/
+
+# local config (see config.properties.example)
+config.properties

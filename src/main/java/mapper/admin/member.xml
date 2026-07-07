@@ -3,37 +3,6 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mapper.admin.member">
-	<select id="selectAllGym" resultType="member">
-		select g.name as gymName, u.phone as gymTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as gymClientCount, ifnull(sum(p.payment_price*0.9),0) as gymCal 
-		from gym g 
-		left join user u on(g.user_id=u.id)
-		left join member m on(u.id=m.id)
-		left join trainer t on(g.id=t.gym_id)
-		left join payment p on(p.user_id=g.user_id)
-		group by g.name, u.phone, u.created_at
-		order by g.name
-	</select>
-	<select id="selectAllTrainer" resultType="member">
-		select u.name as trainerName, u.phone as trainerTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as trainerClientCount, ifnull(sum(p.payment_price*0.9),0) as trainerCal
-		from trainer t
-		left join user u on(t.user_id=u.id)
-		left join member m on(u.id=m.id)
-		left join payment p on(p.user_id=t.user_id)
-		group by u.name, u.phone, u.created_at
-		order by u.name
-	</select>
-	<select id="selectAllClient" resultType="member">
-		select u.name as clientName, u.phone as clientTel, u.created_at as regDate, IFNULL(tu.name, '담당 없음') AS ptTrainer, 
-        IFNULL(SUM(p.payment_price), 0) AS payment 
-    	FROM MEMBER m
-    	LEFT JOIN USER u ON m.user_id = u.id
-    	LEFT JOIN PAYMENT p ON p.user_id = m.user_id
-    	LEFT JOIN TRAINER t ON p.trainer_id = t.id
-    	LEFT JOIN USER tu ON t.user_id = tu.id
-    	GROUP BY u.name, u.phone, u.created_at, tu.name
-    	ORDER BY u.name
-	</select>
-	
 	
 	<select id="selectGymList" parameterType="Map" resultType="member">
 		select g.id as gymId, g.name as gymName, u.phone as gymTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as gymClientCount, ifnull(sum(p.payment_price*0.9),0) as gymCal 

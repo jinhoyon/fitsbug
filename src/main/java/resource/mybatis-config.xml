@@ -51,7 +51,6 @@
 		<typeAlias type="dto.trainer.CertificationDTO"  alias="CertificationDTO"/>
 		<typeAlias type="dto.trainer.ClientDTO" alias="ClientDTO"/>
 		<typeAlias type="dto.trainer.LessonDTO" alias="TrainerLessonDTO"/>
-		<typeAlias type="dto.trainer.MealDTO" alias="MealDTO"/>
 		<typeAlias type="dto.trainer.NotificationDTO" alias="TrainerNotificationDTO"/>
 		<typeAlias type="dto.trainer.PayoutAccountDTO" alias="PayoutAccountDTO"/>
 		<typeAlias type="dto.trainer.PricingDTO" alias="PricingDTO"/>
@@ -119,8 +118,6 @@
         <mapper resource="mapper/member/MypageMapper.xml"/>
         <mapper resource="mapper/member/InquiryMapper.xml"/>
         <mapper resource="mapper/member/TrainerReviewMapper.xml"/>
-        <mapper resource="mapper/member/FeedbackMapper.xml"/>
-        <mapper resource="mapper/member/PtFeedbackMapper.xml"/>
 		<mapper resource="mapper/member/ChartMapper.xml"/>
         <mapper resource="mapper/member/CompleteMapper.xml"/>
         <mapper resource="mapper/member/MembershipMapper.xml"/>

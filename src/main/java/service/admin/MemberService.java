@@ -6,9 +6,6 @@ import java.util.Map;
 import dto.admin.MemberDTO;
 
 public interface MemberService {
-	List<MemberDTO> getGymlist() throws Exception;
-	List<MemberDTO> getTrainerlist() throws Exception;
-	List<MemberDTO> getClientlist() throws Exception;
 	List<MemberDTO> gymList(Map<String, Object> paramMap) throws Exception;
 	List<MemberDTO> trainerList(Map<String, Object> paramMap) throws Exception;
 	List<MemberDTO> clientList(Map<String, Object> paramMap) throws Exception;

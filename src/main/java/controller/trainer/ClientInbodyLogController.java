@@ -6,8 +6,6 @@ import dto.member.InbodyLogDTO;
 import dto.trainer.TrainerDTO;
 import service.trainer.ClientService;
 import service.trainer.ClientServiceImpl;
-import service.trainer.TrainerService;
-import service.trainer.TrainerServiceImpl;
 import dto.trainer.ClientDTO;
 
 import javax.servlet.ServletException;
@@ -20,7 +18,6 @@ import java.util.*;
 public class ClientInbodyLogController extends HttpServlet {
 
     private final ClientService  clientService  = new ClientServiceImpl();
-    private final TrainerService trainerService = new TrainerServiceImpl();
     private final InbodyLogDAO   inbodyLogDAO   = new InbodyLogDAOImpl();
 
     @Override
@@ -28,13 +25,12 @@ public class ClientInbodyLogController extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
+        if (session == null || session.getAttribute("loginTrainer") == null) {
             response.sendRedirect(request.getContextPath() + "/trainer/login");
             return;
         }
 
-        TrainerDTO trainer = trainerService.getTrainerByUserId(
-                ((dto.trainer.UserDTO) session.getAttribute("loginUser")).getId());
+        TrainerDTO trainer = (TrainerDTO) session.getAttribute("loginTrainer");
         int trainerId = trainer.getTrainerId();
 
         String idParam = request.getParameter("clientId");

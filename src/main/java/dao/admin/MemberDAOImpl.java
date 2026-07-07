@@ -12,52 +12,6 @@ import util.MybatisSqlSessionFactory;
 public class MemberDAOImpl implements MemberDAO {
 
 	@Override
-	public List<MemberDTO> selectAllGym() throws Exception {
-		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		List<MemberDTO> list = null;
-		try {
-			list = sqlSession.selectList("mapper.admin.member.selectAllGym");
-		}catch(Exception e) {
-			e.printStackTrace();
-			throw e;
-		}finally {
-			sqlSession.close();
-		}
-		return list;
-	}
-
-	@Override
-	public List<MemberDTO> selectAllTrainer() throws Exception {
-		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		List<MemberDTO> list = null;
-		try {
-			list = sqlSession.selectList("mapper.admin.member.selectAllTrainer");
-		}catch(Exception e) {
-			e.printStackTrace();
-			throw e;
-		}finally {
-			sqlSession.close();
-		}
-		return list;
-	}
-
-	@Override
-	public List<MemberDTO> selectAllClient() throws Exception {
-		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		List<MemberDTO> list = null;
-		try {
-			list = sqlSession.selectList("mapper.admin.member.selectAllClient");
-		}catch(Exception e) {
-			e.printStackTrace();
-			throw e;
-		}finally {
-			sqlSession.close();
-		}
-		return list;
-	}
-
-
-	@Override
 	public Integer selectGymCnt() throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		Integer gymCnt = 0;

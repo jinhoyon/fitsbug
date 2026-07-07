@@ -7,8 +7,6 @@ import dto.trainer.ClientDTO;
 import dto.trainer.TrainerDTO;
 import service.trainer.ClientService;
 import service.trainer.ClientServiceImpl;
-import service.trainer.TrainerService;
-import service.trainer.TrainerServiceImpl;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -22,7 +20,6 @@ import java.util.List;
 public class ClientDetail extends HttpServlet {
 
     private final ClientService  clientService  = new ClientServiceImpl();
-    private final TrainerService trainerService = new TrainerServiceImpl();
     private final InbodyLogDAO   inbodyLogDAO   = new InbodyLogDAOImpl();
 
     @Override
@@ -30,23 +27,22 @@ public class ClientDetail extends HttpServlet {
             throws ServletException, IOException {
 
         // 1. Session check
-        HttpSession session = request.getSession();
-        if (session.getAttribute("loginUser") == null) {
-            response.sendRedirect(request.getContextPath() + "/member/login");
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("loginTrainer") == null) {
+            response.sendRedirect(request.getContextPath() + "/trainer/login");
             return;
         }
 
-//        TrainerDTO trainer = trainerService.getTrainerByUserId(
-//                ((dto.trainer.UserDTO) session.getAttribute("loginUser")).getId());
-//        int trainerId = trainer.getTrainerId();
+        TrainerDTO trainer = (TrainerDTO) session.getAttribute("loginTrainer");
+        int trainerId = trainer.getTrainerId();
 
         // 2. Get clientId
         String idParam = request.getParameter("clientId");
 
-//        if (idParam == null || idParam.isEmpty()) {
-//            response.sendRedirect(request.getContextPath() + "/trainer/clients");
-//            return;
-//        }
+        if (idParam == null || idParam.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/trainer/clients");
+            return;
+        }
 
         try {
             int clientId = Integer.parseInt(idParam);
@@ -54,11 +50,11 @@ public class ClientDetail extends HttpServlet {
             // 3. Use Service (NOT DAO)
             ClientDTO client = clientService.getClientById(clientId);
 
-            // 🔐 4. Ownership check (VERY IMPORTANT)
-//            if (client == null || client.getTrainerId() != trainerId) {
-//                response.sendRedirect(request.getContextPath() + "/trainer/clients");
-//                return;
-//            }
+            // 4. Ownership check
+            if (client == null || client.getTrainerId() != trainerId) {
+                response.sendRedirect(request.getContextPath() + "/trainer/clients");
+                return;
+            }
 
             // 5. Load inbody logs (newest → oldest from DAO)
             List<InbodyLogDTO> inbodyLogs = inbodyLogDAO.findByMemberId(clientId);

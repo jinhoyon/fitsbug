@@ -2,11 +2,8 @@ package controller.trainer;
 
 import dto.trainer.LessonDTO;
 import dto.trainer.TrainerDTO;
-import dto.trainer.UserDTO;
 import service.trainer.LessonService;
 import service.trainer.LessonServiceImpl;
-import service.trainer.TrainerService;
-import service.trainer.TrainerServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,18 +23,12 @@ public class CalendarController extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
+        if (session == null || session.getAttribute("loginTrainer") == null) {
             response.sendRedirect(request.getContextPath() + "/trainer/login");
             return;
         }
 
-        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
-        TrainerService trainerService = new TrainerServiceImpl();
-        TrainerDTO trainer = trainerService.getTrainerByUserId(loginUser.getId());
-        if (trainer == null) {
-            response.sendRedirect(request.getContextPath() + "/trainer/signup");
-            return;
-        }
+        TrainerDTO trainer = (TrainerDTO) session.getAttribute("loginTrainer");
         int trainerId = trainer.getTrainerId();
 
         LessonService lessonService = new LessonServiceImpl();

@@ -44,14 +44,13 @@ public class ProfileEditController extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
+        if (session == null || session.getAttribute("loginTrainer") == null) {
             response.sendRedirect(request.getContextPath() + "/trainer/login");
             return;
         }
 
-        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+        TrainerDTO trainer = (TrainerDTO) session.getAttribute("loginTrainer");
         TrainerService trainerService = new TrainerServiceImpl();
-        TrainerDTO trainer = trainerService.getTrainerByUserId(loginUser.getId());
 
         if (trainer != null) {
             int tid = trainer.getTrainerId();
@@ -77,14 +76,14 @@ public class ProfileEditController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
+        if (session == null || session.getAttribute("loginTrainer") == null) {
             response.sendRedirect(request.getContextPath() + "/trainer/login");
             return;
         }
 
         UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+        TrainerDTO trainer = (TrainerDTO) session.getAttribute("loginTrainer");
         TrainerService trainerService = new TrainerServiceImpl();
-        TrainerDTO trainer = trainerService.getTrainerByUserId(loginUser.getId());
 
         if (trainer == null) {
             response.sendRedirect(request.getContextPath() + "/trainer/profile");

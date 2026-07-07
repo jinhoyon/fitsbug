@@ -42,7 +42,6 @@ public class SignupController extends HttpServlet {
         int age = 0;
         try { age = Integer.parseInt(request.getParameter("age")); } catch (Exception ignored) {}
         String gender = request.getParameter("gender");
-//        String profileImg = request.getParameter("profileImg");
         String provider = request.getParameter("provider");
         String providerId = request.getParameter("providerId");
         if (provider != null && provider.isEmpty()) {
@@ -60,7 +59,6 @@ public class SignupController extends HttpServlet {
         dto.setPassword(hashedPassword);
         dto.setPhone(phone);
         dto.setNickname(nickname);
-//        dto.setProfileImg(profileImg);
         dto.setAge(age);
         dto.setGender(gender);
         dto.setRole(UserDTO.UserRole.TRAINER);
